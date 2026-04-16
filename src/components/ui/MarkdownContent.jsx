@@ -1,11 +1,12 @@
 import ReactMarkdown from "react-markdown";
 import "@/styles/markdown.css";
 
-export default function MarkdownContent({ content }) {
+export default function MarkdownContent({ content, label }) {
   if (!content) return null;
 
   return (
     <div className="markdown-content text-main">
+      {label && <label className="block text-sm font-medium text-muted-foreground mb-2">{label}:</label>}
       <ReactMarkdown
         components={{
           hr: () => <br />,

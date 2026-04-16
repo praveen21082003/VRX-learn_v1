@@ -40,6 +40,15 @@ function LessonLayout() {
 
   // console.log("Active Lesson in Layout:", activeLesson);
 
+  const currentIndex = allLessons.findIndex(
+    (lesson) => lesson.id === activeLesson?.lessonId
+  );
+
+  const nextLesson =
+    currentIndex >= 0 && currentIndex < allLessons.length - 1
+      ? allLessons[currentIndex + 1]
+      : null;
+
 
   if (loading) {
     return <div>Loading Course Content...</div>;
@@ -48,13 +57,14 @@ function LessonLayout() {
   return (
     <div className="flex h-full overflow-hidden bg-background">
       <aside className="w-full max-w-96 border-r-2 border-default bg-surface overflow-y-auto hidden lg:block">
-        <div className="p-4 border-b-2 border-default ">
+        <div className="p-2 border-b-2 border-default">
           <BackButton
             to={`/course/${courseId}/overview`}
             iconName="material-symbols:arrow-back-rounded"
             label="Back to Overview"
           />
         </div>
+
         <ContentLessonSidebar
           modules={modules}
           openPlaylist={openPlaylist}
@@ -64,16 +74,25 @@ function LessonLayout() {
         />
       </aside>
 
-      <main className="flex-1 overflow-y-auto bg-background">
-        <div className="max-w-6xl mx-auto p-4 lg:p-6">
-          <Outlet
-            context={{
-              course,
-              modules,
-              allLessons,
-              activeLesson,
-              setActiveLesson,
-            }}
+      <main className="flex-1 overflow-y-auto bg-background relative">
+        <Outlet
+          context={{
+            course,
+            modules,
+            allLessons,
+            activeLesson,
+            setActiveLesson,
+          }}
+        />
+
+        <div className="lg:hidden">
+          <ContentLessonSidebar
+            modules={modules}
+            activeLesson={activeLesson}
+            setActiveLesson={setActiveLesson}
+            allLessons={allLessons}
+            nextLesson={nextLesson}
+            mobilePlaylistOnly
           />
         </div>
       </main>

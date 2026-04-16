@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { BackButton, Button, Icon } from '@/components/ui';
 import { Overview, QuestionAnswers, Tabs } from '@/components/tabs';
 import { useParams } from 'react-router-dom';
+import ContentRenderer from '@/components/content/ContentRenderer';
 
 
 function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson }) {
@@ -22,6 +23,15 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
         { label: "Overview", value: "overview" },
         { label: "Q&A", value: "qa" },
     ];
+
+
+    const formatToMinutes = (seconds) => {
+        if (!seconds || isNaN(seconds)) return "0mins";
+
+        const mins = Math.round(seconds / 60);
+
+        return `${mins}mins`;
+    };
 
 
     return (
@@ -47,12 +57,21 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
 
                 {lesson?.mimeType?.startsWith("video") && (
                     <>
-                        <span>{videoDuration || "0:00"}</span>
-                        <Icon name="ph:dot-bold" />
+                        <span>{formatToMinutes(videoDuration) || "0:00"}</span>
                     </>
                 )}
             </div>
-            <span>content video player</span>
+
+
+            {/* Content redering */}
+            <ContentRenderer
+                lesson={lesson}
+                // error={error}
+                setVideoDuration={setVideoDuration}
+            />
+
+
+
             <div className="hidden md:flex justify-between items-center pt-4">
                 <div className="flex gap-4 w-[30%]">
 

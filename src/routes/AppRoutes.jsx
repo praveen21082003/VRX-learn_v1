@@ -7,6 +7,7 @@ import AuthLayout from '../layouts/AuthLayout';
 import AppLayout from '../layouts/AppLayout'
 import LearningLayout from '../layouts/LearningLayout';
 import LessonLayout from '../pages/CourseContent/traineeContent/lessons/LessonLayout';
+import AssignmentLayout from '../pages/CourseContent/traineeContent/assignments/AssignmentLayout';
 
 
 // auth pages
@@ -26,6 +27,7 @@ import Courses from '../pages/Courses/Courses';
 // course content pages
 import CourseOverview from '../pages/CourseContent/CourseOverview';
 import LessonContent from '../pages/CourseContent/traineeContent/lessons/LessonContent';
+import AssignmentContent from '../pages/CourseContent/traineeContent/assignments/AssignmentContent';
 
 function AppRoutes() {
   const { user, viewRole, role } = useAuth();
@@ -55,7 +57,14 @@ function AppRoutes() {
         >
           <Route index element={<LessonContent />} />
         </Route>
+        <Route
+          path="/course/:courseId/learn/assignment"
+          element={<AssignmentLayout />}
+        >
+          <Route index element={<AssignmentContent />} />
+        </Route>
       </Route>
+
 
       <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>

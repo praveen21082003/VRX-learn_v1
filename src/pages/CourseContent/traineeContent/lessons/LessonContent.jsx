@@ -4,6 +4,7 @@ import LessonViewer from '@/components/lessonViewer/LessonViewer';
 
 function LessonContent() {
   const {
+    modules,
     allLessons,
     activeLesson,
     setActiveLesson
@@ -27,17 +28,34 @@ function LessonContent() {
       : null;
 
   const onNavigate = (direction) => {
+    let targetLesson = null;
+
     if (direction === "prev" && prevLesson) {
-      setActiveLesson({
-        lessonId: prevLesson.id,
-      });
+      targetLesson = prevLesson;
     }
 
     if (direction === "next" && nextLesson) {
-      setActiveLesson({
-        lessonId: nextLesson.id,
-      });
+      targetLesson = nextLesson;
     }
+
+    if (!targetLesson) return;
+
+    const moduleIndex = modules.findIndex((module) =>
+      module.lessons?.some(
+        (lesson) => lesson.id === targetLesson.id
+      )
+    );
+
+    const lessonIndex =
+      modules[moduleIndex]?.lessons?.findIndex(
+        (lesson) => lesson.id === targetLesson.id
+      ) ?? -1;
+
+    setActiveLesson({
+      moduleIndex,
+      lessonIndex,
+      lessonId: targetLesson.id,
+    });
   };
 
   if (!activeLesson) {

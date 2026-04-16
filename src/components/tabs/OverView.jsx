@@ -1,12 +1,11 @@
 import React from "react";
-// import { MarkdownContent } from "@/components/ui";
+import { MarkdownContent } from "@/components/ui";
 
 
 function Overview({ lesson }) {
 
     return (
-        // <MarkdownContent content={lesson?.description || "No Overview avilable"} />
-        <p>markdown</p>
+        <MarkdownContent content={lesson?.description || "No Overview avilable"} />
     );
 }
 

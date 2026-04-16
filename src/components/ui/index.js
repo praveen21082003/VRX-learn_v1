@@ -9,8 +9,11 @@ export { default as Button } from './Button'
 export {default as Header} from './Header'
 export {default as Dropdown} from './Dropdown'
 export {default as Modal} from './Modal'
+
+// cards
 export {default as CourseCardViewer} from './cards/CourseCardViewer'
 export {default as CourseTumbnail} from './cards/CourseTumbnail'
+export {default as AttachmentCard} from './cards/AttachmentCard'
 
 
 // empty states
@@ -19,3 +22,12 @@ export {default as CourseOverviewPlaceholder} from './emptyStates/CourseOverview
 
 // markdown
 export {default as MarkdownContent} from './MarkdownContent'
+
+// loading states
+export {default as MediaPlaceholder} from './loading/MediaPlaceholder'
+
+// Upload file component
+export {default as UploadSection} from './FileUpload'
+
+// progress bar
+export {default as ProgressBar} from './ProgressBar'
