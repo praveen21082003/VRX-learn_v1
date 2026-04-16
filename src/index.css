@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+
+/* Dark mode variant */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme{
+  --color-primary: #840227;
+}
+
+/* Poppins at root level */
+:root {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+
+  --color-primary: #840227;
+  --color-brand: #840227;
+  --color-brand-rgb: 168, 43, 63;
+  --color-brand-hover: #F2B6A0;
+
+  --color-table: #F1F3F5;
+
+  --color-surface: #FAFAF8;
+  --color-surface-dark: #1E293B;
+
+  --color-background: #FFFFFF;
+  --color-background-dark: #1E293B;
+
+  --color-surface-primary-dark: #0F172A;
+
+  --color-text-main: #2A2A2A;
+  --color-text-main-dark: #FAFAF8;
+  --color-text-muted: #4D4D4D;
+  --color-text-muted-dark: #BBBFC4;
+
+  --color-border: #E2E4E7;
+
+  --color-logo: #D9D9D9;
+  --color-secondary-surface: #F2F2EE;
+
+  --color-pagenation-bg: #EDEEEF;
+
+
+
+  --color-primary-rgb: 132, 2, 39;
+  --color-logo-rgb: 217, 217, 217;
+  --color-border-rgb: 226, 228, 231;
+
+
+
+  --font-h0: 48px;
+  --font-h1: 36px;
+  --font-h2: 28px;
+  --font-h3: 22px;
+  --font-h4: 18px;
+  --font-h45: 16px;
+  --font-h5: 14px;
+
+  --lh-h0: 58px;
+  --lh-h1: 46px;
+  --lh-h2: 38px;
+  --lh-h3: 32px;
+  --lh-h4: 28px;
+  --lh-h45: 24px;
+  --lh-h5: 24px;
+  /* --lh-typo:32px */
+
+  --font-ll: 16px;
+  --font-large: 15px;
+  --font-normal: 14px;
+  --font-emphasis: 12px;
+  --font-caption: 12px;
+  --font-small: 11px;
+  --font-typo:22px
+
+  --lh-ll: 26px;
+  --lh-large: 24px;
+  --lh-normal: 22px;
+  --lh-emphasis: 22px;
+  --lh-caption: 18px;
+  --lh-small: 16px;
+  --lh-typo:32px
+
+  --fw-medium: 500;
+}
+
+
+
+
+/* ========================= GLOBAL ========================= */
+
+body {
+  font-family: var(--font-sans);
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background 0.3s, opacity 0.3s;
+  opacity: 0;
+}
+
+/* ONLY controlled by JS */
+.custom-scroll.scrolling::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 1;
+}
+
+
+
+/* hide scroll bar */
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE, Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari */
+}
+
+
+/* components */
+
+@layer components {
+
+  .video-player {
+    @apply flex justify-center items-center rounded-full bg-black/50 h-7 md:h-10;
+  }
+
+}
+
+/* autofill fix */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  -webkit-text-fill-color: inherit;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #1E293B inset;
+  -webkit-text-fill-color: white;
+}
+
+/* menu animation */
+
+.menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.menu.open {
+  max-height: 200px;
+  opacity: 1;
+}
+
+
+
+
+/* IMPORTS */
+
+@import './styles/typography.css';
+@import "./styles/colors.css";
+@import "./styles/layout.css";
+@import "./styles/components.css";

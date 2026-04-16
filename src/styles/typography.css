@@ -1,0 +1,77 @@
+
+@layer utilities {
+
+    .text-h0 {
+        font-size: var(--font-h0);
+        line-height: var(--lh-h0);
+        font-weight: 600;
+    }
+
+    .text-h1 {
+        font-size: var(--font-h1);
+        line-height: var(--lh-h1);
+        font-weight: 600;
+    }
+
+    .text-h2 {
+        font-size: var(--font-h2);
+        line-height: var(--lh-h2);
+        font-weight: 600;
+    }
+
+    .text-h3 {
+        font-size: var(--font-h3);
+        line-height: var(--lh-h3);
+        font-weight: 600;
+    }
+
+    .text-h4 {
+        font-size: var(--font-h4);
+        line-height: var(--lh-h4);
+        font-weight: 600;
+    }
+
+    .text-h45 {
+        font-size: var(--font-h45);
+        line-height: var(--lh-h45);
+        font-weight: 600;
+    }
+
+    .text-h5 {
+        font-size: var(--font-h5);
+        line-height: var(--lh-h5);
+        font-weight: 600;
+    }
+
+    .text-ll {
+        font-size: var(--font-ll);
+        line-height: var(--lh-ll);
+    }
+
+    .text-large {
+        font-size: var(--font-large);
+        line-height: var(--lh-large);
+    }
+
+    .text-body {
+        font-size: var(--font-normal);
+        line-height: var(--lh-normal);
+    }
+
+    .text-emphasis {
+        font-size: var(--font-emphasis);
+        line-height: var(--lh-emphasis);
+    }
+
+    .text-caption {
+        font-size: var(--font-caption);
+        line-height: var(--lh-caption);
+    }
+
+    .text-small {
+        font-size: var(--font-small);
+        line-height: var(--lh-small);
+        font-weight: 500;
+    }
+
+}
