@@ -6,7 +6,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.5, 2];
 
 const VideoControls = ({ videoRef, setVideoDuration }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [speed, setSpeed] = useState(1);

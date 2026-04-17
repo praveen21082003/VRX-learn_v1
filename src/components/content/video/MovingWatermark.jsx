@@ -4,7 +4,7 @@ const MovingWatermark = ({ text = "PROTECTED" }) => {
   const watermarkRef = useRef(null);
   const containerRef = useRef(null);
   const requestRef = useRef(null);
-  
+
   const pos = useRef({ x: Math.random() * 100, y: Math.random() * 100 });
   const vel = useRef({ dx: 1.2, dy: 1.2 });
   const lastJump = useRef(Date.now());
@@ -25,7 +25,7 @@ const MovingWatermark = ({ text = "PROTECTED" }) => {
 
       // --- RANDOM JUMP LOGIC (Every 60s) ---
       const now = Date.now();
-      if (now - lastJump.current > 60000) { 
+      if (now - lastJump.current > 60000) {
         pos.current.x = Math.random() * (containerRect.width - watermarkRect.width);
         pos.current.y = Math.random() * (containerRect.height - watermarkRect.height);
         lastJump.current = now;
@@ -65,9 +65,17 @@ const MovingWatermark = ({ text = "PROTECTED" }) => {
     <div ref={containerRef} className="absolute inset-0 pointer-events-none overflow-hidden z-40">
       <div
         ref={watermarkRef}
-        className="absolute whitespace-nowrap text-white text-[10px] font-mono bg-black/30 px-2 py-1 rounded will-change-transform"
+        className="absolute flex gap-2 whitespace-nowrap text-white text-[10px] font-mono bg-black/30 px-2 py-1 rounded will-change-transform"
       >
-        {text}
+        <img
+          src="/logo.svg"
+          alt="Logo"
+          className="h-5"
+        />
+        <div className='items-center'>
+          <span>{text}</span>
+        </div>
+
       </div>
     </div>
   );
