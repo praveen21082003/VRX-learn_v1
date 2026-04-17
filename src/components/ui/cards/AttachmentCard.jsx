@@ -4,10 +4,9 @@ function AttachmentCard({ fileName, url, loading }) {
 
     if (loading) {
         return (
-            <div className="flex items-center gap-3 border border-default p-2 rounded-lg w-fit min-w-[180px] animate-pulse">
+            <div className="flex items-center gap-3 border border-default p-2 rounded-lg w-fit min-w-52 max-w-2xs animate-pulse">
 
                 <div className="w-9 h-9 bg-gray-200 rounded-md"></div>
-
 
                 <div className="h-4 w-24 bg-gray-200 rounded"></div>
 
@@ -29,9 +28,6 @@ function AttachmentCard({ fileName, url, loading }) {
                 <p className="text-body font-medium text-foreground truncate leading-tight">
                     {fileName}
                 </p>
-                {/* <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
-          {} File
-        </p> */}
             </div>
 
             <a

@@ -1,14 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useOutletContext } from 'react-router-dom';
 import LessonViewer from '@/components/lessonViewer/LessonViewer';
+import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 
 function LessonContent() {
   const {
     modules,
     allLessons,
     activeLesson,
-    setActiveLesson
+    setActiveLesson,
   } = useOutletContext();
+
+  const { setSectionBreadcrumb } = useBreadcrumbs();
 
 
   const lesson = allLessons.find(
@@ -57,6 +60,12 @@ function LessonContent() {
       lessonId: targetLesson.id,
     });
   };
+
+  // Set the section breadcrumb to "Lessons" when this layout is active
+  useEffect(() => {
+    setSectionBreadcrumb(lesson?.title);
+    return () => setSectionBreadcrumb("");
+  }, [lesson?.title, setSectionBreadcrumb]);
 
   if (!activeLesson) {
     return <div>Select a lesson</div>;

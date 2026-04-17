@@ -7,3 +7,4 @@ export const updateMediaStatus = (mediaId) => {
 export const getMediaUrl = (mediaId) => {
     return axiosInstance.get(`/api/v1/media/${mediaId}`)
 }
+

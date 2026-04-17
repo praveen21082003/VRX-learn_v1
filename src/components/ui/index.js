@@ -31,3 +31,6 @@ export {default as UploadSection} from './FileUpload'
 
 // progress bar
 export {default as ProgressBar} from './ProgressBar'
+
+// status pill
+export {default as StatusPill} from './StatusPill'

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useRef } from "react";
+
+import React, { useRef, useEffect } from "react";
 
 import WelcomeBanner from '@/components/dashboard/WelcomeBanner';
 import MyCoursesSection from '@/components/dashboard/MyCoursesSection';
@@ -11,9 +11,16 @@ import CalendarSection from '@/components/dashboard/CalendarSection';
 
 import useScrollIndicator from "@/hooks/useScrollIndicator";
 import { useDashboardCourses } from './hooks/useDashoardCourses';
+import { useBreadcrumbs } from "@/context/BreadcrumbContext";
+
 
 function TraineeDashboard() {
     const { enrolledCourses, topCourses, loading, error } = useDashboardCourses(3);
+    const { resetBreadcrumbs } = useBreadcrumbs();
+
+    useEffect(() => {
+        resetBreadcrumbs();
+    }, [resetBreadcrumbs]);
 
     const leftRef = useRef(null);
     const rightRef = useRef(null);

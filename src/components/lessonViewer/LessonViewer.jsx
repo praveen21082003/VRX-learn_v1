@@ -35,14 +35,7 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
 
 
     return (
-        <main className="flex-1 overflow-y-auto py-1 px-2 md:py-1 md:px-6 pb-24">
-            <div className="block lg:hidden w-full border-b border-default p-1">
-                <BackButton
-                    to={`/course/${courseId}/overview`}
-                    iconName="material-symbols:arrow-back-rounded"
-                    label="Back"
-                />
-            </div>
+        <main className="flex-1 text-main overflow-y-auto py-1 px-2 md:py-1 md:px-6 pb-24">
             <h1 className="text-h3 flex gap-3">
                 {activeLesson.moduleIndex + 1}.{activeLesson.lessonIndex + 1}
                 <span>{lesson?.title}</span>

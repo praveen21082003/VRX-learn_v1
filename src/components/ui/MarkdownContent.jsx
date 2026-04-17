@@ -6,7 +6,7 @@ export default function MarkdownContent({ content, label }) {
 
   return (
     <div className="markdown-content text-main">
-      {label && <label className="block text-sm font-medium text-muted-foreground mb-2">{label}:</label>}
+      {label && <label className="block text-h45 font-medium text-muted-foreground mb-2">{label}</label>}
       <ReactMarkdown
         components={{
           hr: () => <br />,

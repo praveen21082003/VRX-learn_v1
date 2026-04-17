@@ -8,12 +8,14 @@ import Sidebar from "@/components/ui/Header/Sidebar";
 import { useTheme } from "../../../context/ThemeProvider";
 import { getProfileDropdown } from "@/config/DropdownButtons";
 import { useNavigate } from "react-router-dom";
+import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 
 import LogOut from '@/pages/auth/LogOut'
 
-function Header({ menu, breadcrumbs = [] }) {
+function Header({ menu }) {
 
     const navigate = useNavigate();
+    const { breadcrumbs } = useBreadcrumbs();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
@@ -54,7 +56,7 @@ function Header({ menu, breadcrumbs = [] }) {
     });
 
     return (
-        <header className="sticky top-0 z-40 flex h-[50px] w-full items-center justify-between bg-brand 
+        <header className="sticky top-0 z-50 flex h-[50px] w-full items-center justify-between bg-brand 
         px-4 md:px-10 text-[#FAFAF8]">
 
             {sidebarOpen && (

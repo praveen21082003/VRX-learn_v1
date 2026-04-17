@@ -26,14 +26,14 @@ function Viewer({
                 name: course.progress > 0 ? "Resume" : "Start Learning",
                 bg: course.progress > 0 ? "bg-primary" : "bg-transparent border",
                 text: course.progress > 0 ? "text-white" : "text-main",
-                route: `/course/${course.courseId}`
+                route: `/course/${course.courseId}/overview`
             };
         }
         return {
             name: "View Details",
             bg: "bg-transparent border",
             text: "text-main",
-            route: `/course/${course.courseId}`
+            route: `/course/${course.courseId}/overview`
         };
     };
 
@@ -80,17 +80,21 @@ function Viewer({
                         gridSize === 2 && "md:grid-cols-2",
                         gridSize === 3 && "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
                         gridSize === 4 && "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
-                  
+
                         vertical && "flex flex-col md:grid-cols-1"
                     )}
                 >
                     {loading ? (
-                        [...Array(maxCourses || gridSize)].map((_, i) => <CourseCardLoading key={i} />)
+                        [...Array(maxCourses || gridSize)].map((_, i) => (
+                            <div key={i} className="min-w-72 md:min-w-full snap-start">
+                                <CourseCardLoading />
+                            </div>
+                        ))
                     ) : (
                         visibleCourses.map(course => {
                             const btn = getButtonStyle(course);
                             return (
-                                <div key={course.courseId} className="min-w-[280px] md:min-w-full snap-start">
+                                <div key={course.courseId} className="min-w-72 md:min-w-full snap-start">
                                     <CourseCard
                                         name={course.courseName}
                                         author={course.trainerName}

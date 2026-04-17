@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useCourseContent } from '../../hooks/useCourseContent';
 import { Outlet, useParams } from 'react-router-dom';
-import { BackButton } from "@/components/ui";
+import { BackButton, Icon } from "@/components/ui";
 import ContentLessonSidebar from './ContentLessonSidebar';
 
 function LessonLayout() {
@@ -16,6 +16,7 @@ function LessonLayout() {
 
 
 
+
   const {
     course,
     modules,
@@ -23,6 +24,8 @@ function LessonLayout() {
     loading,
     error,
   } = useCourseContent(courseId);
+
+
 
 
   useEffect(() => {
@@ -51,7 +54,18 @@ function LessonLayout() {
 
 
   if (loading) {
-    return <div>Loading Course Content...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
+        <Icon name="line-md:loading-twotone-loop" height="30" width="30" />
+
+        <div className="space-y-1 text-center">
+          <h3 className="text-h45 font-semibold text-main">Getting things ready...</h3>
+          <p className="text-caption text-muted">
+            We're preparing your course content for you.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -75,6 +89,13 @@ function LessonLayout() {
       </aside>
 
       <main className="flex-1 overflow-y-auto bg-background relative">
+        <div className="lg:hidden p-2 border-b-2 border-default">
+          <BackButton
+            to={`/course/${courseId}/overview`}
+            iconName="material-symbols:arrow-back-rounded"
+            label="Back to Overview"
+          />
+        </div>
         <Outlet
           context={{
             course,

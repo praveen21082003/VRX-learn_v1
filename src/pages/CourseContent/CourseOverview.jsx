@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { use, useEffect } from 'react'
 import { useParams, useOutletContext, NavLink } from "react-router-dom";
+import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 
-import { CourseTumbnail, Icon, CourseOverviewPlaceholder } from '@/components/ui';
+import { CourseTumbnail, Icon, CourseOverviewPlaceholder, BackButton } from '@/components/ui';
 
 import { useCourseOverview } from './hooks/useCourseOverview';
 import { usePermission } from '../../hooks/usePermission';
@@ -12,6 +13,7 @@ import { useAuth } from '@/context/AuthContext';
 
 function CourseOverview() {
 
+    const { setCourseBreadcrumb } = useBreadcrumbs();
     const { courseId } = useParams();
     const { can } = usePermission();
     const { viewRole, role } = useAuth();
@@ -19,6 +21,17 @@ function CourseOverview() {
     const effectiveRole = viewRole || role
 
     const { data, loading, error } = useCourseOverview(courseId, effectiveRole);
+
+
+    // Breadcrumb setup - we set the course breadcrumb on mount and clear it on unmount
+
+    useEffect(() => {
+        if (loading) return;
+        if (courseId) {
+            const displayTitle = data?.title || "Untitled Course";
+            setCourseBreadcrumb(displayTitle, `/course/${courseId}/overview`);
+        }
+    }, [data?.title, loading, courseId, setCourseBreadcrumb]);
 
 
     const totalLessonMinutes =
@@ -71,7 +84,7 @@ function CourseOverview() {
                             to={`/course/${courseId}/learn/${section.key}`}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 rounded-lg px-4 py-2 transition-colors
-                                ${isActive ? "bg-primary-16" : "hover:bg-primary-16"}`
+                                ${isActive ? "bg-primary/16" : "hover:bg-primary/16"}`
                             }
                         >
                             {section.icon && (
@@ -115,8 +128,12 @@ function CourseOverview() {
     }
 
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
+    if (loading) return <div className='flex h-screen w-full justify-center items-center'><Icon name="line-md:loading-twotone-loop" height="30" width="30" />Loading...</div>;
+    if (error) return (
+        <div className='flex flex-col h-screen w-full justify-center items-center text-red-500'>
+            <Icon name="fluent:mail-error-16-filled" height="40" width="40" />
+            <span className='items-center'>{error}</span>
+        </div>);
 
     return (
         <div className="space-y-1 py-4 px-4 lg:px-6 lg:py-4 text-main">

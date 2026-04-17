@@ -6,12 +6,13 @@ export default function BackButton({
     iconName = "",
     to = -1,
     replace = true,
+    onClick 
 }) {
     const navigate = useNavigate();
 
     return (
         <button
-            onClick={() => navigate(to, replace)}
+            onClick={onClick || (() => navigate(to, replace))}
             className="flex items-center gap-2 text-sm font-medium text-blue-900 dark:text-white/70 hover:underline cursor-pointer"
         >
             {iconName &&

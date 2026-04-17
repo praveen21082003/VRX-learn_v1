@@ -13,6 +13,7 @@ function AssignmentLayout() {
     const {
         assignments,
         assignmentDetail,
+        refetchAssignmentDetail,
         loading,
         detailLoading,
         error,
@@ -31,7 +32,18 @@ function AssignmentLayout() {
     // console.log(activeAssignment);
 
     if (loading) {
-        return <div>Loading assignments...</div>;
+        return (
+            <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
+                <Icon name="line-md:loading-twotone-loop" height="30" width="30" />
+
+                <div className="space-y-1 text-center">
+                    <h3 className="text-h45 font-semibold text-main">Getting things ready...</h3>
+                    <p className="text-caption text-muted">
+                        We're fetching the assignments for your tasks.
+                    </p>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -65,23 +77,12 @@ function AssignmentLayout() {
             >
                 {activeAssignment && (
                     <div className="lg:hidden p-2 flex items-center justify-between border-b bg-surface">
-                        <button
-                            onClick={() => setActiveAssignment(null)}
-                            className="flex items-center gap-2 text-primary font-medium"
-                        >
-                            <Icon name="mdi:chevron-left" />
-                            Back to List
-                        </button>
 
-                        {/* <button
-                            onClick={() => setOpenPlaylist(true)}
-                            className="text-primary p-2"
-                        >
-                            <Icon
-                                name="mdi:playlist-play"
-                                width="24"
-                            />
-                        </button> */}
+                        <BackButton
+                            onClick={() => setActiveAssignment(null)}
+                            iconName="material-symbols:arrow-back-rounded"
+                            label="Back to List"
+                        />
                     </div>
                 )}
 
@@ -93,6 +94,7 @@ function AssignmentLayout() {
                             activeAssignment,
                             setActiveAssignment,
                             assignmentDetail,
+                            refetchAssignmentDetail,
                             detailLoading,
                         }}
                     />

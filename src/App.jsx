@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext"
-import { ThemeProvider } from "./context/ThemeProvider";
 import AppRoutes from "./routes/AppRoutes";
+import { BreadcrumbProvider } from "./context/BreadcrumbContext";
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+
+    <BreadcrumbProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </BreadcrumbProvider>
+
+
   );
 }
 

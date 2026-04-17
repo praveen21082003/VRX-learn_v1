@@ -39,7 +39,7 @@ const FileItem = React.memo(({ file, index, isUploading, uploadProgress, loadedD
                 </div>
 
                 <div className="flex flex-col min-w-0 w-full">
-                    <span className="text-h5 font-medium text-muted truncate">
+                    <span className="text-h5 font-medium w-60 md:w-96 lg:w-full text-muted truncate">
                         {file.name}
                     </span>
 
@@ -90,7 +90,9 @@ const FileItem = React.memo(({ file, index, isUploading, uploadProgress, loadedD
     );
 });
 
-const UploadedFiles = React.memo(({ files, isUploading, uploadProgress, loadedData, mediaStatus, handleRemoveFile }) => {
+
+// TODO: Optimize by only rendering progress for the currently uploading file, and not all files in the list. This will require tracking which file is being uploaded in the parent component and passing that info down to FileItem.
+const UploadedFiles = React.memo(({ files, isUploading, uploadProgress, loadedData, mediaStatus, handleRemoveFile, maxFileSize }) => {
     return (
         <div className="grid grid-cols-1 gap-2">
             {files.map((file, index) => (
@@ -109,6 +111,8 @@ const UploadedFiles = React.memo(({ files, isUploading, uploadProgress, loadedDa
     );
 });
 
+
+// 
 export default function UploadSection({
     files,
     setFiles,
@@ -118,13 +122,23 @@ export default function UploadSection({
     label = "Your Work",
     optional,
     loadedData,
-    inputWarning
+    inputWarning,
+    maxFileSize,
+    allowedTypes= ['pdf']
 }) {
 
     console.log(inputWarning);
     const handleRemoveFile = React.useCallback((indexToRemove) => {
         setFiles(files.filter((_, index) => index !== indexToRemove));
     }, [files, setFiles]);
+
+    const acceptString = allowedTypes
+        ?.map((type) => {
+            if (type === "pdf") return "application/pdf";
+            if (type === "mp4") return "video/mp4";
+            return "";
+        })
+        .join(",");
 
     return (
         <>
@@ -137,6 +151,8 @@ export default function UploadSection({
                     onFilesChange={setFiles}
                     heightClass="h-74"
                     handleRemoveFile
+                    maxFileSize={maxFileSize}
+                    allowedTypes={allowedTypes}
                     UploadedFiles={
                         <UploadedFiles
                             files={files}
@@ -166,6 +182,7 @@ export default function UploadSection({
                             <input
                                 type="file"
                                 className="hidden"
+                                accept={acceptString}
                                 onChange={(e) => setFiles([...e.target.files])}
                             />
                         </label>

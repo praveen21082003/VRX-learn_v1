@@ -36,7 +36,7 @@ function ContentLessonSidebar({
 
 
     return (
-        <div>
+        <div className='text-main'>
             {!mobilePlaylistOnly && (
                 <>
 
@@ -48,8 +48,8 @@ function ContentLessonSidebar({
                                 <button
                                     onClick={() => toggleModule(module.id)}
                                     className={clsx(
-                                        "flex h-14 w-full border-primary items-center justify-between text-dark-gray text-h45",
-                                        isOpen ? "bg-primary/16 dark:bg-primary text-primary dark:text-background border-l-8 p-2" : "hover:bg-primary/16 p-4"
+                                        "flex h-14 w-full border-primary items-center justify-between text-h45",
+                                        isOpen ? "bg-primary/16 dark:bg-primary text-primary dark:text-gray-50 border-l-8 p-2" : "hover:bg-primary/16 p-4"
                                     )}
                                 >
                                     <span className="truncate">{module.title}</span>
@@ -125,7 +125,7 @@ function ContentLessonSidebar({
 
 
 
-            <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden px-3 pb-3">
+            <div className="fixed bottom-0 left-0 right-0 z-45 lg:hidden pb-3">
                 <div className="rounded overflow-hidden shadow-2xl border border-default bg-primary">
 
                     <button
@@ -169,10 +169,10 @@ function ContentLessonSidebar({
 
             {showNextPlaylist && (
                 <div className="fixed bottom-0 pb-16 left-0 right-0 z-40 lg:hidden">
-                    <div className="bg-surface border-2 border-default shadow-2xl max-h-[65vh] overflow-y-auto rounded-t-2xl rounded-b-md">
+                    <div className="bg-surface border-2 border-b-0 border-default shadow-2xl max-h-[65vh] overflow-y-auto rounded-t-2xl">
 
                         <div className="px-4 py-3 border-b-2 border-default flex items-center justify-between">
-                            <h3 className="text-sm font-semibold text-main">
+                            <h3 className="text-h4 font-semibold text-main">
                                 Contents
                             </h3>
 
@@ -182,8 +182,8 @@ function ContentLessonSidebar({
                             >
                                 <Icon
                                     name="mdi:close"
-                                    width="18"
-                                    height="18"
+                                    width="26"
+                                    height="26"
                                 />
                             </button>
                         </div>
@@ -195,7 +195,7 @@ function ContentLessonSidebar({
                                 <div key={module.id} className="border-b border-default">
                                     <button
                                         onClick={() => toggleModule(module.id)}
-                                        className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium"
+                                        className="w-full flex items-center justify-between px-3 py-2.5 text-h5 font-medium"
                                     >
                                         <span>{module.title}</span>
 
@@ -229,7 +229,7 @@ function ContentLessonSidebar({
                                                             setShowNextPlaylist(false);
                                                         }}
                                                         className={clsx(
-                                                            "w-full flex items-center justify-between px-3 py-2.5 text-left",
+                                                            "w-full flex items-center justify-between px-3 py-2.5 text-muted text-left",
                                                             isActive
                                                                 ? "bg-primary/10 text-primary"
                                                                 : "hover:bg-primary/5"
@@ -247,7 +247,7 @@ function ContentLessonSidebar({
                                                             />
 
                                                             <div className="min-w-0">
-                                                                <p className="truncate text-sm font-medium">
+                                                                <p className="truncate text-body">
                                                                     {moduleIndex + 1}.{lessonIndex + 1} {lesson.title}
                                                                 </p>
                                                             </div>

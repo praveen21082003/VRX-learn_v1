@@ -58,7 +58,7 @@ function WelcomeBanner() {
                                 buttonName="Resume"
                                 className="lg:max-w-50 p-3 rounded-lg font-semibold text-sm"
                                 bgClass="bg-white"
-                                textClass="text-primary"
+                                textClass="text-brand"
                                 onClick={() => navigate(`/course/${course.courseId}/overview`)}
                             />
                         </>
@@ -72,7 +72,7 @@ function WelcomeBanner() {
                                 backIconName="maki:arrow"
                                 className="lg:max-w-50 p-3 rounded-lg font-semibold text-sm"
                                 bgClass="bg-white"
-                                textClass="text-primary"
+                                textClass="text-brand"
                                 onClick={() => navigate("/courses")}
                             />
                         </>
