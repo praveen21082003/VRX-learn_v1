@@ -1,5 +1,5 @@
 import React from 'react';
-import { CourseCardViewer, Icon } from "@/components/ui";
+import { CourseCardViewer } from "@/components/ui";
 
 function MyCoursesSection({ enrolledCourses, loading }) {
     

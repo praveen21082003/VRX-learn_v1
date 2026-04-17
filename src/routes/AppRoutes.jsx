@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'
-import TraineeRoutes from './traineeRoutes/TraineeRoutes';
+import TraineeRoutes from './TraineeRoutes';
 
 // layouts
 import AuthLayout from '../layouts/AuthLayout';

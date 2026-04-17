@@ -19,6 +19,7 @@ function Courses() {
                 emptyTitle="No Courses available"
                 // emptyDescription="."
                 emptyIcon="uil:book-open"
+                vertical={true}
             />
         </div>
     )

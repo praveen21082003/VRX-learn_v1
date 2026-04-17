@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getEnrolledCourses, getTopCourses } from "@/services/Dashboard.service";
+import { getTraineeEnrolledCourses, getTopCourses } from "@/services/Dashboard.service";
 
 export const useDashboardCourses = (topCount = 3) => {
     const [data, setData] = useState({
@@ -17,7 +17,7 @@ export const useDashboardCourses = (topCount = 3) => {
                 setLoading(true);
 
                 const [enrolledRes, topRes] = await Promise.all([
-                    getEnrolledCourses(),
+                    getTraineeEnrolledCourses(),
                     getTopCourses(topCount)
                 ]);
 
