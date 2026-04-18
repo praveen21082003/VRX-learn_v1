@@ -1,9 +1,9 @@
 import { Icon } from "@/components/ui";
 
 
-function IconContainer({ icon, size = 40 }) {
+function IconContainer({ icon, size = 40, textClass="text-main" }) {
     return (
-        <div className="flex justify-center items-center bg-table-Header-bg text-main h-20 w-20 rounded-xl">
+        <div className={`flex justify-center items-center bg-table-header ${textClass} h-20 w-20 rounded-xl`}>
             <Icon
                 name={icon}
                 height={size}
