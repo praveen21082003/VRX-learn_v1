@@ -11,3 +11,11 @@ export const login = (email, password) => {
 export const userLogout = () => {
     return axiosInstance.post('/api/v1/users/logout')
 }
+
+export const createUsers = (payload) => {
+    return axiosInstance.post('api/v1/users', payload)
+}
+
+export const deleteUserService = (userId) => {
+    return axiosInstance.delete(`/api/v1/users/${userId}`)
+}

@@ -3,6 +3,8 @@ export { default as Icon } from './Icon'
 export { default as Input } from './Input/Input'
 export { default as InputWarnMessage } from './Input/InputWarnMessage'
 export { default as Select } from './Input/Select'
+export { default as SearchSelect } from './Input/SearchSelect'
+export { default as TextEditor } from './Input/TextEditor'
 
 // buttons
 export { default as BackButton } from './Buttons/BackButton'
@@ -15,6 +17,7 @@ export { default as Modal } from './Modal'
 export { default as CourseCardViewer } from './cards/CourseCardViewer'
 export { default as CourseTumbnail } from './cards/CourseTumbnail'
 export { default as AttachmentCard } from './cards/AttachmentCard'
+export { default as DeleteConfirmContent } from './cards/DeleteConfirmContent'
 
 
 // empty states
@@ -37,4 +40,4 @@ export { default as ProgressBar } from './ProgressBar'
 export { default as StatusPill } from './StatusPill'
 
 // Avatar
-export {default as Avatar} from './Avatar'
+export { default as Avatar } from './Avatar'

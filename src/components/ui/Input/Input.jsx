@@ -22,7 +22,8 @@ function Input({
     paddingClass,
     border,
     widthClass = "w-full",
-    onFocus
+    onFocus,
+    ...props
 
 
 }) {
@@ -54,6 +55,7 @@ function Input({
 
                 {/* Input */}
                 <input
+                    {...props}
                     ref={ref}
                     name={name}
                     type={isPassword && showPassword ? "text" : type}

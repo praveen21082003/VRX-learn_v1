@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Icon } from "@/components/ui"
+import { Icon, Modal } from "@/components/ui"
 
 import { useAuth } from '@/context/AuthContext'
 import { useDashboardKPIs } from './hooks/useDashboardKPIs';
@@ -9,6 +9,11 @@ import { ADMIN_STAT_CARDS, QUICK_ACTIONS_CARDS } from '@/config/dashboardConfig'
 
 import StatCard from '@/components/dashboard/StatCard';
 import AdminTopCourses from '@/components/dashboard/AdminTopCourses';
+
+// Create 
+import CreateUser from './components/CreateUser';
+import CreateCourse from './components/CreateCourse';
+import CreateEnrollment from './components/CreateEnrollment';
 
 function AdminDashboard() {
 
@@ -103,6 +108,47 @@ function AdminDashboard() {
         loading={topCoursesLoading}
         error={topCourseError}
       />
+
+      {open && (
+        <Modal
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          title={
+            activeAction === "user"
+              ? "Create New User"
+              : activeAction === "course"
+                ? "Create Course"
+                : "Enroll Trainee"
+          }
+        >
+          {activeAction === "user" && (
+            <CreateUser
+              onClose={() => setOpen(false)}
+            // onSuccess={handleAddKips}
+            />
+          )}
+
+          {activeAction === "course" && (
+            <CreateCourse
+              // setKpis={setKpis}
+              onClose={() => setOpen(false)}
+            // onSuccess={handleCourseCreate}
+            />
+          )}
+
+          {activeAction === "enroll" && (
+            <CreateEnrollment
+              // onSuccess={
+              //   setKpis((prev) => ({
+              //     ...prev,
+              //     totalEnrollments: (prev.totalEnrollments || 0) + 1
+              //   }))}
+              onClose={() => setOpen(false)}
+            />
+          )}
+
+        </Modal>
+      )}
     </div>
   )
 }

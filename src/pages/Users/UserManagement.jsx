@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useUsersData } from './hooks/useUsersData'
+import { useUser } from './hooks/useUsers';
 import { useDebounce } from '@/hooks/useDebounce';
 
 import { TableToolbar, DataTable, } from '@/components/Table'
-import { Select, Avatar, StatusPill, Button } from "@/components/ui"
+import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from "@/components/ui"
 
 import { ROLE_OPTIONS, SORT_OPTIONS, STATUS_OPTIONS } from '@/config/adminFiltersSelectOptions'
 import { USER_COLUMNS_BASE } from '../../config/tablesColumnConfig'
@@ -22,8 +23,16 @@ function UserManagement() {
 
 
     const { refreshUsers, users, setUsers, loading, total, error } = useUsersData();
+    const { deleteUser, deleting } = useUser();
+
 
     // useSates
+    const [open, setOpen] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    console.log(selectedUser);
+
+
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -59,7 +68,7 @@ function UserManagement() {
                 return {
                     ...col,
                     render: (row) => {
-                        const actions = ["mingcute:pencil-line", "mdi:delete-outline"];
+                        const actions = ["mdi:delete-outline"]; //"mingcute:pencil-line",  ----> add ones after edit ready
 
                         return (
                             <div className="flex items-center justify-center gap-3">
@@ -72,7 +81,7 @@ function UserManagement() {
                                         bgClass=""
                                         textClass=""
                                         onClick={() => {
-                                            if (icon === "mingcute:pencil-line") handleOpenEdit(row);
+                                            // if (icon === "mingcute:pencil-line") handleOpenEdit(row);
                                             if (icon === "mdi:delete-outline") handleOpenDelete(row);
                                         }}
                                     />
@@ -149,6 +158,31 @@ function UserManagement() {
             setSelectedRows([]);
         }
     };
+
+    // open edit box
+    // const handleOpenEdit = (user) => {
+    //     setEditingUser(user);
+    //     setOpen(true);
+    // };
+
+    // delete action handeling
+    const handleOpenDelete = (user) => {
+        setSelectedUser(user);
+        setOpen(true);
+    };
+
+    // delete
+    const handleDelete = async (userId) => {
+        try {
+            // console.log(selectedUser.id)
+            await deleteUser(userId);
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+            addToast("User deleted successfully", "success");
+            setIsDelete(false);
+        } catch (err) {
+            addToast("Failed to delete user", "error");
+        }
+    }
 
 
     // fetch users data useEffect
@@ -249,6 +283,22 @@ function UserManagement() {
                 // )}
                 />
             </div>
+            {open && (
+                <Modal
+                    isOpen={open}
+                    onClose={() => setOpen(false)}
+                    title="Are you absolutely sure?"
+                >
+                    <DeleteConfirmContent
+                        confirmText={selectedUser?.name || ""}
+                        entityName="user"
+                        message={`You are about to permanently delete the ${selectedUser?.name} user.`}
+                        loading={deleting}
+                        onClose={() => setOpen(false)}
+                        onConfirm={() => handleDelete(selectedUser.id)}
+                    />
+                </Modal>
+            )}
 
         </div>
     )
