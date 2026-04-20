@@ -18,12 +18,18 @@ export function AuthProvider({ children }) {
                 setUser(data);
 
                 const role = data?.role?.toLowerCase();
-                // If trainer, default the view to trainer
-                if (role === "trainer" && !viewRole) {
+
+                // ✅ Always derive viewRole fresh from the logged-in user
+                // Don't trust whatever was left in localStorage from a previous session
+                if (role === "trainer") {
                     setViewRole("trainer");
+                } else {
+                    // For admin/trainee, clear any stale viewRole
+                    setViewRole(null);
                 }
             } catch (err) {
                 setUser(null);
+                setViewRole(null);
             } finally {
                 setLoading(false);
             }

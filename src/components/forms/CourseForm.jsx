@@ -1,18 +1,31 @@
-import React, { useState, useCallback } from 'react'
-import { Input, SearchSelect, TextEditor, Icon, Button} from '@/components/ui'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import { Input, SearchSelect, TextEditor, Icon, Button } from '@/components/ui'
 
 import useDebouncedSearch from './hooks/useDebouncedSearch';
 
 import { searchUser } from '../../services/AdminSearch.service';
 
-function CourseForm({mode=true, isUpdating}) {
-    const [isOpen, setIsOpen] = useState(false);
+function CourseForm({ initialData, onSubmit, onClose, mode, loading }) {
+
+    const isEdit = mode === "edit";
+
+    const [isOpen, setIsOpen] = useState(!!initialData?.longDescription);
+
     const [formData, setFormData] = useState({
-        title: "",
-        shortDescription: "",
-        longDescription: "",
-        trainerId: ""
-    })
+        title: initialData?.title || "",
+        shortDescription: initialData?.shortDescription || "",
+        longDescription: initialData?.longDescription || "",
+        trainerId: initialData?.trainerId || ""
+    });
+    console.log(formData)
+
+
+    // Get intial data for update
+    useEffect(() => {
+        if (isEdit && initialData?.trainerName) {
+            setSearch(initialData.trainerName);
+        }
+    }, [isEdit, initialData]);
 
 
     const handleSearchUser = useCallback(async ({ query, role }) => {
@@ -43,15 +56,20 @@ function CourseForm({mode=true, isUpdating}) {
         }))
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit(formData);
+    };
+
 
 
     return (
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
             <Input
                 label="Title"
                 placeholder="Enter course title"
                 paddingClass="p-2"
-                value={formData.title || ""}
+                value={formData.title}
                 onChange={(e) => handleChange("title", e.target.value)}
             // inputWarning={warnings.title}
             />
@@ -110,19 +128,22 @@ function CourseForm({mode=true, isUpdating}) {
                 </div>
             }
 
-          
+
             {/* Actions */}
             <div className="flex w-full gap-3">
                 <Button
                     buttonName="Cancel"
                     className="px-4 py-2 rounded-lg w-full"
+                    variant="outline"
+                    onClick={onClose}
+                    type="button"
                     bgClass=""
                     textClass=""
                 />
                 <Button
-                    buttonName={mode ? isUpdating ? "Updating..." : "Save Changes" : isCreating ? "Creating..." : "Add Course"}
+                    buttonName={loading ? "Processing..." : isEdit ? "Save Changes" : "Add Course"}
                     className="px-4 py-2 rounded-lg w-full"
-                    // onClick={handleSubmit}
+                    disabled={loading}
                     type="submit"
                 />
             </div>

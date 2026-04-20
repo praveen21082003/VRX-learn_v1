@@ -1,7 +1,7 @@
 import { usePermission } from "@/hooks/usePermission"
 
 // In courseInfo page create button
-export const getCreateButtons = ({
+export const CREATE_BUTTON_OPTIONS = ({
   navigate,
   courseSlug
 }) => [
@@ -18,7 +18,7 @@ export const editButtons = (handleReorder) => [
   { key: "delete", title: "Delete", icon: "ic:baseline-delete", onClick: () => alert("delete clicked") },
 ];
 
-export const buttons = (courseSlug,moduleId,handleRename, lessonId, navigate, setDeleteLessonId) => [
+export const buttons = (courseSlug, moduleId, handleRename, lessonId, navigate, setDeleteLessonId) => [
   { key: "view", title: "View", icon: "material-symbols:view-cozy-sharp", onClick: () => navigate(`/course/${courseSlug}/content/modules/${moduleId}/lesson/${lessonId}/view`) },
   { key: "edit", title: "Edit", icon: "mingcute:pencil-line", onClick: () => navigate(`/course/${courseSlug}/content/modules/${moduleId}/lesson/${lessonId}/edit`) },
   { key: "rename", title: "Rename", icon: "ix:rename", onClick: () => handleRename(lessonId) },

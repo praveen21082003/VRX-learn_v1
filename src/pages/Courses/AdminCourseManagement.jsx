@@ -4,12 +4,15 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useCourseData } from './hooks/useCoursesData';
 
 import { TableToolbar, DataTable, } from '@/components/Table'
-import { Select, Avatar, StatusPill, Button } from "@/components/ui"
+import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from "@/components/ui"
 
 import { COURSE_COLUMNS_BASE } from '@/config/tablesColumnConfig';
 import { COURSE_SORT_OPTION, EROLLMENT_STATUS_OPTIONS, ROLE_OPTIONS } from '@/config/adminFiltersSelectOptions'
 
+import CourseActionHandler from './CourseActionHandler';
+
 import formatDateTime from '@/utils/formatDateTime'
+import { useNavigate } from 'react-router-dom';
 
 function AdminCourseManagement() {
 
@@ -18,9 +21,15 @@ function AdminCourseManagement() {
         sort: null,
     };
 
+    const navigate = useNavigate();
+
     const { courses, setCourses, loading, error, total, refreshCourses } = useCourseData();
 
     // useSates
+    const [open, setOpen] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState(null);
+    const [actionType, setActionType] = useState(null);
+
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -75,6 +84,7 @@ function AdminCourseManagement() {
                                 {actions.map((icon, index) => (
                                     <Button key={index} frontIconName={icon} frontIconHeight="18" frontIconWidth="18" bgClass="" textClass=""
                                         onClick={() => {
+                                            if (icon === "iconamoon:eye-light") handleOpenOverview(row.id)
                                             if (icon === "mingcute:pencil-line") handleOpenEdit(row);
                                             if (icon === "mdi:delete-outline") handleOpenDelete(row);
                                         }}
@@ -157,6 +167,44 @@ function AdminCourseManagement() {
     // ----- handle fuctions -------
 
 
+    // Handle Actions delete, edit, view
+
+
+
+    // Create
+    const handleOpenCreate = () => {
+        setSelectedCourse(null);
+        setActionType("create");
+        setOpen(true);
+    };
+
+    // View (navigate to course OverView)
+    const handleOpenOverview = (courseId) => {
+        navigate(`/course/${courseId}/overview`)
+    }
+
+    // Update
+    const handleOpenEdit = (course) => {
+        setSelectedCourse(course);
+        setActionType("edit");
+        setOpen(true);
+    };
+
+    // Delete
+    const handleOpenDelete = (course) => {
+        setSelectedCourse(course);
+        setActionType("delete");
+        setOpen(true);
+    };
+
+    // Close
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedCourse(null);
+        setActionType(null);
+    };
+
+
     // Clear Filters
     const clearFilters = () => {
         setFilters(INITIAL_FILTERS);
@@ -206,7 +254,7 @@ function AdminCourseManagement() {
                 setSelectedRows={setSelectedRows}
                 search={filters.search}
                 setSearch={(val) => handleFilterChange('search', val)}
-                onAdd={() => setOpen(true)}
+                onAdd={() => handleOpenCreate()}
                 onExport={() => handleExport()}
                 addLabel="Add New Course"
             // BulK Action ui can add here
@@ -242,6 +290,44 @@ function AdminCourseManagement() {
             //     />
             // )}
             />
+
+
+            {
+                open && (
+                    <Modal
+                        isOpen={open}
+                        onClose={handleClose}
+                        title={
+                            actionType === "delete" ? "Are you absolutely sure?" :
+                                actionType === "edit" ? "Update Course" : "Add New Course"
+                        }
+                    >
+                        {actionType === "delete" && (
+                            <DeleteConfirmContent
+                                confirmText={selectedCourse?.title || ""}
+                                message={
+                                    <span>
+                                        You are about to permanently delete the <strong className="font-bold">{selectedCourse?.title}</strong> course.
+                                        All associated materials, student progress, and data tied to this course will be permanently erased from the system.
+                                    </span>
+                                }
+                                onClose={() => setOpen(false)}
+                                onConfirm={() => handleDelete(selectedCourse.id)}
+                            />
+                        )}
+
+                        {(actionType === "create" || actionType === "edit") && (
+                            <CourseActionHandler
+                                mode={actionType}
+                                CourseData={selectedCourse}
+                                onClose={handleClose}
+                            // onSuccess={refreshUsers}
+                            />
+                        )}
+
+                    </Modal>
+                )
+            }
 
         </div>
     )

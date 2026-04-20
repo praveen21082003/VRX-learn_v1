@@ -38,6 +38,15 @@ function AdminDashboard() {
   };
 
 
+  // on Success functions
+  const handleAddKips = () => {
+    setKpis((prev) => ({
+      ...prev,
+      totalUsers: (prev.totalUsers || 0) + 1
+    }));
+  }
+
+
 
   return (
     <div className="space-y-4 text-main py-4 px-6">
@@ -124,7 +133,7 @@ function AdminDashboard() {
           {activeAction === "user" && (
             <CreateUser
               onClose={() => setOpen(false)}
-            // onSuccess={handleAddKips}
+              onSuccess={handleAddKips}
             />
           )}
 
@@ -132,7 +141,7 @@ function AdminDashboard() {
             <CreateCourse
               // setKpis={setKpis}
               onClose={() => setOpen(false)}
-            // onSuccess={handleCourseCreate}
+              // onSuccess={handleCourseCreate}
             />
           )}
 

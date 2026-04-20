@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react'
 import { useEnrollmentsData } from './hooks/useEnrollmentsData'
 import { useDebounce } from '@/hooks/useDebounce';
 
-import { TableToolbar, DataTable, } from '@/components/Table'
-import { Select, Avatar, StatusPill, Button } from "@/components/ui"
+import { TableToolbar, DataTable } from '@/components/Table'
+import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from "@/components/ui"
 
 import { ENROLLMENT_COLUMNS_BASE } from '@/config/tablesColumnConfig';
 import { EROLLMENT_SORT_OPTIONS, EROLLMENT_STATUS_OPTIONS, ROLE_OPTIONS } from '@/config/adminFiltersSelectOptions'
+
+import EnrollmentActionHandler from './EnrollmentActionHandler';
 
 
 import formatDateTime from '@/utils/formatDateTime'
@@ -24,6 +26,10 @@ function EnrollmentsManagement() {
     const { enrollments, setEnrollments, loading, error, total, refreshEnrollments } = useEnrollmentsData();
 
     // useSates
+    const [open, setOpen] = useState(false);
+    const [selectedEnrollment, setSelectedEnrollment] = useState(null);
+    const [actionType, setActionType] = useState(null);
+
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -158,6 +164,37 @@ function EnrollmentsManagement() {
     // ----- handle fuctions -------
 
 
+    // Handle Actions delete, edit
+
+    // Create
+    const handleOpenCreate = () => {
+        setSelectedEnrollment(null);
+        setActionType("create");
+        setOpen(true);
+    };
+
+    // Update
+    const handleOpenEdit = (enrollment) => {
+        setSelectedEnrollment(enrollment);
+        setActionType("edit");
+        setOpen(true);
+    };
+
+    // Delete
+    const handleOpenDelete = (enrollment) => {
+        setSelectedEnrollment(enrollment);
+        setActionType("delete");
+        setOpen(true);
+    };
+
+    // Close
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedEnrollment(null);
+        setActionType(null);
+    };
+
+
     // Clear Filters
     const clearFilters = () => {
         setFilters(INITIAL_FILTERS);
@@ -206,7 +243,7 @@ function EnrollmentsManagement() {
                 setSelectedRows={setSelectedRows}
                 search={filters.search}
                 setSearch={(val) => handleFilterChange('search', val)}
-                onAdd={() => setOpen(true)}
+                onAdd={() => handleOpenCreate()}
                 onExport={() => handleExport()}
                 addLabel="Add New Enrollment"
             // BulK Action ui can add here
@@ -252,6 +289,44 @@ function EnrollmentsManagement() {
             //     />
             // )}
             />
+
+            {
+                open && (
+                    <Modal
+                        isOpen={open}
+                        onClose={handleClose}
+                        title={
+                            actionType === "delete" ? "Remove Enrollment?" :
+                                actionType === "edit" ? "Update Enrollment" : "Create New Enrollment"
+                        }
+                    >
+                        {actionType === "delete" && (
+                            <DeleteConfirmContent
+                                confirmText={selectedEnrollment?.name || ""}
+                                message={
+                                    <span>
+                                        You are about to remove <strong className="font-bold">{selectedEnrollment?.name}</strong> from the
+                                        <strong className="font-bold"> {selectedEnrollment?.courseName}</strong> course.
+                                        Their progress, submitted assignments, and grades will be permanently erased.
+                                    </span>
+                                }
+                                onClose={() => setOpen(false)}
+                                onConfirm={() => handleDelete(selectedEnrollment.id)}
+                            />
+                        )}
+
+                        {(actionType === "create" || actionType === "edit") && (
+                            <EnrollmentActionHandler
+                                mode={actionType}
+                                EnrollmentData={selectedEnrollment}
+                                onClose={handleClose}
+                            // onSuccess={refreshUsers}
+                            />
+                        )}
+
+                    </Modal>
+                )
+            }
 
         </div>
     )

@@ -18,7 +18,11 @@ function CourseOverview() {
     const { can } = usePermission();
     const { viewRole, role } = useAuth();
 
-    const effectiveRole = viewRole || role
+    const effectiveRole = viewRole ?? role
+
+    const basePath = effectiveRole === "trainee"
+        ? "learn"
+        : "manage";
 
     const { data, loading, error } = useCourseOverview(courseId, effectiveRole);
 
@@ -81,7 +85,7 @@ function CourseOverview() {
                     return (
                         <NavLink
                             key={section.key}
-                            to={`/course/${courseId}/learn/${section.key}`}
+                            to={`/course/${courseId}/${basePath}/${section.key}`}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 rounded-lg px-4 py-2 transition-colors
                                 ${isActive ? "bg-primary/16" : "hover:bg-primary/16"}`
