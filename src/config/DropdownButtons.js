@@ -26,7 +26,7 @@ export const buttons = (courseSlug, moduleId, handleRename, lessonId, navigate, 
 ]
 
 
-export const getButtons = (courseSlug, assignmentId, handleRename, handleDelete, navigate) => [
+export const getAssignmentButtons = (courseSlug, assignmentId, handleRename, handleDelete, navigate) => [
   {
     key: "view", title: "View", icon: "material-symbols:view-cozy-sharp", onClick: () => navigate(`/course/${courseSlug}/content/assignments/${assignmentId}`)
   },

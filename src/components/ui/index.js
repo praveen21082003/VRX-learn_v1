@@ -23,6 +23,7 @@ export { default as DeleteConfirmContent } from './cards/DeleteConfirmContent'
 // empty states
 export { default as IconContainer } from './emptyStates/IconContainer'
 export { default as CourseOverviewPlaceholder } from './emptyStates/CourseOverviewPlaceholder'
+export { default as CourseContentEmptyState } from './emptyStates/CourseContentEmptyState'
 
 // markdown
 export { default as MarkdownContent } from './MarkdownContent'

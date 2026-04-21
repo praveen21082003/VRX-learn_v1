@@ -6,10 +6,13 @@ import { Icon } from '@/components/ui'
 import SortableItem from './SortableItem'
 import clsx from 'clsx';
 import { useParams } from 'react-router-dom';
+import { useToast } from "@/context/ToastProvider"
 
 
 
-function ReorderList({ items, reorder, isUpdating, addToast, onReorderUI }) {
+function ReorderList({ items, reorder, isUpdating, onReorderUI }) {
+
+    const { addToast } = useToast();
 
     const { courseSlug } = useParams();
     // console.log(courseSlug);
@@ -68,12 +71,7 @@ function ReorderList({ items, reorder, isUpdating, addToast, onReorderUI }) {
                 precedingId,
                 succeedingId
             });
-
-            console.log(active.id, {
-                precedingId,
-                succeedingId
-            })
-
+            addToast("Modules Reordered successfully", "success")
 
         } catch (err) {
             setData(previousData);
