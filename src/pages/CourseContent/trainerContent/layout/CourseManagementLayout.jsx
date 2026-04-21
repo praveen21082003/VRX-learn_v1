@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, createContext, useContext } from "react";
 // custom hooks and api
 import { useResizable } from '@/hooks/useResizable';
 import useCourseContent from "../hooks/useCourseContent";
+import useLessons from "../modules/hooks/useLessons";
 
 import { Outlet, useNavigate, useLocation, useParams, useOutletContext } from "react-router-dom";
 import CourseManagementSidebar from "./CourseManagementSidebar";
@@ -46,6 +47,7 @@ function CourseManagementLayout() {
     );
     const { courseId } = useParams();
     const { courseContent, setCourseContent, loading, error, refreshCourseContent } = useCourseContent(courseId);
+    const { lessons, setLessons, fetchLessons, loading: lessonLoading } = useLessons();
 
     const effectiveRole = viewRole ?? role;
     const { course, modules = [], assignments = [] } = courseContent || {};
@@ -108,7 +110,14 @@ function CourseManagementLayout() {
 
     return (
         <CourseContext.Provider value={{ courseId, course, handleUpdateCourseInfoSuccess }}>
-            <ModuleContext.Provider value={{ modules, setModules }}>
+            <ModuleContext.Provider value={{
+                modules,
+                setModules,
+                lessons,
+                setLessons,
+                fetchLessons,
+                lessonLoading
+            }}>
                 <AssignmentContext.Provider value={setAssignments}>
 
                     <div className="flex h-full overflow-hidden bg-background">

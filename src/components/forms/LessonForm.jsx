@@ -163,6 +163,8 @@ function LessonForm({ mode, initialData, modules, courseId }) {
           mediaStatus={mediaStatus}
           loadedData={loadedData}
           inputWarning={warning.file}
+          allowedTypes={['pdf', 'mp4']}
+          maxFileSize={30}
         />
       ) : (
         <div className="text-sm text-muted-foreground">

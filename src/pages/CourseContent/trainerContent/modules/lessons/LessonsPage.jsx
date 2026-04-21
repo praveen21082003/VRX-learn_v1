@@ -9,7 +9,7 @@ import { useToast } from '@/context/ToastProvider';
 import { editButtons, buttons } from '@/config/DropdownButtons.js'
 import { useReorder } from '@/components/dnd/useReorder';
 
-import useLessons from '../hooks/useLessons';
+
 import { useCourse, useModuleContext } from '../../layout/CourseManagementLayout';
 
 function LessonsPage() {
@@ -20,10 +20,9 @@ function LessonsPage() {
 
     // context
     const { courseId } = useCourse();
-    const { modules } = useModuleContext();
+    const { modules, lessons, setLessons, loading, error, fetchLessons, updateLesson, deleteLesson, isDeleting } = useModuleContext();
 
     // hook
-    const { lessons, setLessons, loading, error, fetchLessons, updateLesson, deleteLesson, isDeleting } = useLessons();
     const { reorderLessons, isUpdating } = useReorder();
 
     // state

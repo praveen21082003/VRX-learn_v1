@@ -3,15 +3,14 @@ import LessonForm from '../../../../../components/forms/LessonForm'
 import { BackButton } from '@/components/ui'
 import { useModuleContext, useCourse } from "../../layout/CourseManagementLayout";
 import { useParams } from 'react-router-dom'
-import useLessons from '../hooks/useLessons'
+// import useLessons from '../hooks/useLessons'
 
 function LessonActionHandler({ mode }) {
     const isEdit = mode === "edit";
     const { moduleId } = useParams();
-    const { modules, setModules } = useModuleContext();
+    const { modules, setModules, lessons } = useModuleContext();
 
     const { lessonId } = useParams();
-    const { lessons } = useLessons();
 
     const initialData = lessonId
         ? lessons?.find(l => l.id === lessonId)
