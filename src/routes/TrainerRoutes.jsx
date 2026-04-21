@@ -1,24 +1,23 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom';
-
 import CourseManagementLayout from '../pages/CourseContent/trainerContent/layout/CourseManagementLayout';
-
-// pages
 import CourseInformationPage from '../pages/CourseContent/trainerContent/course/CourseInformationPage';
 import ModulesPage from '../pages/CourseContent/trainerContent/modules/ModulesPage';
 import AssignmentsPage from '../pages/CourseContent/trainerContent/Assignments/AssignmentsPage';
+import { Route, Navigate } from 'react-router-dom';
 
-function TrainerRoutes() {
+export default function TrainerRoutes() {
     return (
-        <Routes>
-            <Route path="content" element={<CourseManagementLayout />}>
-                <Route index element={<CourseInformationPage />} />
-                <Route path="info" element={<CourseInformationPage />} />
-                <Route path="modules" element={<ModulesPage />} />
-                <Route path="assignments" element={<AssignmentsPage />} />
+        <Route path="content" element={<CourseManagementLayout />}>
+            <Route index element={<Navigate to="info" replace />} />
+            <Route path="info" element={<CourseInformationPage />} />
+            <Route path="modules">
+                <Route index element={<ModulesPage />} />
+                <Route path="create" element={<ModulesPage />} />
+                <Route path=":moduleId" element={<ModulesPage />} />
             </Route>
-        </Routes>
+            <Route path="assignments">
+                <Route index element={<AssignmentsPage />} />
+                <Route path=":assignmentId" element={<AssignmentsPage />} />
+            </Route>
+        </Route>
     );
 }
-
-export default TrainerRoutes

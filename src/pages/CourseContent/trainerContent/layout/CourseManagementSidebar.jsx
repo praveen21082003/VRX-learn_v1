@@ -13,14 +13,16 @@ import { CREATE_BUTTON_OPTIONS } from '@/config/dropdownButtons'
 
 import { BackButton, Button, Icon, Dropdown } from '@/components/ui';
 
-function CourseManagementSidebar({ modules, assignments }) {
+function CourseManagementSidebar({ courseContent }) {
 
   const navigate = useNavigate();
   const { courseId } = useParams();
-  const [isOpen, dropdownRef, setIsOpen, toggle] = useClickOutside(false);
+  const [isDropdownOpen, dropdownRef, setIsDropdownOpen, toggle] = useClickOutside(false);
   const [open, setOpen] = React.useState(null);
   // console.log(modules, assignments)
   console.log(courseId);
+
+  const sections = COURSE_EDIT_SECTIONS(courseId);
 
 
   // create dropdown options
@@ -32,8 +34,8 @@ function CourseManagementSidebar({ modules, assignments }) {
 
   // 
   const sectionChildrenMap = {
-    modules: modules,
-    assignments: assignments,
+    modules: courseContent?.modules,
+    assignments: courseContent?.assignments,
     // lab: [],
     // quiz: [],
     // feedback: [],
@@ -62,10 +64,10 @@ function CourseManagementSidebar({ modules, assignments }) {
             className="py-3 px-15 rounded-lg"
             onClick={toggle}
           />
-          {isOpen && (
+          {isDropdownOpen && (
             <Dropdown
               buttons={createButtons}
-              closeDropdown={() => setIsOpen((prev) => !prev)}
+              closeDropdown={() => setIsDropdownOpen((prev) => !prev)}
             />
           )}
         </div>
@@ -73,9 +75,9 @@ function CourseManagementSidebar({ modules, assignments }) {
 
 
       <div className="">
-        {COURSE_EDIT_SECTIONS.map((section) => {
+        {sections.map((section) => {
 
-          const isOpen = open === section.key;
+          const isSectionOpen = open === section.key;
           const children = sectionChildrenMap[section.key];
           const hasChildren = children && children.length > 0;
 
@@ -104,7 +106,7 @@ function CourseManagementSidebar({ modules, assignments }) {
                         isActive
                           ? "text-primary dark:text-background"
                           : "text-white dark:text-background-dark group-hover:text-primary group-hover:dark:text-background",
-                        hasChildren && isOpen && "rotate-90"
+                        hasChildren && isSectionOpen && "rotate-90"
                       )}
                     />
                     <div className="flex justify-between w-full">
@@ -116,7 +118,7 @@ function CourseManagementSidebar({ modules, assignments }) {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          navigate(`${section.key}/create`);
+                          navigate(`/course/${courseId}/content/${section.key}/create`);
                         }}
                       >
                         <Icon
@@ -138,53 +140,47 @@ function CourseManagementSidebar({ modules, assignments }) {
                 )}
               </NavLink>
 
-              {hasChildren && isOpen && (
-                <AnimatePresence>
-                  <motion.ul
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                    className='space-y-1 overflow-hidden'
-                  >
-                    {children.map((child) => (
-                      <li key={child.id}>
-                        <NavLink
-                          to={`${section.key}/${child.id}`}
-                          className={({ isActive }) =>
-                            clsx(
-                              "group flex items-center justify-between pl-10 px-2 py-3 text-h5",
-                              isActive
-                                ? "bg-primary/16 dark:bg-primary text-primary dark:text-background"
-                                : "text-muted hover:bg-primary/16 dark:hover:bg-surface-primary-dark"
-                            )
-                          }
-                        >
-                          <span className="truncate flex-1">
-                            {child.title}
+              {hasChildren && isSectionOpen && (
+                <ul
+                  className='space-y-1 overflow-hidden'
+                >
+                  {children.map((child) => (
+                    <li key={child.id}>
+                      <NavLink
+                        to={`/course/${courseId}/content/${section.key}/${child.id}`}
+                        className={({ isActive }) =>
+                          clsx(
+                            "group flex items-center justify-between pl-10 px-2 py-3 text-h5",
+                            isActive
+                              ? "bg-primary/16 dark:bg-primary text-primary dark:text-background"
+                              : "text-muted hover:bg-primary/16 dark:hover:bg-surface-primary-dark"
+                          )
+                        }
+                      >
+                        <span className="truncate flex-1">
+                          {child.title}
+                        </span>
+                        {section.key === "modules" &&
+                          <span
+                            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              navigate(`/course/${courseId}/content/${section.key}/create`);
+                            }}
+                          >
+                            <Icon
+                              name="ic:baseline-plus"
+                              height="26"
+                              width="26"
+                              className="text-muted-foreground"
+                            />
                           </span>
-                          {section.key === "modules" &&
-                            <span
-                              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                navigate(`/course/${courseId}/manage/content/modules/${child.id}/lesson/create`);
-                              }}
-                            >
-                              <Icon
-                                name="ic:baseline-plus"
-                                height="26"
-                                width="26"
-                                className="text-muted-foreground"
-                              />
-                            </span>
-                          }
-                        </NavLink>
-                      </li>
-                    ))}
-                  </motion.ul>
-                </AnimatePresence>
+                        }
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
           )

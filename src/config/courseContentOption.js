@@ -1,38 +1,18 @@
-export const COURSE_EDIT_SECTIONS = [
+// courseContentOption.js — make path a function
+export const COURSE_EDIT_SECTIONS = (courseId) => [
     {
         key: "info",
         label: "Course Information",
-        path: "info",
-
+        path: `/course/${courseId}/content/info`,
     },
     {
         key: "modules",
         label: "Modules",
-        path: "modules",
-
+        path: `/course/${courseId}/content/modules`,
     },
     {
         key: "assignments",
         label: "Assignments",
-        path: "assignments",
-
+        path: `/course/${courseId}/content/assignments`,
     },
-    // {
-    //     key: "lab",
-    //     label: "Lab Credentials",
-    //     path: "lab",
-
-    // },
-    // {
-    //     key: "quiz",
-    //     label: "Quiz",
-    //     path: "quiz",
-
-    // },
-    // {
-    //     key: "feedback",
-    //     label: "Feedback",
-    //     path: "feedback",
-
-    // }
 ]
