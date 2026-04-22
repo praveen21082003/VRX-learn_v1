@@ -25,6 +25,7 @@ export default function TrainerRoutes() {
 
                     <Route path="lesson/create" element={<LessonActionHandler mode="create" />} />
                     <Route path="lesson/:lessonId/edit" element={<LessonActionHandler mode="edit" />} />
+                    <Route path="lesson/:lessonId/preview" element={<LessonActionHandler mode="view" />} />
                 </Route>
             </Route>
             <Route path="assignments">
@@ -32,6 +33,7 @@ export default function TrainerRoutes() {
                 <Route path=":assignmentId" element={<AssignmentsPage />} />
                 <Route path="create" element={<AssignmentHandler mode="create" />} />
                 <Route path=':assignmentId/edit' element={<AssignmentHandler mode="edit" />} />
+                <Route path=':assignmentId/view' element={<AssignmentHandler mode="view" />} />
             </Route>
         </Route>
     );

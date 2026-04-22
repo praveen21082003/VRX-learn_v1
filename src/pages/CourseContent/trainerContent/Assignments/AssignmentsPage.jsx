@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import clsx from 'clsx';
 
-import useAssignmentContent from './hooks/useAssignmnets'
 import { useCourse, useAssignmentContext } from "../layout/CourseManagementLayout";
 
 import { Button, Icon, Input, Dropdown, Modal, CourseContentEmptyState, DeleteConfirmContent } from '@/components/ui'
@@ -18,15 +17,15 @@ function AssignmentsPage() {
 
   // context
   const { courseId } = useCourse();
-  const { setAssignments } = useAssignmentContext();
-
-  // hook - for fetch, update, delete (add update/delete to hook later)
-  const {
-    assignments,
+  const { 
+    setAssignments,
+    assignmentList,
     fetchAssignments,
-    loading,
-    error,
-  } = useAssignmentContent();
+    assignmentListLoading,
+    assingnmentListError,
+  } = useAssignmentContext();
+
+
 
   // state
   const [isOpenDropdown, setIsOpenDropdown] = useState(null);
@@ -123,18 +122,18 @@ function AssignmentsPage() {
       </div>
 
       <ul className="flex flex-col">
-        {loading ? (
+        {assignmentListLoading ? (
           <div className="h-full w-full">
             <ContentLoading count={7} />
           </div>
 
-        ) : error ? (
+        ) : assingnmentListError ? (
           <div className="text-center py-6 text-red-500">
-            {error}
+            {assingnmentListError}
           </div>
 
-        ) : assignments?.length > 0 ? (
-          assignments.map((assignment) => {
+        ) : assignmentList?.length > 0 ? (
+          assignmentList.map((assignment) => {
             const isOpen = isOpenDropdown === assignment.id;
             return (
               <li

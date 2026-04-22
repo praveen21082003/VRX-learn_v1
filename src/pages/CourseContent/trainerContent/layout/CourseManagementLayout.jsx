@@ -3,6 +3,9 @@ import { useEffect, useState, useRef, createContext, useContext } from "react";
 import { useResizable } from '@/hooks/useResizable';
 import useCourseContent from "../hooks/useCourseContent";
 import useLessons from "../modules/hooks/useLessons";
+import useAssignmentList from '../Assignments/hooks/useAssignmentList'
+import useLessonAction from '@/components/forms/hooks/useLessonActions'
+
 
 import { Outlet, useNavigate, useLocation, useParams, useOutletContext } from "react-router-dom";
 import CourseManagementSidebar from "./CourseManagementSidebar";
@@ -51,7 +54,26 @@ function CourseManagementLayout() {
 
     const effectiveRole = viewRole ?? role;
     const { course, modules = [], assignments = [] } = courseContent || {};
-    console.log(course);
+
+
+    // hook - for fetch, update, delete (add update/delete to hook later)
+    const {
+        assignments: assignmentList,
+        assignment,
+
+        fetchAssignmentDetails,
+        fetchAssignments,
+
+        detailsLoading,
+        loading: assignmentListLoading,
+
+        detailsError,
+        error: assingnmentListError,
+    } = useAssignmentList();
+
+
+    // update actions
+    const {updateLessonAction, isUpdating} = useLessonAction();
 
     // 
     if (effectiveRole === "trainee") {
@@ -116,9 +138,11 @@ function CourseManagementLayout() {
                 lessons,
                 setLessons,
                 fetchLessons,
-                lessonLoading
+                lessonLoading,
+                updateLessonAction,
+                isUpdating
             }}>
-                <AssignmentContext.Provider value={setAssignments}>
+                <AssignmentContext.Provider value={{ setAssignments, assignmentList, fetchAssignments, assignmentListLoading, assingnmentListError, assignment, fetchAssignmentDetails, detailsLoading, detailsError }}>
 
                     <div className="flex h-full overflow-hidden bg-background">
                         <aside style={{ width }} className="relative hidden border-r-2 border-default bg-muted/40 py-1 lg:block overflow-y-auto scrollbar-hide">

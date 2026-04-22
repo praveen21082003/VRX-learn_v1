@@ -20,10 +20,10 @@ function LessonsPage() {
 
     // context
     const { courseId } = useCourse();
-    const { modules, lessons, setLessons, loading, error, fetchLessons, updateLesson, deleteLesson, isDeleting } = useModuleContext();
+    const { modules, lessons, setLessons, loading, error, fetchLessons, updateLessonAction, isUpdating, deleteLesson, isDeleting } = useModuleContext();
 
     // hook
-    const { reorderLessons, isUpdating } = useReorder();
+    const { reorderLessons, isUpdating: reOrdering } = useReorder();
 
     // state
     const [isReorderMode, setIsReorderMode] = useState(false);
@@ -91,7 +91,7 @@ function LessonsPage() {
             return;
         }
 
-        const result = await updateLesson(lessonId, { title: newTitle });
+        const result = await updateLessonAction(lessonId, { title: newTitle });
         if (!result.success) {
             addToast(result.message, "error");
             return;
@@ -188,7 +188,7 @@ function LessonsPage() {
                     <ReorderList
                         items={orderedLessons}
                         reorder={reorderLessons}
-                        isUpdating={isUpdating}
+                        isUpdating={reOrdering}
                         addToast={addToast}
                         onReorderUI={(newOrder) => {
                             setOrderedLessons(newOrder);
@@ -210,8 +210,9 @@ function LessonsPage() {
                                 >
                                     <div
                                         className={clsx(
-                                            'flex gap-2 items-center p-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary cursor-pointer',
-                                            (isOpenDropdown === lesson.id || renameLessonId === lesson.id) && 'bg-primary/16'
+                                            'flex gap-2 items-center p-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary ',
+                                            isUpdating ? "cursor-progress" : "cursor-pointer",
+                                                (isOpenDropdown === lesson.id || renameLessonId === lesson.id) && 'bg-primary/16'
                                         )}
                                         onDoubleClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/${lesson.id}/view`)}
                                         onClick={(e) => {
@@ -233,6 +234,7 @@ function LessonsPage() {
                                                 <Input
                                                     ref={inputRef}
                                                     value={renameValue}
+                                                    disabled={isUpdating}
                                                     onChange={(e) => setRenameValue(e.target.value)}
                                                     autoFocus
                                                     className="text-sm"

@@ -7,7 +7,7 @@ import useAssignmentActions from './hooks/useAssignmentActions'
 
 import { useToast } from '@/context/ToastProvider'
 
-function AssignmentForm({ courseId, mode, initialData, assignments, setAssignments  }) {
+function AssignmentForm({ courseId, mode, initialData, assignments, setAssignments }) {
   const isEdit = mode === "edit";
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -35,13 +35,14 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
 
   // populate in edit mode
   useEffect(() => {
-    if (isEdit && initialData) {
+    if (isEdit && initialData?.assignment) {
+      const { assignment } = initialData;
       setFormData({
-        title: initialData.title || "",
-        instructions: initialData.instructions || "",
-        dueDate: initialData.dueDate || null,
-        maxScore: initialData.maxScore ?? 5,
-        numberOfAttempts: initialData.numberOfAttempts ?? 1,
+        title: assignment.title || "",
+        instructions: assignment.instructions || "",
+        dueDate: assignment.dueDate || null,
+        maxScore: assignment.maxScore ?? 5,
+        numberOfAttempts: assignment.numberOfAttempts ?? 1,
       });
     }
   }, [isEdit, initialData]);
@@ -83,14 +84,18 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
 
   // build update payload — only changed fields, no nulls
   const buildUpdatePayload = () => {
+
+    if (!initialData?.assignment) return {};
+    const { assignment } = initialData;
+
     const payload = {};
-    if (formData.title.trim() !== (initialData?.title || "").trim()) {
+    if (formData.title.trim() !== (assignment?.title || "").trim()) {
       payload.title = formData.title.trim();
     }
-    if (formData.instructions?.trim() !== (initialData?.instructions || "").trim()) {
+    if (formData.instructions?.trim() !== (assignment?.instructions || "").trim()) {
       payload.instructions = formData.instructions?.trim();
     }
-    if (formData.dueDate !== initialData?.dueDate) {
+    if (formData.dueDate !== assignment?.dueDate) {
       payload.dueDate = formData.dueDate;
     }
     return payload;
@@ -115,7 +120,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
         return;
       }
 
-      const result = await updateAssignment(initialData.id, payload);
+      const result = await updateAssignment(initialData?.assignment?.id, payload);
       if (!result.success) {
         addToast(result.message, "error");
         return;

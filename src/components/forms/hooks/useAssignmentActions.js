@@ -34,14 +34,21 @@ export default function useAssignmentActions() {
                     maxScore: assignmentData.maxScore ?? 5,
                     numberOfAttempts: assignmentData.numberOfAttempts ?? 1,
                 },
-                ...(file && {
-                    fileMetadata: {
-                        filename: file.name,
-                        content_type: file.type,
-                        size: file.size,
-                    }
-                })
+                // ...(file && {
+                //     fileMetadata: {
+                //         filename: file.name,
+                //         content_type: file.type,
+                //         size: file.size,
+                //     }
+                // })
+                fileMetadata: file ? {
+                    filename: file.name,
+                    content_type: file.type,
+                    size: file.size,
+                } : null
             };
+
+            console.log(payload)
 
             const response = await createAssignmentService(payload);
             const data = response?.data || response;

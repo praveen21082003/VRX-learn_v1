@@ -14,7 +14,7 @@ export const getModuleById = (moduleId) => {
 
 // Update module
 export const updateModuleById = (moduleId, payload) => {
-    return axiosInstance.patch(`/api/v1/modules/${module_id}`, payload)
+    return axiosInstance.patch(`/api/v1/modules/${moduleId}`, payload)
 }
 
 // delete module

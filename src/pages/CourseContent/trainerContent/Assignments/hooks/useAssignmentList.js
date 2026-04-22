@@ -4,7 +4,7 @@ import {
     getTrainerAssignmentDetail,
 } from "@/services/AssignmentContent.service";
 
-export default function useAssignmentContent() {
+export default function useAssignmentList() {
     const [assignments, setAssignments] = useState([]);
     const [assignment, setAssignment] = useState(null);
 
