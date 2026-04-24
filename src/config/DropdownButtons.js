@@ -18,17 +18,17 @@ export const editButtons = (handleReorder) => [
   { key: "delete", title: "Delete", icon: "ic:baseline-delete", onClick: () => alert("delete clicked") },
 ];
 
-export const buttons = (courseSlug, moduleId, handleRename, lessonId, navigate, setDeleteLessonId) => [
-  { key: "view", title: "View", icon: "material-symbols:view-cozy-sharp", onClick: () => navigate(`/course/${courseSlug}/content/modules/${moduleId}/lesson/${lessonId}/view`) },
-  { key: "edit", title: "Edit", icon: "mingcute:pencil-line", onClick: () => navigate(`/course/${courseSlug}/content/modules/${moduleId}/lesson/${lessonId}/edit`) },
+export const buttons = (courseId, moduleId, handleRename, lessonId, navigate, setDeleteLessonId) => [
+  { key: "view", title: "View", icon: "material-symbols:view-cozy-sharp", onClick: () => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/${lessonId}/preview`) },
+  { key: "edit", title: "Edit", icon: "mingcute:pencil-line", onClick: () => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/${lessonId}/edit`) },
   { key: "rename", title: "Rename", icon: "ix:rename", onClick: () => handleRename(lessonId) },
   { key: "delete", title: "Delete", icon: "ic:baseline-delete", onClick: () => setDeleteLessonId(lessonId) }
 ]
 
 
-export const getButtons = (courseSlug, assignmentId, handleRename, handleDelete, navigate) => [
+export const getAssignmentButtons = (courseSlug, assignmentId, handleRename, handleDelete, navigate) => [
   {
-    key: "view", title: "View", icon: "material-symbols:view-cozy-sharp", onClick: () => navigate(`/course/${courseSlug}/content/assignments/${assignmentId}`)
+    key: "view", title: "View", icon: "material-symbols:view-cozy-sharp", onClick: () => navigate(`/course/${courseSlug}/content/assignments/${assignmentId}/view`)
   },
   { key: "edit", title: "Edit", icon: "mingcute:pencil-line", onClick: () => navigate(`/course/${courseSlug}/content/assignments/${assignmentId}/edit`), permission: "UPDATE_ASSIGNMENT" },
   {
