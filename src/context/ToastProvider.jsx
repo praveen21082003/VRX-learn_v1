@@ -48,6 +48,7 @@ export function ToastProvider({ children }) {
                             toast.type === "success" && "bg-[#D1E7DD] text-text-muted border-[#0F2D1F]",
                             toast.type === "error" && "bg-[#F8D7DA] text-text-muted border-[#661414]",
                             toast.type === "warning" && "bg-[#e7f8d7] text-[#D32F2F] border-[#ffcc00]",
+                            toast.type === "info" && "bg-[#D0E8FF] text-[#0A2540] border-[#1565C0]",
                         )}
                     >
                         <div className="flex justify-between items-center">

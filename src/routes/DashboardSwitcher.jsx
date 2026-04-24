@@ -9,7 +9,7 @@ export const DashboardSwitcher = () => {
     const { role, viewRole } = useAuth();
     console.log(role);
     console.log(viewRole)
-    const effectiveRole = viewRole || role;
+    const effectiveRole = viewRole ?? role;
 
     console.log(effectiveRole)
 

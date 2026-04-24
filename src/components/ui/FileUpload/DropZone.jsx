@@ -94,7 +94,7 @@ export default function DropZone({ label, optional, files, multipleFiles = false
             <div key={file.name}>
               {errors.map((e) => (
                 <p key={e.code}>
-                  {e.code === "file-too-large" && "File exceeds 5MB"}
+                  {e.code === "file-too-large" && `File exceeds ${maxFileSize}MB`}
                   {e.code === "file-invalid-type" && "Invalid file type"}
                 </p>
               ))}

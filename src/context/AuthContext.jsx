@@ -6,10 +6,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [viewRole, setViewRole] = useState(() => {
-        const saved = localStorage.getItem("viewRole");
-        return (saved && saved !== "null") ? saved : null;
-    });
+    const [viewRole, setViewRole] = useState(null); // ✅ always start null
 
     useEffect(() => {
         const initAuth = async () => {
@@ -18,12 +15,10 @@ export function AuthProvider({ children }) {
                 setUser(data);
 
                 const role = data?.role?.toLowerCase();
-                // If trainer, default the view to trainer
-                if (role === "trainer" && !viewRole) {
-                    setViewRole("trainer");
-                }
+                setViewRole(role === "trainer" ? "trainer" : null);
             } catch (err) {
                 setUser(null);
+                setViewRole(null);
             } finally {
                 setLoading(false);
             }
@@ -31,19 +26,11 @@ export function AuthProvider({ children }) {
         initAuth();
     }, []);
 
-    // Update localStorage when viewRole changes [cite: 112, 113]
-    useEffect(() => {
-        if (viewRole) {
-            localStorage.setItem("viewRole", viewRole);
-        } else {
-            localStorage.removeItem("viewRole");
-        }
-    }, [viewRole]);
+    // ✅ REMOVED - no localStorage persistence for viewRole
 
     const logout = () => {
         setUser(null);
         setViewRole(null);
-        localStorage.clear();
         window.location.href = "/login";
     };
 
@@ -60,7 +47,6 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={value}>
-            {/* If loading, show text until you make your UI component */}
             {loading ? <div style={{ padding: "20px" }}>Loading App...</div> : children}
         </AuthContext.Provider>
     );

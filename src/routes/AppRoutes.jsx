@@ -1,33 +1,25 @@
-import React from 'react'
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/AuthContext';
 
-// dashboard switcher
-import { DashboardSwitcher } from './DashboardSwitcher'
-
-// Routes files
+import { DashboardSwitcher } from './DashboardSwitcher';
 import TraineeRoutes from './TraineeRoutes';
-import AdminRoutes from './AdminRoutes'
+import TrainerRoutes from './TrainerRoutes';
+import AdminRoutes from './AdminRoutes';
 
-// layouts
 import AuthLayout from '../layouts/AuthLayout';
-import AppLayout from '../layouts/AppLayout'
+import AppLayout from '../layouts/AppLayout';
+import LearningLayout from '@/layouts/LearningLayout';
+import ContentLayout from '../layouts/ContentLayout';
 
-
-// auth pages
 import Login from '../pages/auth/Login';
-
-
-// my learning page
+import CourseOverview from '@/pages/CourseContent/CourseOverview';
 import MyCourses from '../pages/Learning/MyLearning';
-
-// courses page
 import { CoursesSwitcher } from './CoursesSwitcher';
 
-
-
 function AppRoutes() {
-  const { user, viewRole, role } = useAuth();
+  const { role } = useAuth();
+
   return (
     <Routes>
       <Route element={<AuthLayout />}>
@@ -36,19 +28,27 @@ function AppRoutes() {
 
       <Route element={<AppLayout />}>
         <Route path="/dashboard" element={<DashboardSwitcher />} />
-        <Route path='/learning' element={<MyCourses />} />
-        <Route path='/courses' element={<CoursesSwitcher />} />
+        <Route path="/learning" element={<MyCourses />} />
+        <Route path="/courses" element={<CoursesSwitcher />} />
         {role === 'admin' && AdminRoutes()}
+      </Route>
 
+      <Route path="/course/:courseId" element={<LearningLayout />}>
+        <Route index element={<CourseOverview />} />
+        <Route path="overview" element={<CourseOverview />} />
+        {TraineeRoutes()}
       </Route>
 
 
-      {/* means learning layout trainee learning content*/}
-      <Route path="/course/:courseId/*" element={<TraineeRoutes />} />
+      <Route path="/course/:courseId" element={<ContentLayout />}>
+        <Route index element={<CourseOverview />} />
+        <Route path="overview" element={<CourseOverview />} />
+        {TrainerRoutes()}
+      </Route>
 
-      < Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
-  )
+  );
 }
 
-export default AppRoutes
+export default AppRoutes;

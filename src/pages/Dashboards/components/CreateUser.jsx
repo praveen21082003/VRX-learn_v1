@@ -2,12 +2,8 @@ import React, { useState } from 'react'
 import UserForm from '../../../components/forms/UserForm'
 
 
-function CreateUser(userData = {}, statuses = [], onClose, onSuccess) {
 
-
-    const handleAction = () => {
-
-    }
+function CreateUser({ userData = {}, mode = "create", onSuccess, onClose }) {
 
 
 
@@ -15,9 +11,9 @@ function CreateUser(userData = {}, statuses = [], onClose, onSuccess) {
         <>
             <UserForm
                 initialData={userData}
-                onSubmit={handleAction}
                 onClose={onClose}
-                mode="create"
+                onSuccess={onSuccess}
+                mode={mode}
             />
         </>
     )

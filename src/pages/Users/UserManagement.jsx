@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useUsersData } from './hooks/useUsersData'
-import { useUser } from './hooks/useUsers';
+
 import { useDebounce } from '@/hooks/useDebounce';
 
 import { TableToolbar, DataTable, } from '@/components/Table'
@@ -8,6 +8,8 @@ import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from 
 
 import { ROLE_OPTIONS, SORT_OPTIONS, STATUS_OPTIONS } from '@/config/adminFiltersSelectOptions'
 import { USER_COLUMNS_BASE } from '../../config/tablesColumnConfig'
+
+import UserActionHandler from './UserActionHandler';
 
 import formatDateTime from '@/utils/formatDateTime'
 
@@ -23,14 +25,12 @@ function UserManagement() {
 
 
     const { refreshUsers, users, setUsers, loading, total, error } = useUsersData();
-    const { deleteUser, deleting } = useUser();
 
 
     // useSates
     const [open, setOpen] = useState(false);
-    const [isDelete, setIsDelete] = useState(false);
+    const [actionType, setActionType] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
-    console.log(selectedUser);
 
 
     const [page, setPage] = useState(1);
@@ -159,28 +159,47 @@ function UserManagement() {
         }
     };
 
-    // open edit box
-    // const handleOpenEdit = (user) => {
-    //     setEditingUser(user);
-    //     setOpen(true);
-    // };
 
-    // delete action handeling
-    const handleOpenDelete = (user) => {
-        setSelectedUser(user);
+    // handel function for opening create, update, delete
+
+    // Create
+    const handleOpenCreate = () => {
+        setSelectedUser(null);
+        setActionType("create");
         setOpen(true);
     };
 
-    // delete
-    const handleDelete = async (userId) => {
-        try {
-            // console.log(selectedUser.id)
-            await deleteUser(userId);
-            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-            addToast("User deleted successfully", "success");
-            setIsDelete(false);
-        } catch (err) {
-            addToast("Failed to delete user", "error");
+    // Update
+    const handleOpenEdit = (user) => {
+        setSelectedUser(user);
+        setActionType("edit");
+        setOpen(true);
+    };
+
+    // Delete
+    const handleOpenDelete = (user) => {
+        setSelectedUser(user);
+        setActionType("delete");
+        setOpen(true);
+    };
+
+    // Close Funtion
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedUser(null);
+        setActionType(null);
+    };
+
+    // handle OnSuccess function
+    const handleOnsucess = (newUser) => {
+
+        if (actionType === "create") {
+            setUsers(prev => [
+                { ...newUser, name: newUser.username },
+                ...prev
+            ]);
+        }else {
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser.id));
         }
     }
 
@@ -229,7 +248,7 @@ function UserManagement() {
                 setSelectedRows={setSelectedRows}
                 search={filters.search}
                 setSearch={(val) => handleFilterChange('search', val)}
-                onAdd={() => setOpen(true)}
+                onAdd={() => handleOpenCreate()}
                 onExport={() => handleExport()}
                 addLabel="Add New User"
             // BulK Action ui can add here
@@ -287,16 +306,19 @@ function UserManagement() {
                 <Modal
                     isOpen={open}
                     onClose={() => setOpen(false)}
-                    title="Are you absolutely sure?"
+                    title={
+                        actionType === "delete" ? "Delete User?" :
+                            actionType === "edit" ? "Update User" : "Create New User"
+                    }
                 >
-                    <DeleteConfirmContent
-                        confirmText={selectedUser?.name || ""}
-                        entityName="user"
-                        message={`You are about to permanently delete the ${selectedUser?.name} user.`}
-                        loading={deleting}
-                        onClose={() => setOpen(false)}
-                        onConfirm={() => handleDelete(selectedUser.id)}
+
+                    <UserActionHandler
+                        mode={actionType}
+                        userData={selectedUser}
+                        onClose={handleClose}
+                        onSuccess={handleOnsucess}
                     />
+
                 </Modal>
             )}
 

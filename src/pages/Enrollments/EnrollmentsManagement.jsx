@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react'
 import { useEnrollmentsData } from './hooks/useEnrollmentsData'
 import { useDebounce } from '@/hooks/useDebounce';
 
-import { TableToolbar, DataTable, } from '@/components/Table'
-import { Select, Avatar, StatusPill, Button } from "@/components/ui"
+import { TableToolbar, DataTable } from '@/components/Table'
+import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from "@/components/ui"
 
 import { ENROLLMENT_COLUMNS_BASE } from '@/config/tablesColumnConfig';
 import { EROLLMENT_SORT_OPTIONS, EROLLMENT_STATUS_OPTIONS, ROLE_OPTIONS } from '@/config/adminFiltersSelectOptions'
+
+import EnrollmentActionHandler from './EnrollmentActionHandler';
 
 
 import formatDateTime from '@/utils/formatDateTime'
@@ -24,6 +26,10 @@ function EnrollmentsManagement() {
     const { enrollments, setEnrollments, loading, error, total, refreshEnrollments } = useEnrollmentsData();
 
     // useSates
+    const [open, setOpen] = useState(false);
+    const [selectedEnrollment, setSelectedEnrollment] = useState(null);
+    const [actionType, setActionType] = useState(null);
+
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -121,7 +127,17 @@ function EnrollmentsManagement() {
     // --------------Table colums end-----------------
 
 
-
+const handleOnSuccess = (updatedEnrollment) => {
+    if (actionType === "create") {
+        setEnrollments(prev => [updatedEnrollment, ...prev]);
+    } else if (actionType === "edit") {
+        setEnrollments(prev =>
+            prev.map(e => e.id === selectedEnrollment.id ? { ...e, ...updatedEnrollment } : e)
+        );
+    } else {
+        setEnrollments(prev => prev.filter(e => e.id !== selectedEnrollment.id));
+    }
+};
 
     // fetch users data useEffect
     useEffect(() => {
@@ -156,6 +172,37 @@ function EnrollmentsManagement() {
 
 
     // ----- handle fuctions -------
+
+
+    // Handle Actions delete, edit
+
+    // Create
+    const handleOpenCreate = () => {
+        setSelectedEnrollment(null);
+        setActionType("create");
+        setOpen(true);
+    };
+
+    // Update
+    const handleOpenEdit = (enrollment) => {
+        setSelectedEnrollment(enrollment);
+        setActionType("edit");
+        setOpen(true);
+    };
+
+    // Delete
+    const handleOpenDelete = (enrollment) => {
+        setSelectedEnrollment(enrollment);
+        setActionType("delete");
+        setOpen(true);
+    };
+
+    // Close
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedEnrollment(null);
+        setActionType(null);
+    };
 
 
     // Clear Filters
@@ -206,7 +253,7 @@ function EnrollmentsManagement() {
                 setSelectedRows={setSelectedRows}
                 search={filters.search}
                 setSearch={(val) => handleFilterChange('search', val)}
-                onAdd={() => setOpen(true)}
+                onAdd={() => handleOpenCreate()}
                 onExport={() => handleExport()}
                 addLabel="Add New Enrollment"
             // BulK Action ui can add here
@@ -252,6 +299,28 @@ function EnrollmentsManagement() {
             //     />
             // )}
             />
+
+            {
+                open && (
+                    <Modal
+                        isOpen={open}
+                        onClose={handleClose}
+                        title={
+                            actionType === "delete" ? "Remove Enrollment?" :
+                                actionType === "edit" ? "Update Enrollment" : "Create New Enrollment"
+                        }
+                    >
+                        
+                <EnrollmentActionHandler
+                 mode={actionType}
+                EnrollmentData={selectedEnrollment}
+                onClose={handleClose}
+                onSuccess={handleOnSuccess}  
+                />
+
+                    </Modal>
+                )
+            }
 
         </div>
     )

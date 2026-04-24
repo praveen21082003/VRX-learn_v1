@@ -1,20 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 
-import { SearchSelect, Input, Button } from '@/components/ui'
+import { SearchSelect, Input, Button, Select, DeleteConfirmContent } from '@/components/ui'
+import { useToast } from '@/context/ToastProvider'  
 
 import useDebouncedSearch from './hooks/useDebouncedSearch';
 
 import { searchUser } from '../../services/AdminSearch.service';
 import { searchCourse } from '../../services/AdminSearch.service';
 
-function EnrollmentForm({ isCreating, isUpdating, onClose, isEdit }) {
+function EnrollmentForm({ initialData,
+    onClose,
+    onSuccess,
+    mode,                   
+    isCreating,
+    isUpdating,
+    isDeleting,
+    createNewEnrollment,     
+    updateEnrollment,        
+    deleteEnrollment,        
+    isEdit }) {
+    const { addToast } = useToast();  
 
+    // inside EnrollmentForm
     const [formData, setFormData] = useState({
-        userId: "",
-        courseId: "",
-        status: "in-progress",
-        expireAt: "",
+        userId: initialData?.userId || "",
+        courseId: initialData?.courseId || "",
+        status: initialData?.status || "in-progress",
+        // Format date string to YYYY-MM-DD for the input[type="date"]
+        expireAt: initialData?.expireAt ? initialData.expireAt.split('T')[0] : "",
     });
+    console.log(formData)
+
+    // Update search strings for edit mode
+    useEffect(() => {
+        if (isEdit && initialData) {
+            setUserSearch(initialData.name); // Using the name from the table row
+            setCourseSearch(initialData.courseName);
+        }
+    }, [isEdit, initialData]);
 
 
     // ----------search user and Course-----------
@@ -58,11 +81,82 @@ function EnrollmentForm({ isCreating, isUpdating, onClose, isEdit }) {
 
 
 
+    // ---- Handle Change Fuction
+
+    const handleChange = (field, value) => {
+        setFormData((prev) => ({
+            ...prev,
+            [field]: value
+        })
+        )
+    }
+
+        // submit handler
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+ console.log("handleSubmit fired, mode:", isEdit ? "edit" : "create");
+    console.log("formData:", formData);
+        if (isEdit) {
+            const response = await updateEnrollment(initialData.id, {
+                status: formData.status,
+                expireAt: formData.expireAt,
+            });
+            if (response.success) {
+                addToast(response.message, "success");
+                onSuccess?.(response.data);
+                onClose?.();
+            } else {
+                addToast(response.message, "error");
+            }
+        } else {
+            const response = await createNewEnrollment(formData);
+            if (response.success) {
+                addToast(response.message, "success");
+                onSuccess?.(response.data);
+                onClose?.();
+            } else {
+                addToast(response.message, "error");
+            }
+        }
+    };
+    //  delete handler
+    const handleActionDelete = async (id) => {
+        const response = await deleteEnrollment(id);
+        if (response?.success) {
+            addToast(response.message, "success");
+            onSuccess?.();
+            onClose?.();
+        } else {
+            addToast(response.message || "Delete failed", "error");
+        }
+    };
+
+    //  delete mode rendering 
+    if (mode === "delete") {
+        return (
+            <DeleteConfirmContent
+                confirmText={initialData?.name || ""}
+                entityName="enrollment"
+                message={
+                    <span>
+                        You are about to remove <strong className="font-bold text-main">{initialData?.name}</strong> from the
+                        <strong className="font-bold"> {initialData?.courseName}</strong> course.
+                        Their progress, submitted assignments, and grades will be permanently erased.
+                    </span>
+                }
+                loading={isDeleting}
+                onClose={onClose}
+                onConfirm={() => handleActionDelete(initialData.id)}
+            />
+        );
+    }
+
 
     return (
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
             <SearchSelect
                 label="User"
+                disabled={isEdit}
                 value={userSearch}
                 onChange={setUserSearch}
                 results={userResult}
@@ -78,6 +172,7 @@ function EnrollmentForm({ isCreating, isUpdating, onClose, isEdit }) {
 
             <SearchSelect
                 label="Course"
+                disabled={isEdit}
                 value={courseSearch}
                 onChange={setCourseSearch}
                 loading={courseLoading}
@@ -89,6 +184,21 @@ function EnrollmentForm({ isCreating, isUpdating, onClose, isEdit }) {
                 }}
             // inputWarning={warnings.courseId}
             />
+
+            {isEdit && (
+                <Select
+                    label="Status"
+                    name="status"
+                    value={formData.status}
+                    options={[
+                        { label: "Active", value: "active" },
+                        { label: "In Progress", value: "in-progress" },
+                        { label: "Completed", value: "completed" },
+                        { label: "Cancelled", value: "cancelled" }
+                    ]}
+                    onChange={(val) => handleChange("status", val)}
+                />
+            )}
 
 
 
@@ -105,6 +215,7 @@ function EnrollmentForm({ isCreating, isUpdating, onClose, isEdit }) {
 
             <div className="flex w-full gap-3 pt-4">
                 <Button
+                    type="button" 
                     buttonName="Cancel"
                     className="px-4 py-2 rounded-lg w-full border border-default"
                     bgClass="bg-transparent"
@@ -113,12 +224,13 @@ function EnrollmentForm({ isCreating, isUpdating, onClose, isEdit }) {
                 />
 
                 <Button
+                    type="submit"
                     disabled={isCreating || isUpdating}
                     buttonName={isCreating ? "Processing..." : isEdit ? isUpdating ? "Updating..." : "Save Changes" : "Add Enrollment"}
                     className="px-4 py-2 rounded-lg w-full"
                     bgClass="bg-primary"
                     textClass="text-white"
-                    // onClick={handleSubmit}
+                // onClick={handleSubmit}
                 />
             </div>
 
