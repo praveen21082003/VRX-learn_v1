@@ -4,7 +4,7 @@ import { createAssignmentSubmission } from '@/services/AssignmentSubmission.serv
 
 
 import { UploadMediaToS3 } from "@/services/UploadMediaToS3.service";
-import { updateMediaStatus } from '@/services/media.service';
+import { updateMediaStatus } from '@/services/Media.service';
 
 export function useAssignmentSubmission() {
     const [loading, setLoading] = useState(false);

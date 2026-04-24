@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { getAdminTopCourses } from "@/services/dashboard.service";
+import { getAdminTopCourses } from "@/services/Dashboard.service";
 
 export const useAdminTopCourses = () => {
     const [topCourses, setTopCourses] = useState([]);
