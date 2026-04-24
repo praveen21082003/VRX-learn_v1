@@ -4,6 +4,7 @@ import { Input, Button } from '@/components/ui'
 function TableToolBar({
 
     headerLabel,
+    headerCaption,
     selectedRows = [],
     setSelectedRows,
     search,
@@ -26,6 +27,7 @@ function TableToolBar({
             <div className="flex items-center w-full h-10">
                 <div className="flex-1">
                     {headerLabel && <h3 className="text-h3 font-semibold">{headerLabel}</h3>}
+                    {headerCaption && headerCaption}
                 </div>
                 <div className="flex justify-end items-center gap-3">
 

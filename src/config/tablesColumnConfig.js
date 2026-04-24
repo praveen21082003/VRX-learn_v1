@@ -36,3 +36,13 @@ export const COURSE_COLUMNS_BASE = [
   { key: "createdAt", label: "Created At", align: "center", width: "10%" },
   { key: "actions", label: "Actions", width: "10%", align: "center" },
 ];
+
+
+// roster Table
+export const TRAINEE_ROSTER_BASE = [
+  { key: "profile", label: "Profile", width: "8%", align: "center" },
+  { key: "name", label: "Name", width: "20%", align: "left" },
+  { key: "email", label: "Email", width: "25%", align: "left" },
+  { key: "enrollmentDate", label: "Enrollment Date", width: "20%", align: "left" },
+  { key: "role", label: "Role", width: "12%", align: "center" },
+];

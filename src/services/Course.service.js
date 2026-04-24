@@ -11,6 +11,7 @@ export const updateCourseBasicInfoService = (courseId, payload) => {
 
 export const deleteCourseService = (courseId) => {
     return axiosInstance.delete(`/api/v1/courses/${courseId}`)
+}
 
 
 // Update course info

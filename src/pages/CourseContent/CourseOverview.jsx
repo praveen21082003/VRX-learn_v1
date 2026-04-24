@@ -82,7 +82,8 @@ function CourseOverview() {
                     return (
                         <NavLink
                             key={section.key}
-                            to={section.path(courseId)} 
+                            to={section.path(courseId)}
+                            state={{ noOfTrainees: data?.noOfTrainees }}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 rounded-lg px-4 py-2 transition-colors
                                 ${isActive ? "bg-primary/16" : "hover:bg-primary/16"}`
