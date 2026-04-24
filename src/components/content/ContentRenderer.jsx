@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Button, Icon, MediaPlaceholder } from "@/components/ui";
 import { Tabs } from "@/components/tabs";
-import VideoPlayer from "@/components/content/Video";
+import { VideoPlayer } from "./video";
 import DocumentControls from "./document/DocumentControls";
 // import ZoomControls from "../ui/FileViewer/ZoomControls";
 // import PDFViewer from "./document/PDFViewer";

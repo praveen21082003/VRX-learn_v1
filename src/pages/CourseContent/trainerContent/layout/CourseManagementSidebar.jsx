@@ -9,7 +9,7 @@ import { useClickOutside } from '@/hooks/useClickOutside'
 
 // config
 import { COURSE_EDIT_SECTIONS } from "@/config/courseContentOption";
-import { CREATE_BUTTON_OPTIONS } from '@/config/dropdownButtons'
+import { CREATE_BUTTON_OPTIONS } from "@/config/dropdownButtons"
 
 import { BackButton, Button, Icon, Dropdown } from '@/components/ui';
 

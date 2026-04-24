@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getMediaUrl } from "@/services/media.service";
+import { getMediaUrl } from "@/services/Media.service";
 
 export default function useMedia(mediaId) {
     const [url, setUrl] = useState(null);

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { updateCourseInfo } from "@/services/course.service";
+import { updateCourseInfo } from "@/services/Course.service";
 
 export default function useUpdateCourseInfo() {
     const [updating, setUpdating] = useState(false);
