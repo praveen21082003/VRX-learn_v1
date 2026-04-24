@@ -1,22 +1,36 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { Input, SearchSelect, TextEditor, Icon, Button } from '@/components/ui'
+import { Input, SearchSelect,Select, TextEditor, Icon, Button ,DeleteConfirmContent} from '@/components/ui'
+import { useToast } from '@/context/ToastProvider'   
+
 
 import useDebouncedSearch from './hooks/useDebouncedSearch';
 
 import { searchUser } from '../../services/AdminSearch.service';
 
-function CourseForm({ initialData, onSubmit, onClose, mode, loading }) {
+function CourseForm({  initialData,
+    onClose,
+    onSuccess,
+    mode,
+    loading,
+    isEdit,
+    creating,
+    updating,
+    deleting,
+    createNewCourse,    
+    updateCourse,       
+    deleteCourse,        }) {
+    const { addToast } = useToast();   
 
-    const isEdit = mode === "edit";
+   
 
     const [isOpen, setIsOpen] = useState(!!initialData?.longDescription);
 
-    const [formData, setFormData] = useState({
-        title: initialData?.title || "",
-        shortDescription: initialData?.shortDescription || "",
-        longDescription: initialData?.longDescription || "",
-        trainerId: initialData?.trainerId || ""
-    });
+   const [formData, setFormData] = useState({
+    title: initialData?.title || "",
+    shortDescription: initialData?.shortDescription || "",
+    longDescription: initialData?.longDescription || "",
+    trainerId: initialData?.trainerId || "",
+});
     console.log(formData)
 
 
@@ -56,11 +70,101 @@ function CourseForm({ initialData, onSubmit, onClose, mode, loading }) {
         }))
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit(formData);
+  // ADD: submit handler
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     console.log("Sending payload:", formData);  
+
+    //     if (isEdit) {
+    //         const response = await updateCourse(initialData.id, formData);
+    //         if (response.success) {
+    //             addToast(response.message, "success");
+    //             onSuccess?.(response.data);
+    //             onClose?.();
+    //         } else {
+    //             addToast(response.message, "error");
+    //         }
+    //     } else {
+    //         const response = await createNewCourse(formData);
+    //         if (response.success) {
+    //             addToast(response.message, "success");
+    //             onSuccess?.(response.data);
+    //             onClose?.();
+    //         } else {
+    //             addToast(response.message, "error");
+    //         }
+    //     }
+    // };
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+        title: formData.title,
+        trainerId: formData.trainerId,
+        thumbnail: "",
+        details: {                        // hardcoded default, hidden from UI
+            type: "pre-recorded",
+            totalHours: 1,
+            price: 1001,
+        },
+        ...(formData.shortDescription?.trim() && { shortDescription: formData.shortDescription.trim() }),
+        ...(formData.longDescription?.trim() && { longDescription: formData.longDescription.trim() }),
     };
 
+    if (isEdit) {
+        const response = await updateCourse(initialData.id, payload);
+        if (response.success) {
+            addToast(response.message, "success");
+            onSuccess?.(response.data);
+            onClose?.();
+        } else {
+            addToast(response.message, "error");
+        }
+    } else {
+        const response = await createNewCourse(payload);
+        if (response.success) {
+            addToast(response.message, "success");
+            onSuccess?.(response.data);
+            onClose?.();
+        } else {
+            addToast(response.message, "error");
+        }
+    }
+};
+
+    // ADD: delete handler
+    const handleActionDelete = async (id) => {
+        const response = await deleteCourse(id);
+        if (response?.success) {
+            addToast(response.message, "success");
+            onSuccess?.();
+            onClose?.();
+        } else {
+            addToast(response.message || "Delete failed", "error");
+        }
+    };
+
+    // ADD: delete mode - render confirm screen instead of form
+    if (mode === "delete") {
+        return (
+            <DeleteConfirmContent
+                confirmText={initialData?.title || ""}
+                entityName="course"
+                message={
+                    <span>
+                        You are about to permanently delete{" "}
+                        <strong className="font-bold text-main">{initialData?.title}</strong>.
+                        All associated materials, student progress, and data tied to this course
+                        will be permanently erased from the system.
+                    </span>
+                }
+                loading={deleting}
+                onClose={onClose}
+                onConfirm={() => handleActionDelete(initialData.id)}
+            />
+        );
+    }
 
 
     return (
@@ -132,6 +236,7 @@ function CourseForm({ initialData, onSubmit, onClose, mode, loading }) {
             {/* Actions */}
             <div className="flex w-full gap-3">
                 <Button
+                 type="button"   
                     buttonName="Cancel"
                     className="px-4 py-2 rounded-lg w-full"
                     variant="outline"
@@ -141,9 +246,10 @@ function CourseForm({ initialData, onSubmit, onClose, mode, loading }) {
                     textClass=""
                 />
                 <Button
+                type="submit"
                     buttonName={loading ? "Processing..." : isEdit ? "Save Changes" : "Add Course"}
                     className="px-4 py-2 rounded-lg w-full"
-                    disabled={loading}
+                    disabled={creating || updating}
                     type="submit"
                 />
             </div>
