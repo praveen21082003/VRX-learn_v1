@@ -127,7 +127,17 @@ function EnrollmentsManagement() {
     // --------------Table colums end-----------------
 
 
-
+const handleOnSuccess = (updatedEnrollment) => {
+    if (actionType === "create") {
+        setEnrollments(prev => [updatedEnrollment, ...prev]);
+    } else if (actionType === "edit") {
+        setEnrollments(prev =>
+            prev.map(e => e.id === selectedEnrollment.id ? { ...e, ...updatedEnrollment } : e)
+        );
+    } else {
+        setEnrollments(prev => prev.filter(e => e.id !== selectedEnrollment.id));
+    }
+};
 
     // fetch users data useEffect
     useEffect(() => {
@@ -300,29 +310,13 @@ function EnrollmentsManagement() {
                                 actionType === "edit" ? "Update Enrollment" : "Create New Enrollment"
                         }
                     >
-                        {actionType === "delete" && (
-                            <DeleteConfirmContent
-                                confirmText={selectedEnrollment?.name || ""}
-                                message={
-                                    <span>
-                                        You are about to remove <strong className="font-bold">{selectedEnrollment?.name}</strong> from the
-                                        <strong className="font-bold"> {selectedEnrollment?.courseName}</strong> course.
-                                        Their progress, submitted assignments, and grades will be permanently erased.
-                                    </span>
-                                }
-                                onClose={() => setOpen(false)}
-                                onConfirm={() => handleDelete(selectedEnrollment.id)}
-                            />
-                        )}
-
-                        {(actionType === "create" || actionType === "edit") && (
-                            <EnrollmentActionHandler
-                                mode={actionType}
-                                EnrollmentData={selectedEnrollment}
-                                onClose={handleClose}
-                            // onSuccess={refreshUsers}
-                            />
-                        )}
+                        
+                <EnrollmentActionHandler
+                 mode={actionType}
+                EnrollmentData={selectedEnrollment}
+                onClose={handleClose}
+                onSuccess={handleOnSuccess}  
+                />
 
                     </Modal>
                 )

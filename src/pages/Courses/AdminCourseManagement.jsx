@@ -129,6 +129,18 @@ function AdminCourseManagement() {
         ...columns,
     ];
 
+    const handleOnSuccess = (data) => {
+    if (actionType === "create") {
+        setCourses(prev => [data, ...prev]);              // add to top of table
+    } else if (actionType === "edit") {
+        setCourses(prev =>
+            prev.map(c => c.id === selectedCourse.id ? { ...c, ...data } : c)
+        );                                                 // update row in place
+    } else {
+        setCourses(prev => prev.filter(c => c.id !== selectedCourse.id));  // remove row
+    }
+};
+
     // --------------Table end ----------------
 
 
@@ -292,42 +304,23 @@ function AdminCourseManagement() {
             />
 
 
-            {
-                open && (
-                    <Modal
-                        isOpen={open}
+            {open && (
+                <Modal
+                    isOpen={open}
+                    onClose={handleClose}
+                    title={
+                        actionType === "delete" ? "Are you absolutely sure?" :
+                        actionType === "edit" ? "Update Course" : "Add New Course"
+                    }
+                >
+                    <CourseActionHandler
+                        mode={actionType}
+                        CourseData={selectedCourse}
                         onClose={handleClose}
-                        title={
-                            actionType === "delete" ? "Are you absolutely sure?" :
-                                actionType === "edit" ? "Update Course" : "Add New Course"
-                        }
-                    >
-                        {actionType === "delete" && (
-                            <DeleteConfirmContent
-                                confirmText={selectedCourse?.title || ""}
-                                message={
-                                    <span>
-                                        You are about to permanently delete the <strong className="font-bold">{selectedCourse?.title}</strong> course.
-                                        All associated materials, student progress, and data tied to this course will be permanently erased from the system.
-                                    </span>
-                                }
-                                onClose={() => setOpen(false)}
-                                onConfirm={() => handleDelete(selectedCourse.id)}
-                            />
-                        )}
-
-                        {(actionType === "create" || actionType === "edit") && (
-                            <CourseActionHandler
-                                mode={actionType}
-                                CourseData={selectedCourse}
-                                onClose={handleClose}
-                            // onSuccess={refreshUsers}
-                            />
-                        )}
-
-                    </Modal>
-                )
-            }
+                        onSuccess={handleOnSuccess}   
+                    />
+                </Modal>
+            )}
 
         </div>
     )
