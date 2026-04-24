@@ -15,19 +15,12 @@ function LogOut({ isOpen, onClose }) {
         setLoading(true);
         try {
             await userLogout();
-            // 
-            // // clear other things if needed
-            // // localStorage.clear();
-
-            logout();
-            navigate("/", { replace: true });
         } catch (err) {
-            console.log("Logout error:", err);
-            logout();
-            navigate("/", { replace: true });
+            console.error("Logout error:", err);
         } finally {
             setLoading(false);
             onClose?.();
+            logout(); // this function in auth context have / logout
         }
     }
 

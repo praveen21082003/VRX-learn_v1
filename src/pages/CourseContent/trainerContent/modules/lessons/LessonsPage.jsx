@@ -20,7 +20,7 @@ function LessonsPage() {
 
     // context
     const { courseId } = useCourse();
-    const { modules, lessons, setLessons, loading, error, fetchLessons, updateLessonAction, isUpdating, deleteLesson, isDeleting } = useModuleContext();
+    const { modules, lessons, setLessons, lessonLoading, error, fetchLessons, updateLessonAction, isUpdating, deleteLesson, isDeleting } = useModuleContext();
 
     // hook
     const { reorderLessons, isUpdating: reOrdering } = useReorder();
@@ -195,7 +195,7 @@ function LessonsPage() {
                             setLessons(newOrder);
                         }}
                     />
-                ) : loading ? (
+                ) : lessonLoading ? (
                     <div className="h-full w-full">
                         <ContentLoading count={7} />
                     </div>
