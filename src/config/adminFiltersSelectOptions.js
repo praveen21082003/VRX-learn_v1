@@ -60,5 +60,15 @@ export const COURSE_SORT_OPTION = [
 ]
 
 
+// sort option for the trainee roster
+export const TRAINEE_ROSTER_SORT_OPTIONS = [
+    { label: "None", value: null },
+    { label: "Newest First", value: "date_asc" },
+    { label: "Oldest First", value: "date_desc" },
+    { label: "Name (A - Z)", value: "name_asc" },
+    { label: "Name (Z - A)", value: "name_desc" },
+]
+
+
 
 

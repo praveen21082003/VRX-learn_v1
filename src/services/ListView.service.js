@@ -19,7 +19,15 @@ export const getEnrollments = (params = {}) => {
 
 // Courses fetch
 export const getCourses = (params = {}) => {
-    return axiosInstance.get('/api/v1/list/admin/courses',{
+    return axiosInstance.get('/api/v1/list/admin/courses', {
+        params,
+    })
+}
+
+
+// trainee roster for trainer
+export const getTraineesRoster = (courseId, params = {}) => {
+    return axiosInstance.get(`/api/v1/list/trainer/trainees/${courseId}`,{
         params,
     })
 }
