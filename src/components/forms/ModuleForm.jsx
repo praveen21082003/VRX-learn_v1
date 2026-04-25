@@ -30,7 +30,9 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
 
     // handle Change
     const handleChange = (field, value) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
+        const processedValue = field === "title" ? value.toUpperCase() : value;
+
+        setFormData(prev => ({ ...prev, [field]: processedValue }));
         // clear warning on change
         setWarning((prev) => ({ ...prev, [field]: null }));
     };

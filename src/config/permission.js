@@ -35,11 +35,13 @@ export const ROLE_PERMISSION = {
         "CREATE_ASSIGNMENTS",
         "UPDATE_ASSIGNMENT",
         "SHOW_BACKBUTTON",
+        "BREADCRUMBS_DASHBOARD"
     ],
 
     trainee: [
         "VIEW_COURSE",
-        "SUBMIT_ASSIGNMENT"
+        "SUBMIT_ASSIGNMENT",
+        "BREADCRUMBS_DASHBOARD"
     ]
 }
 

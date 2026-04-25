@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import clsx from 'clsx';
 
 import { useCourse, useAssignmentContext } from "../layout/CourseManagementLayout";
+import useDeleteAssignment from './hooks/useDeleteAssignment';
 
 import { Button, Icon, Input, Dropdown, Modal, CourseContentEmptyState, DeleteConfirmContent } from '@/components/ui'
 import { ContentLoading } from "@/components/ui/loading"
@@ -15,9 +16,12 @@ function AssignmentsPage() {
   const navigate = useNavigate();
   const { addToast } = useToast();
 
+  const { deleteAssignment, deleting } = useDeleteAssignment();
+
   // context
   const { courseId } = useCourse();
-  const { 
+  const {
+    assignments,
     setAssignments,
     assignmentList,
     fetchAssignments,
@@ -93,10 +97,10 @@ function AssignmentsPage() {
 
   const handleDelete = async (assignmentId) => {
     // TODO: add deleteAssignment hook call here
-    // const result = await deleteAssignment(assignmentId);
-    // if (!result.success) { addToast(result.message, "error"); return; }
+    const result = await deleteAssignment(assignmentId);
+    if (!result.success) { addToast(result.message, "error"); return; }
 
-    const updated = assignments.filter(a => a.id !== assignmentId);
+    const updated = assignmentList.filter(a => a.id !== assignmentId);
     setAssignments(updated);
     setDeleteAssignmentId(null);
     addToast("Assignment Deleted", "success");
@@ -241,6 +245,7 @@ function AssignmentsPage() {
                           onConfirm={() => handleDelete(assignment.id)}
                           confirmText={assignment.title}
                           entityName="assignment"
+                          loading={deleting}
                           message={`You are about to permanently delete ${assignment.title}.`}
                         />
                       </Modal>

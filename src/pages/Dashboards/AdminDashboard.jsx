@@ -139,19 +139,23 @@ function AdminDashboard() {
 
           {activeAction === "course" && (
             <CreateCourse
-              // setKpis={setKpis}
               onClose={() => setOpen(false)}
-              // onSuccess={handleCourseCreate}
+              onSuccess={() =>
+                setKpis((prev) => ({
+                  ...prev,
+                  totalCourses: (prev?.totalCourses || 0) + 1,
+                }))
+              }
             />
           )}
-
+          
           {activeAction === "enroll" && (
             <CreateEnrollment
-              // onSuccess={
-              //   setKpis((prev) => ({
-              //     ...prev,
-              //     totalEnrollments: (prev.totalEnrollments || 0) + 1
-              //   }))}
+              onSuccess={
+                setKpis((prev) => ({
+                  ...prev,
+                  totalEnrollments: (prev.totalEnrollments || 0) + 1
+                }))}
               onClose={() => setOpen(false)}
             />
           )}

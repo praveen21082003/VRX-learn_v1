@@ -132,12 +132,13 @@ function UserManagement() {
             ...prev,
             [key]: value
         }));
+        setPage(1);
     };
 
     // Clear Filters
     const clearFilters = () => {
         setFilters(INITIAL_FILTERS);
-        // setPage(1);
+        setPage(1);
     };
 
 
@@ -198,7 +199,7 @@ function UserManagement() {
                 { ...newUser, name: newUser.username },
                 ...prev
             ]);
-        }else {
+        } else {
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser.id));
         }
     }
@@ -247,7 +248,10 @@ function UserManagement() {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 search={filters.search}
-                setSearch={(val) => handleFilterChange('search', val)}
+                setSearch={(val) => {
+                    handleFilterChange('search', val);
+                    setPage(1);
+                }}
                 onAdd={() => handleOpenCreate()}
                 onExport={() => handleExport()}
                 addLabel="Add New User"

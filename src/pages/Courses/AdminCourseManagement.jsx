@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { useDebounce } from '@/hooks/useDebounce';
 import { useCourseData } from './hooks/useCoursesData';
+import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 
 import { TableToolbar, DataTable, } from '@/components/Table'
 import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from "@/components/ui"
@@ -14,12 +15,16 @@ import CourseActionHandler from './CourseActionHandler';
 import formatDateTime from '@/utils/formatDateTime'
 import { useNavigate } from 'react-router-dom';
 
+
+
 function AdminCourseManagement() {
 
     const INITIAL_FILTERS = {
         search: "",
         sort: null,
     };
+
+    const { resetBreadcrumbs } = useBreadcrumbs();
 
     const navigate = useNavigate();
 
@@ -43,6 +48,12 @@ function AdminCourseManagement() {
     const debouncedSearch = useDebounce(filters.search, 500);
 
 
+    // Breadcrumb setup - set the course breadcrumb on mount and clear it on unmount
+    useEffect(() => {
+        resetBreadcrumbs();
+    }, [resetBreadcrumbs]);
+
+
     // ------------Table Columns------------
     // Inside your Enrollments component:
     const columns = COURSE_COLUMNS_BASE.map((col) => {
@@ -51,7 +62,7 @@ function AdminCourseManagement() {
                 return {
                     ...col,
                     render: (row) => (
-                        <div className="hover:text-primary hover:cursor-pointer transition-colors">
+                        <div className="hover:text-primary hover:cursor-pointer transition-colors" onClick={() => handleOpenOverview(row.id)}>
                             {row.title}
                         </div>
                     ),
@@ -129,18 +140,6 @@ function AdminCourseManagement() {
         ...columns,
     ];
 
-    const handleOnSuccess = (data) => {
-    if (actionType === "create") {
-        setCourses(prev => [data, ...prev]);              // add to top of table
-    } else if (actionType === "edit") {
-        setCourses(prev =>
-            prev.map(c => c.id === selectedCourse.id ? { ...c, ...data } : c)
-        );                                                 // update row in place
-    } else {
-        setCourses(prev => prev.filter(c => c.id !== selectedCourse.id));  // remove row
-    }
-};
-
     // --------------Table end ----------------
 
 
@@ -177,6 +176,17 @@ function AdminCourseManagement() {
 
 
     // ----- handle fuctions -------
+
+    // on success of update create
+    const handleOnSuccess = (data, type) => {
+        if (type === "delete") {
+            setCourses((prev) =>
+                prev.filter((course) => course.id !== data.id)
+            );
+        } else {
+            refreshCourses(); // create / update
+        }
+    };
 
 
     // Handle Actions delete, edit, view
@@ -220,7 +230,7 @@ function AdminCourseManagement() {
     // Clear Filters
     const clearFilters = () => {
         setFilters(INITIAL_FILTERS);
-        // setPage(1);
+        setPage(1);
     };
 
 
@@ -248,6 +258,7 @@ function AdminCourseManagement() {
             ...prev,
             [key]: value
         }));
+        setPage(1);
     };
 
 
@@ -265,7 +276,11 @@ function AdminCourseManagement() {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 search={filters.search}
-                setSearch={(val) => handleFilterChange('search', val)}
+                searchPlaceholder="Search by Course name or Trainer names"
+                setSearch={(val) => {
+                    handleFilterChange('search', val);
+                    setPage(1);
+                }}
                 onAdd={() => handleOpenCreate()}
                 onExport={() => handleExport()}
                 addLabel="Add New Course"
@@ -277,6 +292,7 @@ function AdminCourseManagement() {
                     value={filters.sort}
                     onChange={(value) => handleFilterChange('sort', value)}
                     options={COURSE_SORT_OPTION}
+                    disabled={isSearchActive}
                 />
 
             </TableToolbar>
@@ -293,6 +309,7 @@ function AdminCourseManagement() {
                 pageSize={pageSize}
                 setPageSize={setPageSize}
                 total={total}
+                clearFilters={clearFilters}
             // renderMobileCard={(row, key) => (
             //     <CourseCard
             //         key={key}
@@ -310,14 +327,14 @@ function AdminCourseManagement() {
                     onClose={handleClose}
                     title={
                         actionType === "delete" ? "Are you absolutely sure?" :
-                        actionType === "edit" ? "Update Course" : "Add New Course"
+                            actionType === "edit" ? "Update Course" : "Add New Course"
                     }
                 >
                     <CourseActionHandler
                         mode={actionType}
                         CourseData={selectedCourse}
                         onClose={handleClose}
-                        onSuccess={handleOnSuccess}   
+                        onSuccess={handleOnSuccess}
                     />
                 </Modal>
             )}

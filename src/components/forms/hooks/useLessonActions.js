@@ -23,10 +23,11 @@ export default function useLessonActions() {
 
         try {
             const response = await createLesson(payload);
+            // console.log("createLesson", response);
 
-            const lessonId = response?.lessonId;
-            const uploadUrl = response?.uploadUrl;
-            const mediaId = response?.mediaId;
+            const lessonId = response?.lesson?.id;
+            const uploadUrl = response?.media?.uploadUrl;
+            const mediaId = response?.media?.mediaId;
 
             if (file) {
                 if (!uploadUrl || !mediaId) {
@@ -45,6 +46,7 @@ export default function useLessonActions() {
                         setLoadedData(loaded);
                     }
                 );
+                // console.log("upload response", uploadResponse)
 
                 if (uploadResponse?.status !== 200) {
                     return {
@@ -55,6 +57,7 @@ export default function useLessonActions() {
                 }
 
                 const mediaResponse = await updateMediaStatus(mediaId);
+                // console.log("media response", mediaResponse);
                 const mediaData = mediaResponse?.data || mediaResponse;
 
                 setMediaStatus(mediaData?.status || null);
@@ -68,6 +71,7 @@ export default function useLessonActions() {
                 message: "Lesson created successfully",
             };
         } catch (err) {
+            console.log(err)
             let message = "Failed to create lesson";
 
             if (err.response?.status === 400) {

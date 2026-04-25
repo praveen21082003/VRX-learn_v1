@@ -8,6 +8,7 @@ function TableToolBar({
     selectedRows = [],
     setSelectedRows,
     search,
+    searchPlaceholder = "Search by name or email...",
     setSearch,
     onAdd,
     onExport,
@@ -98,7 +99,7 @@ function TableToolBar({
                             border="border-default"
                             paddingClass="py-2"
                             widthClass="w-full md:w-96"
-                            placeholder="Search by name or email..."
+                            placeholder={searchPlaceholder}
                         />
                     </div>
                     {/* Specific Filters passed from the parent page */}

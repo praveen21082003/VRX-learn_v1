@@ -39,7 +39,9 @@ function CourseInfoForm({ courseInfo, onSuccess }) {
 
     // handle Function
     const handleChange = (field, value) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
+        const processedValue = field === "title" ? value.toUpperCase() : value;
+
+        setFormData(prev => ({ ...prev, [field]: processedValue }));
     };
 
     // Handle thumbnail upload file handleing

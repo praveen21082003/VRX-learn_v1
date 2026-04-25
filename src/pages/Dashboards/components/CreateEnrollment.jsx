@@ -1,9 +1,14 @@
 import React from 'react'
 import EnrollmentForm from '../../../components/forms/EnrollmentForm'
 
-function CreateEnrollment() {
+function CreateEnrollment({EnrollmentData, onClose, onSuccess, mode = "create"}) {
   return (
-    <EnrollmentForm />
+    <EnrollmentForm
+      initialData={EnrollmentData}
+      onClose={onClose}
+      onSuccess={onSuccess}
+      mode={mode}
+    />
   )
 }
 

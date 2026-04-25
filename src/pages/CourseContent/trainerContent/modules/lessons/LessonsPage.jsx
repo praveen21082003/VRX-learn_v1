@@ -214,7 +214,7 @@ function LessonsPage() {
                                             isUpdating ? "cursor-progress" : "cursor-pointer",
                                                 (isOpenDropdown === lesson.id || renameLessonId === lesson.id) && 'bg-primary/16'
                                         )}
-                                        onDoubleClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/${lesson.id}/view`)}
+                                        onDoubleClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/${lesson.id}/preview`)}
                                         onClick={(e) => {
                                             if (isOpenDropdown === lesson.id) {
                                                 e.preventDefault();

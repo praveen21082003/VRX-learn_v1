@@ -41,7 +41,9 @@ function LessonForm({ mode, initialData, modules, courseId }) {
   }, [isEdit, initialData]);
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    const processedValue = field === "title" ? value.toUpperCase() : value;
+
+    setFormData(prev => ({ ...prev, [field]: processedValue }));
     setWarning(prev => ({ ...prev, [field]: null }));
   };
 
@@ -49,7 +51,9 @@ function LessonForm({ mode, initialData, modules, courseId }) {
   const validate = () => {
     const errors = {};
     if (!formData.title.trim()) errors.title = "Title is required";
-    if (!formData.description.trim()) errors.description = "Description is required";
+
+    // description is optional
+    // if (!formData.description.trim()) errors.description = "Description is required";
     if (!isEdit && files.length === 0) errors.file = "Please upload a file";
     return errors;
   };

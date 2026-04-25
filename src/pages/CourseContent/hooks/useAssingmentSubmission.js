@@ -73,6 +73,7 @@ export function useAssignmentSubmission() {
             };
 
         } catch (err) {
+            console.log(err)
             const status = err?.response?.status;
 
             const message = !err?.response

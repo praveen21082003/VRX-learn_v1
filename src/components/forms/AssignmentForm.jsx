@@ -48,7 +48,9 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
   }, [isEdit, initialData]);
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    const processedValue = field === "title" ? value.toUpperCase() : value;
+
+    setFormData(prev => ({ ...prev, [field]: processedValue }));
     setWarning(prev => ({ ...prev, [field]: null }));
   };
 
@@ -101,6 +103,10 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
     return payload;
   };
 
+
+
+  // -----------submit function -------------------
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -121,6 +127,8 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
       }
 
       const result = await updateAssignment(initialData?.assignment?.id, payload);
+      console.log(result.data)
+
       if (!result.success) {
         addToast(result.message, "error");
         return;
@@ -157,8 +165,9 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
       } else {
         addToast(result.message, "success");
       }
-
+      
       // update context
+      console.log(result.data)
       setAssignments([result.data, ...assignments]);
       navigate(`/course/${courseId}/content/assignments`);
     }

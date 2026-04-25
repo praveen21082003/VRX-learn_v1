@@ -129,6 +129,7 @@ function AssignmentContent() {
 
         }
         catch (err) {
+            console.log(err)
             addToast(err.message, "error");
         }
     }

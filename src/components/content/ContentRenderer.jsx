@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Icon, MediaPlaceholder } from "@/components/ui";
+import { Button, Icon } from "@/components/ui";
+
+import { MediaPlaceholder, FilePlaceholder } from '@/components/ui/loading'
 import { Tabs } from "@/components/tabs";
 import { VideoPlayer } from "./video";
 import DocumentControls from "./document/DocumentControls";
@@ -23,11 +25,6 @@ function ContentRenderer({ lesson, error, setVideoDuration }) {
     setTotalPages(1);
   }, [lesson?.mediaId]);
 
-  if (mediaLoading || !url) {
-    return (
-      <MediaPlaceholder />
-    );
-  }
 
 
   if (!lesson) {
@@ -45,7 +42,7 @@ function ContentRenderer({ lesson, error, setVideoDuration }) {
     <>
       <div className="flex justify-center w-full mt-1 lg:px-10 2xl:px-0 rounded overflow-hidden">
         {mediaLoading || !url ? (
-          <MediaPlaceholder />
+          isPDF ? <FilePlaceholder /> : <MediaPlaceholder />
         ) : (
           <>
             {
