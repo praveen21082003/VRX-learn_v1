@@ -3,10 +3,10 @@ import { usePermission } from "@/hooks/usePermission"
 // In courseInfo page create button
 export const CREATE_BUTTON_OPTIONS = ({
   navigate,
-  courseSlug
+  courseID
 }) => [
-    { key: "module", title: "Module", icon: "codicon:file-submodule", onClick: () => navigate(`/course/${courseSlug}/content/modules/create`), permission: "CREATE_MODULES" },
-    { key: "assignment", title: "Assignment", icon: "material-symbols:assignment-outline", onClick: () => navigate(`/course/${courseSlug}/content/assignments/create`), permission: "CREATE_ASSIGNMENTS" },
+    { key: "module", title: "Module", icon: "codicon:file-submodule", onClick: () => navigate(`/course/${courseID}/content/modules/create`), permission: "CREATE_MODULES" },
+    { key: "assignment", title: "Assignment", icon: "material-symbols:assignment-outline", onClick: () => navigate(`/course/${courseID}/content/assignments/create`), permission: "CREATE_ASSIGNMENTS" },
     // { key: "lab_credential", title: "Lab Credential", icon: "ooui:lab-flask", onClick: () => navigate(`/course/${courseSlug}/content/labs/create`), permission: "CREATE_LABS" },
     // { key: "quiz", title: "Quiz", icon: "hugeicons:quiz-05", onClick: () => navigate(`/course/${courseSlug}/content/quiz/create`), permission: "CREATE_QUIZ" }
   ]

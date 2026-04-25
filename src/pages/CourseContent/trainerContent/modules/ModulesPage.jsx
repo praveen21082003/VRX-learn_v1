@@ -10,7 +10,7 @@ import useModules from './hooks/useModules';
 import { Icon, Button, Input, Dropdown, Modal, CourseContentEmptyState, DeleteConfirmContent } from '@/components/ui'
 import { ContentLoading } from "@/components/ui/loading"
 import ReorderList from '@/components/dnd/ReorderList';
-import { getModuleButtons } from '@/config/DropdownButtons';
+import { getModuleButtons } from '@/config/dropdownButtons';
 import { useToast } from '@/context/ToastProvider';
 
 

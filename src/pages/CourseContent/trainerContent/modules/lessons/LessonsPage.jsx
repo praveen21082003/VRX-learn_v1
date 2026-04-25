@@ -6,7 +6,7 @@ import { Button, Icon, Dropdown, MarkdownContent, Input, Modal, DeleteConfirmCon
 import { ContentLoading } from "@/components/ui/loading"
 import ReorderList from '@/components/dnd/ReorderList';
 import { useToast } from '@/context/ToastProvider';
-import { editButtons, buttons } from '@/config/DropdownButtons.js'
+import { editButtons, buttons } from '@/config/dropdownButtons.js'
 import { useReorder } from '@/components/dnd/useReorder';
 
 
