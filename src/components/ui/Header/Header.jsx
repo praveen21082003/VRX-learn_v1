@@ -6,7 +6,7 @@ import HeaderProfile from "./HeaderProfile";
 import { useAuth } from '@/context/AuthContext'
 import Sidebar from "@/components/ui/Header/Sidebar";
 import { useTheme } from "../../../context/ThemeProvider";
-import { getProfileDropdown } from "@/config/DropdownButtons";
+import { getProfileDropdown } from "@/config/dropdownButtons";
 import { useNavigate } from "react-router-dom";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 
