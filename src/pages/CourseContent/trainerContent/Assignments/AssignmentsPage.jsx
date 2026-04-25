@@ -6,7 +6,7 @@ import { useCourse, useAssignmentContext } from "../layout/CourseManagementLayou
 
 import { Button, Icon, Input, Dropdown, Modal, CourseContentEmptyState, DeleteConfirmContent } from '@/components/ui'
 import { ContentLoading } from "@/components/ui/loading"
-import { getAssignmentButtons } from '@/config/DropdownButtons';
+import { getAssignmentButtons } from '@/config/dropdownButtons';
 import { useToast } from '@/context/ToastProvider';
 import formatDateTime from '@/utils/formatDateTime'
 
