@@ -13,6 +13,8 @@ import UserActionHandler from './UserActionHandler';
 
 import formatDateTime from '@/utils/formatDateTime'
 
+import UserTableMobileCard from './UserTableMobileCard'
+
 
 
 function UserManagement() {
@@ -258,7 +260,7 @@ function UserManagement() {
             // BulK Action ui can add here
             // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}
             >
-
+            
                 <Select
                     label="Role:"
                     value={filters.role}
@@ -298,12 +300,12 @@ function UserManagement() {
                     pageSize={pageSize}
                     setPageSize={setPageSize}
                     clearFilters={clearFilters}
-                // renderMobileCard={(row) => (
-                //     <UserCard
-                //         row={row}
-                //         columns={usersManagementColumns}
-                //     />
-                // )}
+                    renderMobileCard={(row) => (
+                        <UserTableMobileCard
+                            row={row}
+                            columns={finalColumns}
+                        />
+                    )}
                 />
             </div>
             {open && (

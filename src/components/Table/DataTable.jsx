@@ -49,21 +49,25 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
       </div>
 
 
-      <div className="block md:hidden flex-1 overflow-y-auto p-2">
-        {renderMobileCard
-          ? data?.map((row, index) => {
-            if (!row) return null;
-            return (
-              <div key={row.id || index}>
-                {renderMobileCard(row)}
-              </div>
-            )
-          })
-          : null}
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <div className="block md:hidden flex-1 overflow-y-auto mb-5 space-y-2">
+          {data?.length > 0 ? (
+            data.map((row, index) => {
+              if (!row) return null;
+              return (
+                <div key={row.id || index} className="w-full">
+                  {renderMobileCard(row)}
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center p-10 text-muted">No data found</div>
+          )}
+        </div>
       </div>
 
 
-      <div className="">
+      <div className="sticky bottom-0 md:relative bg-white border-t border-default z-20 md:border-t-0">
         <TablePagination
           page={page}
           setPage={setPage}

@@ -146,7 +146,7 @@ function AssignmentsPage() {
               >
                 <NavLink
                   to={`/course/${courseId}/content/assignments/${assignment.id}`}
-                  onDoubleClick={() => navigate(`/course/${courseId}/content/assignments/${assignment.id}`)}
+                  onDoubleClick={() => navigate(`/course/${courseId}/content/assignments/${assignment.id}/view`)}
                   onClick={(e) => {
                     if (isOpenDropdown === assignment.id) {
                       e.preventDefault();

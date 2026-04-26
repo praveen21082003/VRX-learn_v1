@@ -165,7 +165,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
       } else {
         addToast(result.message, "success");
       }
-      
+
       // update context
       console.log(result.data)
       setAssignments([result.data, ...assignments]);
@@ -178,7 +178,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
   const getButtonText = () => {
     if (!isEdit) {
       if (creating && uploadProgress === 0) return "Preparing...";
-      if (creating && uploadProgress > 0 && uploadProgress < 100) return `Uploading... ${uploadProgress}%`;
+      if (creating && uploadProgress > 0 && uploadProgress < 100) return `Uploading...`;
       if (mediaStatus === "uploaded") return "Finalizing...";
       return files.length > 0 ? "Upload & Submit" : "Submit"; // ← files not file
     }
@@ -247,6 +247,10 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
             setFiles(newFiles);
             setWarning(prev => ({ ...prev, file: null }));
           }}
+          uploadProgress={uploadProgress}
+          isUploading={creating}
+          isUploaded={uploadProgress === 100}
+          loadedData={uploadedBytes}
           label="Attachments"
           optional={true}
           inputWarning={warning.file}

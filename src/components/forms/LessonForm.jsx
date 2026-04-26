@@ -125,7 +125,7 @@ function LessonForm({ mode, initialData, modules, courseId }) {
   const getButtonText = () => {
     if (!isEdit) {
       if (isCreating && uploadProgress === 0) return "Preparing...";
-      if (isCreating && uploadProgress > 0 && uploadProgress < 100) return `Uploading... ${uploadProgress}%`;
+      if (isCreating && uploadProgress > 0 && uploadProgress < 100) return `Uploading...`;
       if (mediaStatus === "uploaded") return "Finalizing...";
       return files.length > 0 ? "Upload & Create" : "Create Lesson";
     }
