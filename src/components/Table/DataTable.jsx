@@ -51,8 +51,8 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
 
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         <div className="block md:hidden flex-1 overflow-y-auto mb-5 space-y-2">
-          {data?.length > 0 ? (
-            data.map((row, index) => {
+          {safeData?.length > 0 ? (
+            safeData.map((row, index) => {
               if (!row) return null;
               return (
                 <div key={row.id || index} className="w-full">
