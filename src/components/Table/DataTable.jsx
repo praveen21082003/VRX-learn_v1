@@ -49,7 +49,7 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
       </div>
 
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
+      {/* <div className="flex-1 overflow-y-auto scrollbar-hide">
         <div className="block md:hidden flex-1 overflow-y-auto mb-5 space-y-2">
           {safeData?.length > 0 ? (
             safeData.map((row, index) => {
@@ -62,6 +62,34 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
             })
           ) : (
             <div className="text-center p-10 text-muted">No data found</div>
+          )}
+        </div>
+      </div> */}
+
+      {/* DataTable.jsx - Mobile Section */}
+       {/* ======================================//temparaty================================================ */}
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <div className="block md:hidden flex-1 overflow-y-auto mb-5 space-y-2">
+          {/* 1. Check if renderMobileCard is actually a function before mapping */}
+          {typeof renderMobileCard === 'function' ? (
+            safeData?.length > 0 ? (
+              safeData.map((row, index) => {
+                if (!row) return null;
+                return (
+                  <div key={row.id || index} className="w-full">
+                    {renderMobileCard(row)}
+                  </div>
+                );
+              })
+            ) : (
+              <div className="text-center p-10 text-muted">No data found</div>
+            )
+          ) : (
+            /* 2. Fallback: If no mobile card is implemented yet, show a simple list or message */
+            <div className="p-4 text-center text-muted italic text-sm">
+              Mobile view not implemented for this table.
+              Please view on a larger screen.
+            </div>
           )}
         </div>
       </div>
