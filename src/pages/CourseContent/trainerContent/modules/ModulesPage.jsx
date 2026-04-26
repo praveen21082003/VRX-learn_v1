@@ -21,7 +21,7 @@ function ModulesPage() {
   const { addToast } = useToast();
 
   // context
-  const { modules, setModules } = useModuleContext();
+  const { modules, setModules, error } = useModuleContext();
   const { courseId, course, loading } = useCourse();
 
 
@@ -133,6 +133,15 @@ function ModulesPage() {
   };
 
 
+  if (error) {
+    return (
+      <div className="text-center py-6 text-red-500">
+        {error}
+      </div>
+    )
+  }
+
+
   return (
     <div className="space-y-4" onClick={() => setRenameModuleId(null)}>
       <div className='flex justify-between'>
@@ -194,17 +203,15 @@ function ModulesPage() {
                   key={module.id}
                   ref={(el) => (rowRefs.current[module.id] = el)}
                 >
-                  <NavLink
-                    to={`/course/${courseId}/content/modules/${module.id}`}
-                    onDoubleClick={() => navigate(`${module.id}`)}
+                  <div
+                    onDoubleClick={() => navigate(`/course/${courseId}/content/modules/${module.id}`)}
                     onClick={(e) => {
                       if (isOpenDropdown === module.id) {
-                        e.preventDefault();
                         setIsOpenDropdown(null);
                       }
                     }}
                     className={clsx(
-                      'flex justify-between items-center p-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary',
+                      'flex justify-between items-center p-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary cursor-pointer',
                       isRename ? "cursor-progress" : "cursor-pointer",
                       (isOpenDropdown === module.id || renameModuleId === module.id) && 'bg-primary/16'
                     )}
@@ -294,7 +301,7 @@ function ModulesPage() {
                         </Modal>
                       )}
                     </div>
-                  </NavLink>
+                  </div>
                 </div>
               );
             })}

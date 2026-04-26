@@ -1,37 +1,41 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { Input, SearchSelect,Select, TextEditor, Icon, Button ,DeleteConfirmContent} from '@/components/ui'
-import { useToast } from '@/context/ToastProvider'   
+import { Input, SearchSelect, Select, TextEditor, Icon, Button, DeleteConfirmContent, InputWarnMessage } from '@/components/ui'
+import { useToast } from '@/context/ToastProvider'
 
 
 import useDebouncedSearch from './hooks/useDebouncedSearch';
+import { useCourseActions } from './hooks/useCourseActions';
 
 import { searchUser } from '../../services/AdminSearch.service';
 
-function CourseForm({  initialData,
+function CourseForm({ initialData,
     onClose,
     onSuccess,
     mode,
-    loading,
-    isEdit,
-    creating,
-    updating,
-    deleting,
-    createNewCourse,    
-    updateCourse,       
-    deleteCourse,        }) {
-    const { addToast } = useToast();   
+}) {
+    const isEdit = mode === "edit";
 
-   
+    const { addToast } = useToast();
+    const {
+        createNewCourse,
+        updateCourse,
+        deleteCourse,
+        creating,
+        updating,
+        deleting,
+    } = useCourseActions();
+
+
 
     const [isOpen, setIsOpen] = useState(!!initialData?.longDescription);
 
-   const [formData, setFormData] = useState({
-    title: initialData?.title || "",
-    shortDescription: initialData?.shortDescription || "",
-    longDescription: initialData?.longDescription || "",
-    trainerId: initialData?.trainerId || "",
-});
-    console.log(formData)
+    const [formData, setFormData] = useState({
+        title: initialData?.title || "",
+        shortDescription: initialData?.shortDescription || "",
+        longDescription: initialData?.longDescription || "",
+        trainerId: initialData?.trainerId || "",
+    });
+    const [warning, setWarning] = useState({});
 
 
     // Get intial data for update
@@ -64,81 +68,136 @@ function CourseForm({  initialData,
 
     // Handle Change Fuction 
     const handleChange = (field, value) => {
-        setFormData((prev) => ({
+
+        const processedValue = field === "title" ? value.toUpperCase() : value;
+
+        setFormData(prev => ({ ...prev, [field]: processedValue }));
+        setWarning(prev => ({
             ...prev,
-            [field]: value
-        }))
+            [field]: null
+        }));
+        if (field === "shortDescription") {
+            const trimmed = value?.trim();
+            if (trimmed && trimmed.length > 600) {
+                setWarning(prev => ({ ...prev, shortDescription: `Max 600 characters (${trimmed.length}/600)` }));
+            }
+        }
+
+        if (field === "longDescription") {
+            const trimmed = value?.trim();
+            if (trimmed && trimmed.length > 5000) {
+                setWarning(prev => ({ ...prev, longDescription: `Max 5000 characters (${trimmed.length}/5000)` }));
+            }
+        }
     }
 
-  // ADD: submit handler
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     console.log("Sending payload:", formData);  
 
-    //     if (isEdit) {
-    //         const response = await updateCourse(initialData.id, formData);
-    //         if (response.success) {
-    //             addToast(response.message, "success");
-    //             onSuccess?.(response.data);
-    //             onClose?.();
-    //         } else {
-    //             addToast(response.message, "error");
-    //         }
-    //     } else {
-    //         const response = await createNewCourse(formData);
-    //         if (response.success) {
-    //             addToast(response.message, "success");
-    //             onSuccess?.(response.data);
-    //             onClose?.();
-    //         } else {
-    //             addToast(response.message, "error");
-    //         }
-    //     }
-    // };
 
-const handleSubmit = async (e) => {
-    e.preventDefault();
+    const validate = () => {
+        const errors = {};
 
-    const payload = {
-        title: formData.title,
-        trainerId: formData.trainerId,
-        thumbnail: "",
-        details: {                        // hardcoded default, hidden from UI
-            type: "pre-recorded",
-            totalHours: 1,
-            price: 1001,
-        },
-        ...(formData.shortDescription?.trim() && { shortDescription: formData.shortDescription.trim() }),
-        ...(formData.longDescription?.trim() && { longDescription: formData.longDescription.trim() }),
+        // title — required only, no length limit
+        if (!formData.title.trim()) {
+            errors.title = "Title is required";
+        }
+
+        // trainer required
+        if (!formData.trainerId) {
+            errors.trainerId = "Please select a trainer";
+        }
+
+        // short description — optional, max 600 only
+        const shortDesc = formData.shortDescription?.trim();
+        if (shortDesc && shortDesc.length > 600) {
+            errors.shortDescription = `Short description must be under 600 characters (${shortDesc.length}/600)`;
+        }
+
+        // long description — optional, max 5000 only
+        const longDesc = formData.longDescription?.trim();
+        if (longDesc && longDesc.length > 5000) {
+            errors.longDescription = `Description must be under 5000 characters (${longDesc.length}/5000)`;
+        }
+
+        return errors;
     };
 
-    if (isEdit) {
-        const response = await updateCourse(initialData.id, payload);
-        if (response.success) {
-            addToast(response.message, "success");
-            onSuccess?.(response.data);
-            onClose?.();
-        } else {
-            addToast(response.message, "error");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const errors = validate();
+        if (Object.keys(errors).length > 0) {
+            setWarning(errors);
+            return;
         }
-    } else {
-        const response = await createNewCourse(payload);
-        if (response.success) {
-            addToast(response.message, "success");
-            onSuccess?.(response.data);
-            onClose?.();
+
+        if (isEdit) {
+            // update payload — only changed fields
+            const payload = {};
+            if (formData.title.trim() !== (initialData?.title || "").trim()) {
+                payload.title = formData.title.trim();
+            }
+            if (formData.trainerId !== initialData?.trainerId) {
+                payload.trainerId = formData.trainerId;
+            }
+            if (formData.shortDescription?.trim() !== (initialData?.shortDescription || "").trim()) {
+                payload.shortDescription = formData.shortDescription?.trim() || null;
+            }
+            if (formData.longDescription?.trim() !== (initialData?.longDescription || "").trim()) {
+                payload.longDescription = formData.longDescription?.trim() || null;
+            }
+            if (formData.thumbnail !== initialData?.thumbnail) {
+                payload.thumbnail = formData.thumbnail || null;
+            }
+
+            if (Object.keys(payload).length === 0) {
+                addToast("No changes made", "info");
+                return;
+            }
+
+            const response = await updateCourse(initialData.id, payload);
+            // console.log(payload);
+            if (response.success) {
+                addToast(response.message, "success");
+                onSuccess(response.data, "update");
+                onClose?.();
+            } else {
+                addToast(response.message, "error");
+            }
+
         } else {
-            addToast(response.message, "error");
+            // create payload — send null for empty optional fields
+            const payload = {
+                title: formData.title.trim(),
+                trainerId: formData.trainerId,
+                thumbnail: null,
+                shortDescription: formData.shortDescription?.trim() || null,
+                longDescription: formData.longDescription?.trim() || null,
+                details: {
+                    type: "live",
+                    totalHours: 1,
+                    price: 1001,
+                },
+            };
+
+            const response = await createNewCourse(payload);
+            console.log(payload);
+
+            if (response.success) {
+                addToast(response.message, "success");
+                onSuccess(response.data, "create");
+                onClose?.();
+            } else {
+                addToast(response.message, "error");
+            }
         }
-    }
-};
+    };
 
     // ADD: delete handler
     const handleActionDelete = async (id) => {
         const response = await deleteCourse(id);
         if (response?.success) {
             addToast(response.message, "success");
-            onSuccess?.();
+            onSuccess({ id }, "delete");
             onClose?.();
         } else {
             addToast(response.message || "Delete failed", "error");
@@ -175,7 +234,7 @@ const handleSubmit = async (e) => {
                 paddingClass="p-2"
                 value={formData.title}
                 onChange={(e) => handleChange("title", e.target.value)}
-            // inputWarning={warnings.title}
+                inputWarning={warning.title}
             />
 
             <SearchSelect
@@ -195,7 +254,7 @@ const handleSubmit = async (e) => {
                     handleChange("trainerId", item.id);
                     setSearch(item.username);
                 }}
-            // inputWarning={warnings.trainerId}
+                inputWarning={warning.trainerId}
             />
 
             <div className="flex flex-col gap-2">
@@ -211,7 +270,7 @@ const handleSubmit = async (e) => {
                         e.target.style.height = e.target.scrollHeight + "px";
                     }}
                 />
-                {/* {warnings.shortDescription && <InputWarnMessage message={warnings.shortDescription} />} */}
+                {warning.shortDescription && <InputWarnMessage message={warning.shortDescription} />}
             </div>
             {!isOpen &&
                 <div className="flex justify-between" onClick={() => setIsOpen((prev) => !prev)}>
@@ -226,7 +285,7 @@ const handleSubmit = async (e) => {
                     <TextEditor
                         value={formData.longDescription}
                         onChange={(value) => handleChange("longDescription", value)}
-                        // inputWarning={warnings.longDescription}
+                        inputWarning={warning.longDescription}
                         placeholder="Provide a detailed description of the course, including key topics and outcomes"
                     />
                 </div>
@@ -236,20 +295,19 @@ const handleSubmit = async (e) => {
             {/* Actions */}
             <div className="flex w-full gap-3">
                 <Button
-                 type="button"   
+                    type="button"
                     buttonName="Cancel"
                     className="px-4 py-2 rounded-lg w-full"
                     variant="outline"
                     onClick={onClose}
-                    type="button"
                     bgClass=""
                     textClass=""
                 />
                 <Button
-                type="submit"
-                    buttonName={loading ? "Processing..." : isEdit ? "Save Changes" : "Add Course"}
-                    className="px-4 py-2 rounded-lg w-full"
+                    type="submit"
+                    buttonName={creating || updating ? "Processing..." : isEdit ? "Save Changes" : "Add Course"}
                     disabled={creating || updating}
+                    className="px-4 py-2 rounded-lg w-full"
                     type="submit"
                 />
             </div>

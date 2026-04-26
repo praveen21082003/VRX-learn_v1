@@ -19,3 +19,11 @@ export const getTrainerAssignmentDetail = async (assignmentId) => {
     return axiosInstance.get(`/api/v1/assignment-contents/trainer/contents/${assignmentId}`);
 }
 
+
+// Assignment Submissions to list sbmission table
+export const getSubmissionsData = async (assignmentId, params = {}) => {
+    return axiosInstance.get(`/api/v1/assignment-contents/trainer/submissions/${assignmentId}`, {
+        params,
+    })
+}
+

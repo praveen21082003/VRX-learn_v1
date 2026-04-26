@@ -48,7 +48,9 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
   }, [isEdit, initialData]);
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    const processedValue = field === "title" ? value.toUpperCase() : value;
+
+    setFormData(prev => ({ ...prev, [field]: processedValue }));
     setWarning(prev => ({ ...prev, [field]: null }));
   };
 
@@ -101,6 +103,10 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
     return payload;
   };
 
+
+
+  // -----------submit function -------------------
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -121,6 +127,8 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
       }
 
       const result = await updateAssignment(initialData?.assignment?.id, payload);
+      console.log(result.data)
+
       if (!result.success) {
         addToast(result.message, "error");
         return;
@@ -159,6 +167,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
       }
 
       // update context
+      console.log(result.data)
       setAssignments([result.data, ...assignments]);
       navigate(`/course/${courseId}/content/assignments`);
     }
@@ -169,7 +178,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
   const getButtonText = () => {
     if (!isEdit) {
       if (creating && uploadProgress === 0) return "Preparing...";
-      if (creating && uploadProgress > 0 && uploadProgress < 100) return `Uploading... ${uploadProgress}%`;
+      if (creating && uploadProgress > 0 && uploadProgress < 100) return `Uploading...`;
       if (mediaStatus === "uploaded") return "Finalizing...";
       return files.length > 0 ? "Upload & Submit" : "Submit"; // ← files not file
     }
@@ -238,6 +247,10 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
             setFiles(newFiles);
             setWarning(prev => ({ ...prev, file: null }));
           }}
+          uploadProgress={uploadProgress}
+          isUploading={creating}
+          isUploaded={uploadProgress === 100}
+          loadedData={uploadedBytes}
           label="Attachments"
           optional={true}
           inputWarning={warning.file}

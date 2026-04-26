@@ -20,7 +20,7 @@ function CourseManagementSidebar({ courseContent }) {
   const [isDropdownOpen, dropdownRef, setIsDropdownOpen, toggle] = useClickOutside(false);
   const [open, setOpen] = React.useState(null);
   // console.log(modules, assignments)
-  console.log(courseId);
+  // console.log(courseId);
 
   const sections = COURSE_EDIT_SECTIONS(courseId);
 

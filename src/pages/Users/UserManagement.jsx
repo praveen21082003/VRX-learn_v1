@@ -13,6 +13,8 @@ import UserActionHandler from './UserActionHandler';
 
 import formatDateTime from '@/utils/formatDateTime'
 
+import UserTableMobileCard from './UserTableMobileCard'
+
 
 
 function UserManagement() {
@@ -132,12 +134,13 @@ function UserManagement() {
             ...prev,
             [key]: value
         }));
+        setPage(1);
     };
 
     // Clear Filters
     const clearFilters = () => {
         setFilters(INITIAL_FILTERS);
-        // setPage(1);
+        setPage(1);
     };
 
 
@@ -198,7 +201,7 @@ function UserManagement() {
                 { ...newUser, name: newUser.username },
                 ...prev
             ]);
-        }else {
+        } else {
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser.id));
         }
     }
@@ -247,14 +250,17 @@ function UserManagement() {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 search={filters.search}
-                setSearch={(val) => handleFilterChange('search', val)}
+                setSearch={(val) => {
+                    handleFilterChange('search', val);
+                    setPage(1);
+                }}
                 onAdd={() => handleOpenCreate()}
                 onExport={() => handleExport()}
                 addLabel="Add New User"
             // BulK Action ui can add here
             // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}
             >
-
+            
                 <Select
                     label="Role:"
                     value={filters.role}
@@ -294,12 +300,12 @@ function UserManagement() {
                     pageSize={pageSize}
                     setPageSize={setPageSize}
                     clearFilters={clearFilters}
-                // renderMobileCard={(row) => (
-                //     <UserCard
-                //         row={row}
-                //         columns={usersManagementColumns}
-                //     />
-                // )}
+                    renderMobileCard={(row) => (
+                        <UserTableMobileCard
+                            row={row}
+                            columns={finalColumns}
+                        />
+                    )}
                 />
             </div>
             {open && (

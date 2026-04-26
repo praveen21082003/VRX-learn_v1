@@ -51,10 +51,11 @@ export default function useAssignmentActions() {
             console.log(payload)
 
             const response = await createAssignmentService(payload);
+            // console.log("create step - 1", response);
             const data = response?.data || response;
 
-            const uploadUrl = data?.uploadUrl;
-            const mediaId = data?.mediaId;
+            const uploadUrl = data?.media?.uploadUrl;
+            const mediaId = data?.media?.mediaId;
 
             // upload to S3 only if file provided and urls returned
             if (file && uploadUrl && mediaId) {
@@ -66,6 +67,8 @@ export default function useAssignmentActions() {
                         setUploadedBytes(loaded);
                     }
                 );
+                console.log("uploading step -2 ", uploadResponse)
+
 
                 if (uploadResponse?.status !== 200) {
                     return {
@@ -77,6 +80,7 @@ export default function useAssignmentActions() {
                 }
 
                 const mediaResponse = await updateMediaStatus(mediaId);
+                console.log("media response step-3 ", mediaResponse);
                 const mediaData = mediaResponse?.data || mediaResponse;
                 setMediaStatus(mediaData?.status || "completed");
             }
@@ -88,6 +92,7 @@ export default function useAssignmentActions() {
             };
 
         } catch (err) {
+            console.log(err)
             let message = "Failed to create assignment";
             if (err.response?.status === 400) message = "Please check the entered assignment details";
             if (err.response?.status === 403) message = "You do not have permission to create assignments";

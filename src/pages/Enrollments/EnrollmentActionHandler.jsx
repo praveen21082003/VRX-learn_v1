@@ -1,6 +1,6 @@
 import React from 'react'
 import EnrollmentForm from '@/components/forms/EnrollmentForm'
-import { useEnrollmentActions } from '../../../src/components/forms/hooks/useEnrollmentActions' 
+
 
 function EnrollmentActionHandler({
   mode,
@@ -9,14 +9,7 @@ function EnrollmentActionHandler({
   onSuccess
 }) {
 
-const {
-        createNewEnrollment,
-        updateEnrollment,
-        deleteEnrollment,
-        creating,
-        updating,
-        deleting,
-    } = useEnrollmentActions();
+
 
   const isEdit = mode === "edit";
 
@@ -24,16 +17,10 @@ const {
   return (
     <EnrollmentForm
       initialData={EnrollmentData}
-      isEdit={isEdit} // Pass this down!
+      isEdit={isEdit}
       onClose={onClose}
       onSuccess={onSuccess}
-      mode={mode}                          
-            creating={creating}                  
-            updating={updating}                  
-            deleting={deleting}                  
-            createNewEnrollment={createNewEnrollment}  
-            updateEnrollment={updateEnrollment}        
-            deleteEnrollment={deleteEnrollment}
+      mode={mode}
     />
   )
 }

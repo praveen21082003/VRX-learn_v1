@@ -134,6 +134,7 @@ function CourseManagementLayout() {
         <CourseContext.Provider value={{ courseId, course, handleUpdateCourseInfoSuccess }}>
             <ModuleContext.Provider value={{
                 modules,
+                error,
                 setModules,
                 lessons,
                 setLessons,

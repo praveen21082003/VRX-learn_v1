@@ -127,18 +127,6 @@ function EnrollmentsManagement() {
     // --------------Table colums end-----------------
 
 
-const handleOnSuccess = (updatedEnrollment) => {
-    if (actionType === "create") {
-        setEnrollments(prev => [updatedEnrollment, ...prev]);
-    } else if (actionType === "edit") {
-        setEnrollments(prev =>
-            prev.map(e => e.id === selectedEnrollment.id ? { ...e, ...updatedEnrollment } : e)
-        );
-    } else {
-        setEnrollments(prev => prev.filter(e => e.id !== selectedEnrollment.id));
-    }
-};
-
     // fetch users data useEffect
     useEffect(() => {
 
@@ -172,6 +160,16 @@ const handleOnSuccess = (updatedEnrollment) => {
 
 
     // ----- handle fuctions -------
+
+
+    // onsuccess fuction
+    const handleOnSuccess = (data, type) => {
+        if (type === "delete") {
+            setEnrollments(prev => prev.filter(e => e.id !== selectedEnrollment.id));
+        } else {
+            refreshEnrollments(); // (create or update)
+        }
+    };
 
 
     // Handle Actions delete, edit
@@ -208,7 +206,7 @@ const handleOnSuccess = (updatedEnrollment) => {
     // Clear Filters
     const clearFilters = () => {
         setFilters(INITIAL_FILTERS);
-        // setPage(1);
+        setPage(1);
     };
 
 
@@ -236,6 +234,7 @@ const handleOnSuccess = (updatedEnrollment) => {
             ...prev,
             [key]: value
         }));
+        setPage(1);
     };
 
 
@@ -252,7 +251,10 @@ const handleOnSuccess = (updatedEnrollment) => {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 search={filters.search}
-                setSearch={(val) => handleFilterChange('search', val)}
+                setSearch={(val) => {
+                    handleFilterChange('search', val);
+                    setPage(1);
+                }}
                 onAdd={() => handleOpenCreate()}
                 onExport={() => handleExport()}
                 addLabel="Add New Enrollment"
@@ -264,12 +266,14 @@ const handleOnSuccess = (updatedEnrollment) => {
                     value={filters.sort}
                     onChange={(value) => handleFilterChange('sort', value)}
                     options={EROLLMENT_SORT_OPTIONS}
+                    disabled={isSearchActive}
                 />
                 <Select
                     label="Role:"
                     value={filters.role}
                     onChange={(value) => handleFilterChange('role', value)}
                     options={ROLE_OPTIONS}
+                    disabled={isSearchActive}
                 />
 
                 <Select
@@ -277,6 +281,7 @@ const handleOnSuccess = (updatedEnrollment) => {
                     value={filters.status}
                     onChange={(value) => handleFilterChange('status', value)}
                     options={EROLLMENT_STATUS_OPTIONS}
+                    disabled={isSearchActive}
                 />
 
             </TableToolbar>
@@ -310,13 +315,13 @@ const handleOnSuccess = (updatedEnrollment) => {
                                 actionType === "edit" ? "Update Enrollment" : "Create New Enrollment"
                         }
                     >
-                        
-                <EnrollmentActionHandler
-                 mode={actionType}
-                EnrollmentData={selectedEnrollment}
-                onClose={handleClose}
-                onSuccess={handleOnSuccess}  
-                />
+
+                        <EnrollmentActionHandler
+                            mode={actionType}
+                            EnrollmentData={selectedEnrollment}
+                            onClose={handleClose}
+                            onSuccess={handleOnSuccess}
+                        />
 
                     </Modal>
                 )

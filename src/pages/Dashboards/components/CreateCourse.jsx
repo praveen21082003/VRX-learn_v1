@@ -1,10 +1,15 @@
 import React from 'react'
 import CourseForm from '../../../components/forms/CourseForm'
 
-function CreateCourse() {
+function CreateCourse({courseData = {}, mode = "create", onSuccess, onClose}) {
     return (
         <div>
-            <CourseForm />
+            <CourseForm
+                initialData={courseData}
+                onClose={onClose}
+                onSuccess={onSuccess}
+                mode={mode}
+            />
         </div>
     )
 }

@@ -7,3 +7,7 @@ export const createAssignment = (payload) => {
 export const updateAssignment = (assignmentId, payload) => {
     return axiosInstance.patch(`/api/v1/assignments/${assignmentId}/update-details`, payload);
 }
+
+export const deleteAssignmnet = (assignmentId) => {
+    return axiosInstance.delete(`/api/v1/assignments/${assignmentId}`)
+}

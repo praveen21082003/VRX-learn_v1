@@ -14,13 +14,15 @@ function TablePagination({
   pages
 }) {
 
-  console.log("page", page);
-  console.log("total items", total);
-  console.log("total pages", totalPages);
-  console.log("pageSize", pageSize);
+  // console.log("page", page);
+  // console.log("total items", total);
+  // console.log("total pages", totalPages);
+  // console.log("pageSize", pageSize);
 
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
+  
   return (
     <div className="flex items-center justify-between px-3 text-small h-10 border-t border-default">
       <div className='hidden md:flex items-center gap-3'>
@@ -43,7 +45,7 @@ function TablePagination({
         {start}-{end} of {total} entries
       </div>
 
-      <div className="flex items-center gap-1 w-full md:w-auto justify-center md:justify-end">
+      <div className="flex items-center gap-1 w-full md:w-auto justify-between md:justify-end">
         <Button
           buttonName="Previous"
           disabled={page === 1}
