@@ -2,9 +2,10 @@ import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import TablePagination from "./TablePagination";
 import getPagination from '@/utils/getPagination';
+import { TableMobileSkeleton } from "../ui/loading";
 
 
-function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize, selectedRows, renderMobileCard, loading, clearFilters }) {
+function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize, selectedRows, renderMobileCard, loading, mobileLoadingType, clearFilters }) {
 
   const totalPages = Math.ceil(total / pageSize);
 
@@ -23,17 +24,17 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
   const emptyRows = Math.max(0, pageSize - safeData.length);
 
   return (
-    <div className="w-full md:border-2 border-default flex flex-col">
+    <div className="h-full md:h-auto w-full md:border-2 border-default flex flex-col overflow-hidden">
 
-
-      <div className="hidden md:block">
+      {/* Desktop header */}
+      <div className="hidden md:block flex-shrink-0">
         <table className="w-full table-fixed border-b border-default">
           <TableHeader columns={columns} />
         </table>
       </div>
 
-      <div className="hidden md:block flex-1 overflow-y-auto">
-
+      {/* Desktop body — NO flex-1, grows naturally */}
+      <div className="hidden md:block">
         <table className="w-full table-fixed">
           <TableBody
             loading={loading}
@@ -45,13 +46,12 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
             clearFilters={clearFilters}
           />
         </table>
-
       </div>
 
-
-      {/* <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <div className="block md:hidden flex-1 overflow-y-auto mb-5 space-y-2">
-          {safeData?.length > 0 ? (
+      {/* Mobile body — flex-1 + overflow scroll */}
+      <div className="block md:hidden flex-1 overflow-y-auto scrollbar-hide space-y-2 p-2">
+        {typeof renderMobileCard === 'function' ? (
+          safeData?.length > 0 ? (
             safeData.map((row, index) => {
               if (!row) return null;
               return (
@@ -60,42 +60,20 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
                 </div>
               );
             })
+          ) : loading ? (
+            <TableMobileSkeleton type={mobileLoadingType} />
           ) : (
             <div className="text-center p-10 text-muted">No data found</div>
-          )}
-        </div>
-      </div> */}
-
-      {/* DataTable.jsx - Mobile Section */}
-       {/* ======================================//temparaty================================================ */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <div className="block md:hidden flex-1 overflow-y-auto mb-5 space-y-2">
-          {/* 1. Check if renderMobileCard is actually a function before mapping */}
-          {typeof renderMobileCard === 'function' ? (
-            safeData?.length > 0 ? (
-              safeData.map((row, index) => {
-                if (!row) return null;
-                return (
-                  <div key={row.id || index} className="w-full">
-                    {renderMobileCard(row)}
-                  </div>
-                );
-              })
-            ) : (
-              <div className="text-center p-10 text-muted">No data found</div>
-            )
-          ) : (
-            /* 2. Fallback: If no mobile card is implemented yet, show a simple list or message */
-            <div className="p-4 text-center text-muted italic text-sm">
-              Mobile view not implemented for this table.
-              Please view on a larger screen.
-            </div>
-          )}
-        </div>
+          )
+        ) : (
+          <div className="p-4 text-center text-muted italic text-sm">
+            Mobile view not implemented for this table.
+          </div>
+        )}
       </div>
 
-
-      <div className="sticky bottom-0 md:relative bg-white border-t border-default z-20 md:border-t-0">
+      {/* Pagination */}
+      <div className="flex-shrink-0 sticky bottom-0 border-t border-default bg-background z-20">
         <TablePagination
           page={page}
           setPage={setPage}
@@ -109,6 +87,7 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
         />
       </div>
 
-    </div>);
+    </div>
+  );
 }
 export default DataTable;

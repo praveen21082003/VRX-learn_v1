@@ -91,34 +91,51 @@ function AssignmentView() {
   }
 
   return (
-    <div className="space-y-0">
+    <div className="space-y-0 py-2">
       <div className='flex justify-between'>
         <h2 className="text-h3">{assignmentData?.title}</h2>
         {activeTab === "instructions" && (
-          <Button
-            buttonName="Edit Details"
-            frontIconName='mingcute:pencil-line'
-            frontIconWidth="24px"
-            frontIconHeght="24px"
-            className="p-1 rounded font-semibold text-md"
-            bgClass=""
-            textClass="text-primary dark:text-background"
-            onClick={() => navigate(`/course/${courseId}/content/assignments/${assignmentId}/edit`)}
-          />
+          <div className='flex-shrink-0'>
+            <Button
+              buttonName="Edit Details"
+              frontIconName='mingcute:pencil-line'
+              frontIconWidth="24px"
+              frontIconHeght="24px"
+              className="p-1 rounded font-semibold text-md"
+              bgClass=""
+              textClass="text-primary dark:text-background"
+              onClick={() => navigate(`/course/${courseId}/content/assignments/${assignmentId}/edit`)}
+            />
+          </div>
+
+        )}
+
+        {activeTab === "submissions" && (
+          <div className='block md:hidden shrink-0'>
+            <Button buttonName="Export as CSV" frontIconName="material-symbols:download" frontIconHeght="24" frontIconWidth="24" className="p-1 px-2 rounded font-semibold text-md" bgClass="" textClass="text-primary dark:text-background" />
+          </div>
         )}
       </div>
 
-      <div className="flex items-center text-caption gap-2 text-muted-foreground">
+      <div className="flex flex-col md:flex-row md:items-center text-caption gap-2 text-muted-foreground">
         <div className="flex gap-2 items-center">
           <Icon name="mdi:clock-outline" width="16px" height="16px" />
           <p>{assignmentData?.dueDate ? formatDateTime(assignmentData.dueDate) : "No due date for this assignment"}</p>
         </div>
-        <Icon name="bi:dot" />
+
+        <div className='hidden md:block'>
+          <Icon name="bi:dot" />
+        </div>
+
         <div className="flex gap-2 items-center">
           <Icon name="streamline:star-badge-remix" width="16px" height="16px" />
           <p>Max: {assignmentData?.maxScore} Marks</p>
         </div>
-        <Icon name="bi:dot" />
+
+        <div className='hidden md:block'>
+          <Icon name="bi:dot" />
+        </div>
+
         <div className="flex gap-2 items-center">
           <Icon name="mdi:repeat" width="16px" height="16px" />
           <p>Max Attempts: {assignmentData?.numberOfAttempts}</p>
@@ -150,7 +167,7 @@ function AssignmentView() {
               setActiveAssignmentId={setActiveAssignmentId}
             />
           )}
-          
+
           {activeTab === "view_submission" && (
             <SubmissionView
               submissions={submissions}

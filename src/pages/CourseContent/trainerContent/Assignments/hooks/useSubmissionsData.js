@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getSubmissionsData } from "@/services/AssignmentContent.service";
+import { getAssignmentSubmission } from "@/services/AssignmentContent.service";
 
 export const useSubmissionsData = (assignmentId, params) => {
   const [submissions, setSubmissions] = useState([]);

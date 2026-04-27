@@ -13,16 +13,20 @@ import AssignmentHandler from '../pages/CourseContent/trainerContent/Assignments
 // Roster trainee
 import TraineeRoster from '../pages/Rosters/TraineeRoster';
 
+
+// mobile
+import MobileOrDesktopIndex from '../pages/CourseContent/trainerContent/layout/mobile/MobileOrDesktopIndex';
+
 export default function TrainerRoutes() {
     return (
         <>
             <Route path="content" element={<CourseManagementLayout />}>
-                <Route index element={<Navigate to="info" replace />} />
+                <Route index element={<MobileOrDesktopIndex />} />
                 <Route path="info" element={<CourseInformationPage />} />
                 <Route path="modules">
                     <Route index element={<ModulesPage />} />
                     <Route path="create" element={<ModuleActionHandler mode="create" />} />
-                    <Route path=":moduleId">
+                    <Route path=":moduleId/view">
                         <Route index element={<LessonsPage />} />
                         <Route path="edit" element={<ModuleActionHandler mode="edit" />} />
 

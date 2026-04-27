@@ -10,6 +10,7 @@ import { ENROLLMENT_COLUMNS_BASE } from '@/config/tablesColumnConfig';
 import { EROLLMENT_SORT_OPTIONS, EROLLMENT_STATUS_OPTIONS, ROLE_OPTIONS } from '@/config/adminFiltersSelectOptions'
 
 import EnrollmentActionHandler from './EnrollmentActionHandler';
+import EnrollmentTableMobileCard from './EnrollmentTableMobileCard'
 
 
 import formatDateTime from '@/utils/formatDateTime'
@@ -245,65 +246,75 @@ function EnrollmentsManagement() {
 
 
     return (
-        <div className="w-full p-4 bg-transparent text-main border-b border-gray-200">
-            <TableToolbar
-                headerLabel="Enrollment Management"
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                search={filters.search}
-                setSearch={(val) => {
-                    handleFilterChange('search', val);
-                    setPage(1);
-                }}
-                onAdd={() => handleOpenCreate()}
-                onExport={() => handleExport()}
-                addLabel="Add New Enrollment"
-            // BulK Action ui can add here
-            // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}
-            >
-                <Select
-                    label="Sort by:"
-                    value={filters.sort}
-                    onChange={(value) => handleFilterChange('sort', value)}
-                    options={EROLLMENT_SORT_OPTIONS}
-                    disabled={isSearchActive}
-                />
-                <Select
-                    label="Role:"
-                    value={filters.role}
-                    onChange={(value) => handleFilterChange('role', value)}
-                    options={ROLE_OPTIONS}
-                    disabled={isSearchActive}
-                />
+        <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
 
-                <Select
-                    label="Status:"
-                    value={filters.status}
-                    onChange={(value) => handleFilterChange('status', value)}
-                    options={EROLLMENT_STATUS_OPTIONS}
-                    disabled={isSearchActive}
+            <div className="p-4 flex-shrink-0">
+
+
+                <TableToolbar
+                    headerLabel="Enrollment Management"
+                    selectedRows={selectedRows}
+                    setSelectedRows={setSelectedRows}
+                    search={filters.search}
+                    setSearch={(val) => {
+                        handleFilterChange('search', val);
+                        setPage(1);
+                    }}
+                    onAdd={() => handleOpenCreate()}
+                    onExport={() => handleExport()}
+                    addLabel="Add New Enrollment"
+                // BulK Action ui can add here
+                // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}
+                >
+                    <Select
+                        label="Sort by:"
+                        value={filters.sort}
+                        onChange={(value) => handleFilterChange('sort', value)}
+                        options={EROLLMENT_SORT_OPTIONS}
+                        disabled={isSearchActive}
+                    />
+                    <Select
+                        label="Role:"
+                        value={filters.role}
+                        onChange={(value) => handleFilterChange('role', value)}
+                        options={ROLE_OPTIONS}
+                        disabled={isSearchActive}
+                    />
+
+                    <Select
+                        label="Status:"
+                        value={filters.status}
+                        onChange={(value) => handleFilterChange('status', value)}
+                        options={EROLLMENT_STATUS_OPTIONS}
+                        disabled={isSearchActive}
+                    />
+
+                </TableToolbar>
+            </div>
+
+
+            {/* table */}
+            <div className="md:px-4 md:pb-4 flex-1 overflow-hidden px-2 pb-4 min-h-0">
+                <DataTable
+                    loading={loading}
+                    selectedRows={selectedRows}
+                    columns={finalColumns}
+                    data={enrollments}
+                    page={page}
+                    setPage={setPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                    total={total}
+                    clearFilters={clearFilters}
+                    renderMobileCard={(row) => (
+                        <EnrollmentTableMobileCard
+                            row={row}
+                            columns={finalColumns}
+                        />
+                    )}
                 />
+            </div>
 
-            </TableToolbar>
-
-            <DataTable
-                loading={loading}
-                selectedRows={selectedRows}
-                columns={finalColumns}
-                data={enrollments}
-                page={page}
-                setPage={setPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                total={total}
-                clearFilters={clearFilters}
-            // renderMobileCard={(row) => (
-            //     <EnrollmentCard
-            //         row={row}
-            //         columns={enrollmentsManagementColumns}
-            //     />
-            // )}
-            />
 
             {
                 open && (

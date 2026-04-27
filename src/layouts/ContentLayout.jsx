@@ -5,7 +5,7 @@ export default function ContentLayout() {
     return (
         <div className="h-screen w-screen flex flex-col overflow-hidden">
             <Header menu={false} />
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-y-auto">  
                 <Outlet />
             </div>
         </div>

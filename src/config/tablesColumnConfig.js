@@ -46,3 +46,14 @@ export const TRAINEE_ROSTER_BASE = [
   { key: "enrollmentDate", label: "Enrollment Date", width: "20%", align: "left" },
   { key: "role", label: "Role", width: "12%", align: "center" },
 ];
+
+
+// submissions table
+export const SUBMISSION_COLUMNS_BASE = [
+    { key: "student", label: "Student Name", width: "25%", align: "left" },
+    { key: "attempt", label: "Attempt", width: "10%" },
+    { key: "submittedAt", label: "Submission Date", width: "20%" },
+    { key: "status", label: "Status", width: "15%" },
+    { key: "score", label: "Grade", width: "10%" },
+    { key: "actions", label: "Actions", width: "10%" },
+];

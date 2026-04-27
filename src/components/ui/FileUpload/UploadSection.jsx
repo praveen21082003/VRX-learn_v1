@@ -1,8 +1,9 @@
 import React from 'react';
-import { Icon, ProgressBar } from '@/components/ui'
+import { Icon, ProgressBar, InputWarnMessage } from '@/components/ui'
 import DropZone from "./DropZone";
 // import UploadButton from "./UploadButton";
 import { motion, warning } from "motion/react";
+import { usePermission } from '@/hooks/usePermission'
 
 const formatBytes = (bytes) => {
     if (!bytes) return "0 B";
@@ -124,10 +125,11 @@ export default function UploadSection({
     loadedData,
     inputWarning,
     maxFileSize,
-    allowedTypes= ['pdf']
+    allowedTypes = ['pdf']
 }) {
 
-    console.log(inputWarning);
+    const { can } = usePermission();
+
     const handleRemoveFile = React.useCallback((indexToRemove) => {
         setFiles(files.filter((_, index) => index !== indexToRemove));
     }, [files, setFiles]);
@@ -166,38 +168,73 @@ export default function UploadSection({
                     inputWarning={inputWarning}
                 />
             </div>
+            {!can("FILE_UPLOAD_UI")
+                ? (
+                    <>
+                        <div className='flex items-center gap-2'>
+                            <h5 className='text-h5'>Attachments</h5>
+                            {!inputWarning
+                                ? <span className='text-caption text-muted'>(Optional)</span>
+                                : <InputWarnMessage message={inputWarning} />}
 
-            <motion.div
-                initial={{ y: 0 }}
-                animate={isUploading ? false : { y: 0 }}
-                transition={{ duration: 0.25 }}
-                className="lg:hidden fixed bottom-0 left-0 right-0 bg-background overflow-hidden rounded-t-2xl shadow-lg z-40"
-            >
-                <div className='bg-primary-16 p-3'>
-                    <p className="text-h5 font-medium mb-2">{label}</p>
-
-                    {files.length === 0 ? (
-                        <label className="block border border-primary dark:bg-primary rounded-md text-center py-2 cursor-pointer">
-                            + Add File
-                            <input
-                                type="file"
-                                className="hidden"
-                                accept={acceptString}
-                                onChange={(e) => setFiles([...e.target.files])}
+                        </div>
+                        {files.length === 0 ? (
+                            <label className="block border border-primary dark:bg-primary rounded-md text-center py-2 cursor-pointer">
+                                + Add File
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    accept={acceptString}
+                                    onChange={(e) => setFiles([...e.target.files])}
+                                />
+                            </label>
+                        ) : (
+                            <UploadedFiles
+                                files={files}
+                                isUploading={isUploading}
+                                uploadProgress={uploadProgress}
+                                loadedData={loadedData}
+                                mediaStatus={mediaStatus}
+                                handleRemoveFile={handleRemoveFile}
                             />
-                        </label>
-                    ) : (
-                        <UploadedFiles
-                            files={files}
-                            isUploading={isUploading}
-                            uploadProgress={uploadProgress}
-                            loadedData={loadedData}
-                            mediaStatus={mediaStatus}
-                            handleRemoveFile={handleRemoveFile}
-                        />
-                    )}
-                </div>
-            </motion.div>
+                        )}
+                    </>
+                )
+                : (
+                    <motion.div
+                        initial={{ y: 0 }}
+                        animate={isUploading ? false : { y: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="lg:hidden fixed bottom-0 left-0 right-0 bg-background overflow-hidden rounded-t-2xl shadow-lg z-40"
+                    >
+                        <div className='bg-primary-16 p-3'>
+                            {inputWarning && <InputWarnMessage message={inputWarning} />}
+                            <p className="text-h5 font-medium mb-2">{label}</p>
+
+                            {files.length === 0 ? (
+                                <label className="block border border-primary dark:bg-primary rounded-md text-center py-2 cursor-pointer">
+                                    + Add File
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        accept={acceptString}
+                                        onChange={(e) => setFiles([...e.target.files])}
+                                    />
+                                </label>
+                            ) : (
+                                <UploadedFiles
+                                    files={files}
+                                    isUploading={isUploading}
+                                    uploadProgress={uploadProgress}
+                                    loadedData={loadedData}
+                                    mediaStatus={mediaStatus}
+                                    handleRemoveFile={handleRemoveFile}
+                                />
+                            )}
+                        </div>
+                    </motion.div >
+                )
+            }
         </>
     );
 }

@@ -176,14 +176,43 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
   const isLoading = creating || updating;
 
   const getButtonText = () => {
+    // =========================
+    // CREATE MODE
+    // =========================
     if (!isEdit) {
-      if (creating && uploadProgress === 0) return "Preparing...";
-      if (creating && uploadProgress > 0 && uploadProgress < 100) return `Uploading...`;
-      if (mediaStatus === "uploaded") return "Finalizing...";
-      return files.length > 0 ? "Upload & Submit" : "Submit"; // ← files not file
+      if (creating) {
+        if (uploadProgress === 0) return "Preparing for Upload";
+        if (uploadProgress > 0 && uploadProgress < 100) return "Uploading...";
+        if (uploadProgress === 100 && mediaStatus !== "uploaded") return "Finalizing...";
+      }
+
+      if (mediaStatus === "uploaded") return "Done";
+
+      return files.length > 0 ? "Upload & Submit" : "Create New Assignment";
     }
-    if (updating) return "Updating...";
+
+    // =========================
+    // EDIT MODE
+    // =========================
+    if (updating) return "Saving Changes...";
+
     return "Save Changes";
+  };
+
+  // for button Icon
+  const getButtonIcon = () => {
+    if (!isEdit) {
+      if (creating) {
+        if (uploadProgress === 0) return "line-md:loading-loop";
+        if (uploadProgress > 0 && uploadProgress < 100) return "line-md:uploading-loop";
+        if (uploadProgress === 100 && mediaStatus !== "uploaded") return "line-md:loading-twotone-loop";
+      }
+      return null; // ✅ no icon in normal state
+    }
+
+    if (updating) return "line-md:loading-loop";
+
+    return null; // ✅ edit idle = no icon
   };
 
   return (
@@ -279,6 +308,9 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
           disabled={isLoading}
           buttonName={getButtonText()}
           className="mt-5 px-5 py-2 rounded"
+          frontIconName={getButtonIcon()}
+          frontIconHeight="24"
+          frontIconWidth="24"
         />
       </div>
     </form>

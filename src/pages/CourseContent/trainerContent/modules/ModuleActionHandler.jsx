@@ -19,7 +19,7 @@ function ModuleActionHandler({ mode }) {
         : null;
     return (
 
-        <div>
+        <div className='p-4'>
             <BackButton to={`/course/${courseId}/content/modules`} label={`${course?.title || "Loading..."} - Modules`} />
             <h2 className="text-h3">
                 {isEdit ? "Edit Module" : "New Module"}

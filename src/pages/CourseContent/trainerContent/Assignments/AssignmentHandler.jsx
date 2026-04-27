@@ -38,8 +38,10 @@ function AssignmentHandler({ mode }) {
 
 
     return (
-        <div>
+        <div className='p-4 mb-30 lg:mb-0'>
+
             <BackButton to={`/course/${courseId}/content/assignments`} label={`${course?.title || "Loading..."} - Assignments`} />
+
 
             {mode === "view" ? (
                 <AssignmentView assignment={initialData} />
