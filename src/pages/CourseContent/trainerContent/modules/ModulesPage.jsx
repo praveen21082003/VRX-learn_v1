@@ -208,7 +208,7 @@ function ModulesPage() {
                     ref={(el) => (rowRefs.current[module.id] = el)}
                   >
                     <div
-                      onDoubleClick={() => navigate(`/course/${courseId}/content/modules/${module.id}`)}
+                      onDoubleClick={() => navigate(`/course/${courseId}/content/modules/${module.id}/view`)}
                       onClick={(e) => {
                         if (isOpenDropdown === module.id) {
                           setIsOpenDropdown(null);

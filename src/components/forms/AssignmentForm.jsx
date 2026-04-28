@@ -217,7 +217,6 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-
       <Input
         label="Title"
         value={formData.title}
@@ -246,19 +245,20 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
           min="5"
           max="100"
           disabled={isEdit}
-          value={formData.maxScore}
+          value={formData.maxScore ?? ""}
           inputWarning={warning.maxScore}
-          onChange={(e) => handleChange("maxScore", Number(e.target.value))}
+          onChange={(e) => handleChange("maxScore", e.target.value)}
         />
+
         <Input
           label="Max Attempts"
           type="number"
           min="1"
           max="3"
           disabled={isEdit}
-          value={formData.numberOfAttempts}
+          value={formData.numberOfAttempts ?? ""}
           inputWarning={warning.numberOfAttempts}
-          onChange={(e) => handleChange("numberOfAttempts", Number(e.target.value))}
+          onChange={(e) => handleChange("numberOfAttempts", e.target.value)}
         />
       </div>
 

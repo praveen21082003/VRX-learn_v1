@@ -14,9 +14,9 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
     // states
     const [filtersOpen, setFiltersOpen] = useState(false);
 
-    console.log(parms);
 
-
+    
+    // handle functions
     const handleFilterChange = (field, value) => {
         setParms((prev) => ({
             ...prev,

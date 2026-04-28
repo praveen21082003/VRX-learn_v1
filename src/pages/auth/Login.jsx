@@ -43,8 +43,9 @@ function Login() {
         try {
             setLoading(true);
 
-            
+            console.log("login started")
             const data = await login(credentials.email, credentials.password);
+            console.log(data)
 
             if (data.message === "Logged in successfully") {
                

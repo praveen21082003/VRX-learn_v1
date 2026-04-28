@@ -109,7 +109,7 @@ function AssignmentsPage() {
 
   return (
     <>
-      <div className="border-b border-default p-2 px-4">
+      <div className="block md:hidden border-b border-default p-2 px-4">
         <BackButton to={`/course/${courseId}/content`} label="Back" />
       </div>
       <div className="space-y-6 p-4" onClick={() => setRenameAssignmentId(null)}>

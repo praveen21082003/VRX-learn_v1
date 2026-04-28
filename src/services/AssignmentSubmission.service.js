@@ -12,3 +12,7 @@ export const getSubmission = async (submissionId) => {
 export const patchSubmissionGrade = async (submissionId, payload) => {
     return axiosInstance.patch(`/api/v1/assignment-submission/${submissionId}/verify`, payload)
 }
+
+export const updateGradedFeedback = async (submissionId, payload) => {
+    return axiosInstance.patch(`/api/v1/assignment-submission/${submissionId}/update-feedback`, payload)
+}

@@ -26,10 +26,10 @@ export default function TrainerRoutes() {
                 <Route path="modules">
                     <Route index element={<ModulesPage />} />
                     <Route path="create" element={<ModuleActionHandler mode="create" />} />
-                    <Route path=":moduleId/view">
+                    <Route path=":moduleId">
                         <Route index element={<LessonsPage />} />
+                        <Route path="view" element={<LessonsPage />} />
                         <Route path="edit" element={<ModuleActionHandler mode="edit" />} />
-
                         <Route path="lesson/create" element={<LessonActionHandler mode="create" />} />
                         <Route path="lesson/:lessonId/edit" element={<LessonActionHandler mode="edit" />} />
                         <Route path="lesson/:lessonId/preview" element={<LessonActionHandler mode="view" />} />

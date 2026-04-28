@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from "react-router-dom";
-import { Icon, Button, CourseContentEmptyState } from '@/components/ui'
+import clsx from 'clsx';
+import { Icon, Button, CourseContentEmptyState, BackButton } from '@/components/ui'
 import { Tabs } from '@/components/tabs'
 
 import { useCourse, useAssignmentContext } from "../layout/CourseManagementLayout";
@@ -37,6 +38,7 @@ function AssignmentView() {
     refreshSubmissions
   } = useSubmissionsData(assignmentId, params);
 
+
   const { assignment: assignmentData, attachment } = assignment || {};
 
   // fetch assignment details on mount
@@ -67,7 +69,20 @@ function AssignmentView() {
 
   // loading state
   if (detailsLoading) {
-    return <p>Loading...</p>;
+
+    return (
+      <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
+        <Icon name="line-md:loading-twotone-loop" height="30" width="30" />
+
+        <div className="space-y-1 text-center">
+          <h3 className="text-h45 font-semibold text-main">Loading Assignment Workspace...</h3>
+          <p className="text-caption text-muted">
+            Organizing instructions and student submissions for your review.
+          </p>
+        </div>
+      </div>
+
+    );
   }
 
   // error state — no UI break
@@ -91,94 +106,110 @@ function AssignmentView() {
   }
 
   return (
-    <div className="space-y-0 py-2">
-      <div className='flex justify-between'>
-        <h2 className="text-h3">{assignmentData?.title}</h2>
-        {activeTab === "instructions" && (
-          <div className='flex-shrink-0'>
-            <Button
-              buttonName="Edit Details"
-              frontIconName='mingcute:pencil-line'
-              frontIconWidth="24px"
-              frontIconHeght="24px"
-              className="p-1 rounded font-semibold text-md"
-              bgClass=""
-              textClass="text-primary dark:text-background"
-              onClick={() => navigate(`/course/${courseId}/content/assignments/${assignmentId}/edit`)}
-            />
-          </div>
-
-        )}
-
-        {activeTab === "submissions" && (
-          <div className='block md:hidden shrink-0'>
-            <Button buttonName="Export as CSV" frontIconName="material-symbols:download" frontIconHeght="24" frontIconWidth="24" className="p-1 px-2 rounded font-semibold text-md" bgClass="" textClass="text-primary dark:text-background" />
-          </div>
-        )}
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-center text-caption gap-2 text-muted-foreground">
-        <div className="flex gap-2 items-center">
-          <Icon name="mdi:clock-outline" width="16px" height="16px" />
-          <p>{assignmentData?.dueDate ? formatDateTime(assignmentData.dueDate) : "No due date for this assignment"}</p>
-        </div>
-
-        <div className='hidden md:block'>
-          <Icon name="bi:dot" />
-        </div>
-
-        <div className="flex gap-2 items-center">
-          <Icon name="streamline:star-badge-remix" width="16px" height="16px" />
-          <p>Max: {assignmentData?.maxScore} Marks</p>
-        </div>
-
-        <div className='hidden md:block'>
-          <Icon name="bi:dot" />
-        </div>
-
-        <div className="flex gap-2 items-center">
-          <Icon name="mdi:repeat" width="16px" height="16px" />
-          <p>Max Attempts: {assignmentData?.numberOfAttempts}</p>
-        </div>
-      </div>
-
-      <div className="mt-6">
-        <Tabs
-          tabs={tabs}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
+    <>
+      <div className="">
+        <BackButton
+          to={clsx(
+            (activeTab === "instructions" || activeTab === "submissions") && `/course/${courseId}/content/assignments`,
+          )}
+          onClick={activeTab === "view_submission" && (() => setActiveTab("submissions"))}
+          label={clsx(
+            (activeTab === "instructions" || activeTab === "submissions") && 'Back to assignments',
+            activeTab === "view_submission" && 'Back to assignment preview'
+          )}
         />
+      </div>
 
-        <div className="py-5">
+      <div className="space-y-0 p-4">
+        <div className='flex justify-between'>
+          <h2 className="text-h3">{assignmentData?.title}</h2>
           {activeTab === "instructions" && (
-            <InstructionsTab
-              instructions={assignmentData?.instructions}
-              attachment={attachment}
-            />
+            <div className='shrink-0'>
+              <Button
+                buttonName="Edit Details"
+                frontIconName='mingcute:pencil-line'
+                frontIconWidth="24px"
+                frontIconHeght="24px"
+                className="p-1 rounded font-semibold text-md"
+                bgClass=""
+                textClass="text-primary dark:text-background"
+                onClick={() => navigate(`/course/${courseId}/content/assignments/${assignmentId}/edit`)}
+              />
+            </div>
+
           )}
 
           {activeTab === "submissions" && (
-            <SubmissionsTab
-              submissions={submissions}
-              setActiveTab={setActiveTab}
-              setParms={setParams}
-              parms={params}
-              loading={loading}
-              setActiveAssignmentId={setActiveAssignmentId}
-            />
-          )}
-
-          {activeTab === "view_submission" && (
-            <SubmissionView
-              submissions={submissions}
-              setActiveTab={setActiveTab}
-              assignmentId={assignmentId}
-              activeAssignmentId={activeAssignmentId}
-            />
+            <div className='block md:hidden shrink-0'>
+              <Button buttonName="Export as CSV" frontIconName="material-symbols:download" frontIconHeght="24" frontIconWidth="24" className="p-1 px-2 rounded font-semibold text-md" bgClass="" textClass="text-primary dark:text-background" />
+            </div>
           )}
         </div>
+
+        <div className="flex flex-col md:flex-row md:items-center text-caption gap-2 text-muted-foreground">
+          <div className="flex gap-2 items-center">
+            <Icon name="mdi:clock-outline" width="16px" height="16px" />
+            <p>{assignmentData?.dueDate ? formatDateTime(assignmentData.dueDate) : "No due date for this assignment"}</p>
+          </div>
+
+          <div className='hidden md:block'>
+            <Icon name="bi:dot" />
+          </div>
+
+          <div className="flex gap-2 items-center">
+            <Icon name="streamline:star-badge-remix" width="16px" height="16px" />
+            <p>Max: {assignmentData?.maxScore} Marks</p>
+          </div>
+
+          <div className='hidden md:block'>
+            <Icon name="bi:dot" />
+          </div>
+
+          <div className="flex gap-2 items-center">
+            <Icon name="mdi:repeat" width="16px" height="16px" />
+            <p>Max Attempts: {assignmentData?.numberOfAttempts}</p>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <Tabs
+            tabs={tabs}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+
+          <div className="py-5">
+            {activeTab === "instructions" && (
+              <InstructionsTab
+                instructions={assignmentData?.instructions}
+                attachment={attachment}
+              />
+            )}
+
+            {activeTab === "submissions" && (
+              <SubmissionsTab
+                submissions={submissions}
+                setActiveTab={setActiveTab}
+                setParms={setParams}
+                parms={params}
+                loading={loading}
+                setActiveAssignmentId={setActiveAssignmentId}
+              />
+            )}
+
+            {activeTab === "view_submission" && (
+              <SubmissionView
+                submissions={submissions}
+                setActiveTab={setActiveTab}
+                assignmentId={assignmentId}
+                activeAssignmentId={activeAssignmentId}
+                setActiveAssignmentId={setActiveAssignmentId}
+              />
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

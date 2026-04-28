@@ -3,6 +3,7 @@ import { getAssignmentSubmission } from "@/services/AssignmentContent.service";
 import {
     getSubmission,
     patchSubmissionGrade,
+    updateGradedFeedback
 } from "@/services/AssignmentSubmission.service";
 
 export default function useAssignmentSubmissions(assignmentId, params) {
@@ -19,7 +20,7 @@ export default function useAssignmentSubmissions(assignmentId, params) {
 
     const isFetchingRef = useRef(false);
 
-    // ✅ Fetch all submissions
+    // Fetch all submissions
     const fetchSubmissions = useCallback(async () => {
         if (!assignmentId || isFetchingRef.current) return;
 
@@ -49,7 +50,7 @@ export default function useAssignmentSubmissions(assignmentId, params) {
         }
     }, [assignmentId, params]);
 
-    // ✅ Fetch single submission
+    // Fetch single submission
     const fetchSubmissionData = useCallback(async (submissionId) => {
         if (!submissionId) {
             return {
@@ -92,7 +93,7 @@ export default function useAssignmentSubmissions(assignmentId, params) {
         }
     }, []);
 
-    // ✅ Grade submission
+    // Grade submission
     const gradeSubmission = useCallback(async (submissionId, payload) => {
         if (!submissionId) {
             return {
@@ -139,7 +140,39 @@ export default function useAssignmentSubmissions(assignmentId, params) {
         }
     }, []);
 
-    // ✅ auto fetch
+
+    // Update feedback
+    const updateFeedback = useCallback(async (submissionId, feedback) => {
+        if (!submissionId) {
+            return { success: false, data: null, message: "Submission ID required" };
+        }
+
+        try {
+            setGrading(true);
+            setGradeError(null);
+
+            const res = await updateGradedFeedback(submissionId, { feedback });
+            const data = res?.data || res;
+
+            setSubmissions(prev =>
+                prev.map(item => item.id === submissionId ? { ...item, feedback } : item)
+            );
+
+            return { success: true, data, message: "Feedback updated successfully" };
+        } catch (err) {
+            let message = "Failed to update feedback";
+            if (err.response?.status === 400) message = "Invalid feedback data";
+            if (err.response?.status === 403) message = "No permission";
+            setGradeError(message);
+            return { success: false, data: null, message };
+        } finally {
+            setGrading(false);
+        }
+    }, []);
+
+
+
+    // auto fetch
     useEffect(() => {
         fetchSubmissions();
     }, [fetchSubmissions]);
@@ -158,5 +191,7 @@ export default function useAssignmentSubmissions(assignmentId, params) {
         grading,
         gradeError,
         gradeSubmission,
+
+        updateFeedback,
     };
 }

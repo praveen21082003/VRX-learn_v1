@@ -4,7 +4,7 @@ import formatDateTime from '@/utils/formatDateTime'
 
 function SubmissionTableMobileCard({ row, onView }) {
     return (
-        <div className="border border-dashed border-primary/40 rounded-lg p-3 space-y-2">
+        <div className="border border-default rounded-lg p-3 space-y-2">
 
             {/* top row — score + status */}
             <div className="flex justify-between items-start">

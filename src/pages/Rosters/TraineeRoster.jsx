@@ -12,6 +12,8 @@ import { TableToolbar, DataTable } from '@/components/Table'
 import { Icon, Input, Button, Avatar, StatusPill, Select, BackButton } from '@/components/ui'
 import { ROLE_OPTIONS, TRAINEE_ROSTER_SORT_OPTIONS } from '../../config/adminFiltersSelectOptions'
 
+import RosterTableMobileCard from './RosterTableMobileCard'
+
 
 function TraineeRoster() {
 
@@ -25,7 +27,7 @@ function TraineeRoster() {
     const { state } = useLocation();
 
     // hooks
-    const { roster, loading } = useTraineeRosterData(courseId);
+    const { roster, total, loading } = useTraineeRosterData(courseId);
 
 
     // states
@@ -134,50 +136,58 @@ function TraineeRoster() {
 
 
     return (
-        <div className='h-full overflow-y-auto p-6 bg-background text-main'>
-            <div className="mb-2 w-full hidden lg:block">
+        <>
+            <div className="p-2 border-b-2 border-default w-full block lg:hidden">
                 <BackButton to={`/course/${courseId}/overview`} iconName="material-symbols:arrow-back-rounded" label="Back to Overview" />
             </div>
-            <div className="p-4 border border-default rounded-lg">
-                <TableToolbar
-                    headerLabel='Trainee Roster'
-                    headerCaption={
-                        <div className="flex items-center gap-2 text-caption text-muted">
-                            <Icon name="mdi:users" height="16" width="16" />
-                            <span>{noOfTrainees} Trainees Enrolled</span>
-                        </div>
-                    }
-                    selectedRows={selectedRows}
-                    setSelectedRows={setSelectedRows}
-                    search={filters.search}
-                    setSearch={(val) => handleFilterChange('search', val)}
-                >
-                    <Select
-                        label="Sort by:"
-                        value={filters.sort}
-                        onChange={(value) => handleFilterChange('sort', value)}
-                        options={TRAINEE_ROSTER_SORT_OPTIONS}
+            <div className='h-full overflow-y-auto p-6 bg-background text-main'>
+                <div className="mb-2 w-full hidden lg:block">
+                    <BackButton to={`/course/${courseId}/overview`} iconName="material-symbols:arrow-back-rounded" label="Back to Overview" />
+                </div>
+                <div className="p-4 border border-default rounded-lg">
+                    <TableToolbar
+                        headerLabel='Trainee Roster'
+                        headerCaption={
+                            <div className="flex items-center gap-2 text-caption text-muted">
+                                <Icon name="mdi:users" height="16" width="16" />
+                                <span>{noOfTrainees} Trainees Enrolled</span>
+                            </div>
+                        }
+                        selectedRows={selectedRows}
+                        setSelectedRows={setSelectedRows}
+                        search={filters.search}
+                        setSearch={(val) => handleFilterChange('search', val)}
+                    >
+                        <Select
+                            label="Sort by:"
+                            value={filters.sort}
+                            onChange={(value) => handleFilterChange('sort', value)}
+                            options={TRAINEE_ROSTER_SORT_OPTIONS}
+                        />
+                        <Select
+                            label="Role:"
+                            value={filters.role}
+                            onChange={(value) => handleFilterChange('role', value)}
+                            options={ROLE_OPTIONS}
+                        />
+                    </TableToolbar>
+                    <DataTable
+                        loading={loading}
+                        selectedRows={selectedRows}
+                        columns={finalColumns}
+                        data={roster}
+                        page={page}
+                        setPage={setPage}
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                        total={total}
+                        renderMobileCard={(row) => (
+                            <RosterTableMobileCard row={row} />
+                        )}
                     />
-                    <Select
-                        label="Role:"
-                        value={filters.role}
-                        onChange={(value) => handleFilterChange('role', value)}
-                        options={ROLE_OPTIONS}
-                    />
-                </TableToolbar>
-                <DataTable
-                    loading={loading}
-                    selectedRows={selectedRows}
-                    columns={finalColumns}
-                    data={roster}
-                    page={page}
-                    setPage={setPage}
-                    pageSize={pageSize}
-                    setPageSize={setPageSize}
-                    total={roster.totalPages}
-                />
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

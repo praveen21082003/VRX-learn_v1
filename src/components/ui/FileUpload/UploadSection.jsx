@@ -170,7 +170,7 @@ export default function UploadSection({
             </div>
             {!can("FILE_UPLOAD_UI")
                 ? (
-                    <>
+                    <div className='block lg:hidden'>
                         <div className='flex items-center gap-2'>
                             <h5 className='text-h5'>Attachments</h5>
                             {!inputWarning
@@ -198,7 +198,7 @@ export default function UploadSection({
                                 handleRemoveFile={handleRemoveFile}
                             />
                         )}
-                    </>
+                    </div>
                 )
                 : (
                     <motion.div

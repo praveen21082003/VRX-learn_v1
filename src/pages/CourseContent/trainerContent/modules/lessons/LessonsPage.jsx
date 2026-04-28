@@ -123,7 +123,7 @@ function LessonsPage() {
     if (error) return <div className="p-10 text-red-500">{error}</div>;
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 p-4">
             <div className='flex justify-between'>
                 <h2 className="text-h4 md:text-h3 truncate">{selectedModule?.title}</h2>
                 <div className='flex gap-px'>

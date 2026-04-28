@@ -14,13 +14,14 @@ function LogOut({ isOpen, onClose }) {
     async function handleLogout() {
         setLoading(true);
         try {
-            await userLogout();
+            const response = await userLogout();
+            console.log(response)
         } catch (err) {
-            console.error("Logout error:", err);
+            console.error("Backend logout failed, but we will clear local state anyway:", err);
         } finally {
             setLoading(false);
             onClose?.();
-            logout(); // this function in auth context have / logout
+            logout();
         }
     }
 

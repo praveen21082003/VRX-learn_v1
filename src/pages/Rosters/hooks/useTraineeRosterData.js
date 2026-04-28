@@ -5,6 +5,7 @@ export default function useTraineeRosterData(courseId, params = null) {
     const [roster, setRoster] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [total, setTotal] = useState(0);
 
     const fetchRoster = useCallback(async (courseId, params = null) => {
         if (!courseId) return;
@@ -18,6 +19,7 @@ export default function useTraineeRosterData(courseId, params = null) {
             const data = response?.data || response;
 
             setRoster(data || []);
+            setTotal(response?.totalItems || 0);
 
             return {
                 success: true,
@@ -38,6 +40,7 @@ export default function useTraineeRosterData(courseId, params = null) {
             }
 
             setError(message);
+            setTotal(0);
 
             return {
                 success: false,
@@ -63,6 +66,8 @@ export default function useTraineeRosterData(courseId, params = null) {
         loading,
         error,
         setError,
+
+        total,
 
         fetchRoster,
     };
