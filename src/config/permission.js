@@ -15,7 +15,7 @@ export const ROLE_PERMISSION = {
         "UPDATE_USER",
         "UPDATE_COURSE",
         "UPDATE_MODULES",
-        "UPDATE_ASSIGNMENTS",
+        "UPDATE_ASSIGNMENT",
         "UPDATE_QUIZ",
         "UPDATE_LABS",
     ],

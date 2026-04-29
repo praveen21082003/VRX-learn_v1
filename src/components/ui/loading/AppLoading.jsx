@@ -1,42 +1,31 @@
 import { Icon } from '@/components/ui'
+import { useTheme } from '@/context/ThemeProvider'
 
 export default function AppLoading({
-    message = "Loading..."
+    message = "Loading, please wait"
 }) {
+    const { darkMode } = useTheme();
     return (
-        <div className="fixed inset-0 bg-main/80 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-background backdrop-blur-sm flex flex-col items-center justify-center z-50">
+            <div className="relative flex items-center justify-center">
+                <Icon
+                    name="line-md:loading-twotone-loop"
+                    bgClass="text-primary"
+                    width="40"
+                    height="40"
+                />
 
-            <div className="flex items-center gap-4">
+                <img src={darkMode ? "/logo.svg" : "/VRX-logo.svg"} className="absolute h-5 animate-pulse" />
 
-                <div className="relative flex items-center justify-center">
-                    <Icon
-                        name="line-md:loading-twotone-loop"
-                        className="text-primary"
-                        width="64"
-                        height="64"
-                    />
+            </div>
+            <div className="flex items-end gap-2 mt-2 text-muted">
+                <p className="text-sm">{message}</p>
 
-                    <img
-                        src="/VRX-logo.svg"
-                        alt="logo"
-                        className="absolute w-8 h-8"
-                    />
-                </div>
-
-                <div className="flex flex-col items-center text-center">
-                    <h2 className="text-h2 font-semibold">VRXLearn</h2>
-
-                    <div className="flex items-center gap-2 mt-2 text-muted">
-                        <p className="text-sm">{message}</p>
-
-                        <Icon
-                            name="eos-icons:three-dots-loading"
-                            width="28"
-                            height="28"
-                        />
-                    </div>
-                </div>
-
+                <Icon
+                    name="eos-icons:three-dots-loading"
+                    width="16"
+                    height="16"
+                />
             </div>
         </div>
     )

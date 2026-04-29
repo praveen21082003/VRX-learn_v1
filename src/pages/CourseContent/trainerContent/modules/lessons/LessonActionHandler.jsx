@@ -20,8 +20,8 @@ function LessonActionHandler({ mode }) {
 
     const { courseId, course, loading } = useCourse();
     return (
-        <div>
-            <BackButton to={`/course/${courseId}/content/modules/${moduleId}`} label={`Module`} />
+        <div className='p-4'>
+            <BackButton to={`/course/${courseId}/content/modules/${moduleId}`} label={`Back to Module`} />
             <h2 className="text-h3">
                 {isEdit ? "Edit Lesson" : mode === "view" ? "Lesson Preview" : "New Lesson"}
             </h2>

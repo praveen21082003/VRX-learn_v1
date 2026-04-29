@@ -19,6 +19,9 @@ import CourseOverview from '@/pages/CourseContent/CourseOverview';
 import MyCourses from '../pages/Learning/MyLearning';
 import { CoursesSwitcher } from './CoursesSwitcher';
 
+// error page
+import ErrorPage from '../pages/Errors/ErrorPage';
+
 function AppRoutes() {
   const { role, loading } = useAuth();
 
@@ -58,7 +61,14 @@ function AppRoutes() {
 
       </Route>
 
+      <Route path="/unauthorized" element={<ErrorPage statusCode={403} />} />
+      <Route path="/server-error" element={<ErrorPage statusCode={500} />} />
+      <Route path="/maintenance" element={<ErrorPage statusCode={503} />} />
+      <Route path="/404" element={<ErrorPage statusCode={404} />} />
+
       <Route path="/" element={<Navigate to="/login" replace />} />
+
+      <Route path="*" element={<ErrorPage statusCode={404} />} />
     </Routes>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useParams, NavLink, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 
-import { Button, Icon, Dropdown, MarkdownContent, Input, Modal, DeleteConfirmContent, CourseContentEmptyState } from '@/components/ui'
+import { Button, BackButton, Icon, Dropdown, MarkdownContent, Input, Modal, DeleteConfirmContent, CourseContentEmptyState } from '@/components/ui'
 import { ContentLoading } from "@/components/ui/loading"
 import ReorderList from '@/components/dnd/ReorderList';
 import { useToast } from '@/context/ToastProvider';
@@ -123,196 +123,202 @@ function LessonsPage() {
     if (error) return <div className="p-10 text-red-500">{error}</div>;
 
     return (
-        <div className="space-y-4 p-4">
-            <div className='flex justify-between'>
-                <h2 className="text-h4 md:text-h3 truncate">{selectedModule?.title}</h2>
-                <div className='flex gap-px'>
-                    <span className='flex gap-3'>
-                        {isReorderMode ? (
-                            <Button
-                                buttonName='Done'
-                                frontIconWidth="24px"
-                                frontIconHeght="24px"
-                                frontIconName='material-symbols:done-rounded'
-                                className="p-1 px-4 rounded"
-                                onClick={() => setIsReorderMode(false)}
-                            />
-                        ) : (
-                            <div className='relative flex flex-row gap-px'>
+        <>
+            <div className='border-b lg:border-0 border-default py-1 px-2'>
+                <BackButton to={`/course/${courseId}/content/modules`} label="Back to Modules"/>
+            </div>
+            <div className="space-y-4 p-4">
+                <div className='flex justify-between'>
+                    <h2 className="text-h4 md:text-h3 truncate">{selectedModule?.title}</h2>
+                    <div className='flex gap-px'>
+                        <span className='flex gap-3'>
+                            {isReorderMode ? (
                                 <Button
-                                    buttonName="Edit Details"
-                                    frontIconName='mingcute:pencil-line'
+                                    buttonName='Done'
                                     frontIconWidth="24px"
                                     frontIconHeght="24px"
-                                    className="p-1 rounded-r-none rounded font-semibold text-md"
+                                    frontIconName='material-symbols:done-rounded'
+                                    className="p-1 px-4 rounded"
+                                    onClick={() => setIsReorderMode(false)}
+                                />
+                            ) : (
+                                <div className='relative flex flex-row gap-px'>
+                                    <Button
+                                        buttonName="Edit Details"
+                                        frontIconName='mingcute:pencil-line'
+                                        frontIconWidth="24px"
+                                        frontIconHeght="24px"
+                                        className="p-1 rounded-r-none rounded font-semibold text-md"
+                                        bgClass=""
+                                        textClass=""
+                                        isMobile={isMobile}
+                                        onClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/edit`)}
+                                    />
+                                    <Button
+                                        frontIconName="subway:down-2"
+                                        frontIconWidth="16px"
+                                        frontIconHeght="16px"
+                                        className="p-2 px-2 rounded-l-none rounded"
+                                        onClick={() => setOpenDropDown(prev => !prev)}
+                                    />
+                                    {openDropDown && (
+                                        <Dropdown
+                                            buttons={editButtons(() => setIsReorderMode(true))}
+                                            closeDropdown={() => setOpenDropDown(false)}
+                                        />
+                                    )}
+                                </div>
+                            )}
+                            <NavLink to={`/course/${courseId}/content/modules/${moduleId}/lesson/create`}>
+                                <Button
+                                    buttonName="Add New Lesson"
+                                    frontIconName='ic:baseline-plus'
+                                    frontIconWidth="24px"
+                                    frontIconHeght="24px"
+                                    className="p-1 rounded font-semibold text-md"
                                     bgClass=""
                                     textClass=""
                                     isMobile={isMobile}
-                                    onClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/edit`)}
                                 />
-                                <Button
-                                    frontIconName="subway:down-2"
-                                    frontIconWidth="16px"
-                                    frontIconHeght="16px"
-                                    className="p-2 px-2 rounded-l-none rounded"
-                                    onClick={() => setOpenDropDown(prev => !prev)}
-                                />
-                                {openDropDown && (
-                                    <Dropdown
-                                        buttons={editButtons(() => setIsReorderMode(true))}
-                                        closeDropdown={() => setOpenDropDown(false)}
-                                    />
-                                )}
-                            </div>
-                        )}
-                        <NavLink to={`/course/${courseId}/content/modules/${moduleId}/lesson/create`}>
-                            <Button
-                                buttonName="Add New Lesson"
-                                frontIconName='ic:baseline-plus'
-                                frontIconWidth="24px"
-                                frontIconHeght="24px"
-                                className="p-1 rounded font-semibold text-md"
-                                bgClass=""
-                                textClass=""
-                                isMobile={isMobile}
-                            />
-                        </NavLink>
-                    </span>
-                </div>
-            </div>
-
-            <MarkdownContent content={selectedModule?.description} />
-
-            <ul className="flex flex-col">
-                {isReorderMode ? (
-                    <ReorderList
-                        items={orderedLessons}
-                        reorder={reorderLessons}
-                        isUpdating={reOrdering}
-                        addToast={addToast}
-                        onReorderUI={(newOrder) => {
-                            setOrderedLessons(newOrder);
-                            setLessons(newOrder);
-                        }}
-                    />
-                ) : lessonLoading ? (
-                    <div className="h-full w-full">
-                        <ContentLoading count={7} />
+                            </NavLink>
+                        </span>
                     </div>
-                ) : orderedLessons?.length > 0 ? (
-                    <div>
-                        {orderedLessons.map((lesson, index) => {
-                            const isOpen = isOpenDropdown === lesson.id;
-                            return (
-                                <div
-                                    key={lesson.id}
-                                    ref={(el) => (rowRefs.current[lesson.id] = el)}
-                                >
+                </div>
+
+                <MarkdownContent content={selectedModule?.description} />
+
+                <ul className="flex flex-col">
+                    {isReorderMode ? (
+                        <ReorderList
+                            items={orderedLessons}
+                            reorder={reorderLessons}
+                            isUpdating={reOrdering}
+                            addToast={addToast}
+                            onReorderUI={(newOrder) => {
+                                setOrderedLessons(newOrder);
+                                setLessons(newOrder);
+                            }}
+                        />
+                    ) : lessonLoading ? (
+                        <div className="h-full w-full">
+                            <ContentLoading count={7} />
+                        </div>
+                    ) : orderedLessons?.length > 0 ? (
+                        <div>
+                            {orderedLessons.map((lesson, index) => {
+                                const isOpen = isOpenDropdown === lesson.id;
+                                return (
                                     <div
-                                        className={clsx(
-                                            'flex gap-2 items-center p-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary ',
-                                            isUpdating ? "cursor-progress" : "cursor-pointer",
-                                                (isOpenDropdown === lesson.id || renameLessonId === lesson.id) && 'bg-primary/16'
-                                        )}
-                                        onDoubleClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/${lesson.id}/preview`)}
-                                        onClick={(e) => {
-                                            if (isOpenDropdown === lesson.id) {
-                                                e.preventDefault();
-                                                setIsOpenDropdown(null);
-                                            }
-                                        }}
+                                        key={lesson.id}
+                                        ref={(el) => (rowRefs.current[lesson.id] = el)}
                                     >
-                                        <Icon
-                                            name={lesson.mimeType === 'video/mp4' ? "ep:video-play" : "basil:document-outline"}
-                                            height="25px"
-                                            width="25px"
-                                        />
-                                        <div className='flex items-center gap-2 w-full min-w-0'>
-                                            <span className="py-1 mr-2">{index + 1}.</span>
-
-                                            {renameLessonId === lesson.id ? (
-                                                <Input
-                                                    ref={inputRef}
-                                                    value={renameValue}
-                                                    disabled={isUpdating}
-                                                    onChange={(e) => setRenameValue(e.target.value)}
-                                                    autoFocus
-                                                    className="text-sm"
-                                                    bgClass="bg-primary-border"
-                                                    onBlur={() => setRenameLessonId(null)}
-                                                    onKeyDown={(e) => {
-                                                        if (e.key === "Enter") {
-                                                            e.preventDefault();
-                                                            setRenameLessonId(null);
-                                                            renameLessonHandler(lesson.id);
-                                                        }
-                                                        if (e.key === "Escape") {
-                                                            setRenameLessonId(null);
-                                                            setRenameValue(lesson.title);
-                                                        }
-                                                    }}
-                                                />
-                                            ) : (
-                                                <span className="truncate flex-1">{lesson.title}</span>
+                                        <div
+                                            className={clsx(
+                                                'flex gap-2 items-center p-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary ',
+                                                isUpdating ? "cursor-progress" : "cursor-pointer",
+                                                (isOpenDropdown === lesson.id || renameLessonId === lesson.id) && 'bg-primary/16'
                                             )}
-
-                                            <div
-                                                className='relative flex justify-center mr-5'
-                                                onClick={(e) => {
+                                            onDoubleClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/${lesson.id}/preview`)}
+                                            onClick={(e) => {
+                                                if (isOpenDropdown === lesson.id) {
                                                     e.preventDefault();
-                                                    e.stopPropagation();
-                                                    setIsOpenDropdown(prev =>
-                                                        prev === lesson.id ? null : lesson.id
-                                                    );
-                                                }}
-                                            >
-                                                <Icon
-                                                    name="iconamoon:menu-kebab-horizontal"
-                                                    height="32px"
-                                                    width="32px"
-                                                    className="cursor-help"
-                                                />
-                                                {isOpen && (
-                                                    <Dropdown
-                                                        buttons={buttons(courseId, moduleId, handleRename, lesson.id, navigate, setDeleteLessonId)}
-                                                        closeDropdown={() => setIsOpenDropdown(null)}
+                                                    setIsOpenDropdown(null);
+                                                }
+                                            }}
+                                        >
+                                            <Icon
+                                                name={lesson.mimeType === 'video/mp4' ? "ep:video-play" : "basil:document-outline"}
+                                                height="25px"
+                                                width="25px"
+                                            />
+                                            <div className='flex items-center gap-2 w-full min-w-0'>
+                                                <span className="py-1 mr-2">{index + 1}.</span>
+
+                                                {renameLessonId === lesson.id ? (
+                                                    <Input
+                                                        ref={inputRef}
+                                                        value={renameValue}
+                                                        disabled={isUpdating}
+                                                        onChange={(e) => setRenameValue(e.target.value)}
+                                                        autoFocus
+                                                        className="text-sm"
+                                                        bgClass="bg-primary-border"
+                                                        onBlur={() => setRenameLessonId(null)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === "Enter") {
+                                                                e.preventDefault();
+                                                                setRenameLessonId(null);
+                                                                renameLessonHandler(lesson.id);
+                                                            }
+                                                            if (e.key === "Escape") {
+                                                                setRenameLessonId(null);
+                                                                setRenameValue(lesson.title);
+                                                            }
+                                                        }}
                                                     />
+                                                ) : (
+                                                    <span className="truncate flex-1">{lesson.title}</span>
                                                 )}
-                                                {deleteLessonId === lesson.id && (
-                                                    <Modal
-                                                        isOpen={true}
-                                                        onClose={() => setDeleteLessonId(null)}
-                                                        title="Are you absolutely sure?"
-                                                    >
-                                                        <DeleteConfirmContent
-                                                            onClose={() => setDeleteLessonId(null)}
-                                                            onConfirm={() => handleDeleteLesson(lesson.id)}
-                                                            loading={isDeleting}
-                                                            confirmText={lesson.title}
-                                                            entityName="lesson"
-                                                            message={`You are about to permanently delete the ${lesson.title} lesson. All associated materials will be permanently erased.`}
+
+                                                <div
+                                                    className='relative flex justify-center mr-5'
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        setIsOpenDropdown(prev =>
+                                                            prev === lesson.id ? null : lesson.id
+                                                        );
+                                                    }}
+                                                >
+                                                    <Icon
+                                                        name="iconamoon:menu-kebab-horizontal"
+                                                        height="32px"
+                                                        width="32px"
+                                                        className="cursor-help"
+                                                    />
+                                                    {isOpen && (
+                                                        <Dropdown
+                                                            buttons={buttons(courseId, moduleId, handleRename, lesson.id, navigate, setDeleteLessonId)}
+                                                            closeDropdown={() => setIsOpenDropdown(null)}
                                                         />
-                                                    </Modal>
-                                                )}
+                                                    )}
+                                                    {deleteLessonId === lesson.id && (
+                                                        <Modal
+                                                            isOpen={true}
+                                                            onClose={() => setDeleteLessonId(null)}
+                                                            title="Are you absolutely sure?"
+                                                        >
+                                                            <DeleteConfirmContent
+                                                                onClose={() => setDeleteLessonId(null)}
+                                                                onConfirm={() => handleDeleteLesson(lesson.id)}
+                                                                loading={isDeleting}
+                                                                confirmText={lesson.title}
+                                                                entityName="lesson"
+                                                                message={`You are about to permanently delete the ${lesson.title} lesson. All associated materials will be permanently erased.`}
+                                                            />
+                                                        </Modal>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                ) : (
-                    <div className="h-full w-full">
-                        <CourseContentEmptyState
-                            title="No Lessons Found"
-                            description="You have not added any lessons to this Module yet, Start building your course by adding Lessons."
-                            buttonText="Add New Lesson"
-                            onButtonClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/create`)}
-                        />
-                    </div>
-                )}
-            </ul>
-        </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="h-full w-full">
+                            <CourseContentEmptyState
+                                title="No Lessons Found"
+                                description="You have not added any lessons to this Module yet, Start building your course by adding Lessons."
+                                buttonText="Add New Lesson"
+                                onButtonClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/lesson/create`)}
+                            />
+                        </div>
+                    )}
+                </ul>
+            </div>
+        </>
+
     );
 }
 

@@ -115,11 +115,11 @@ function CourseManagementLayout() {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
+            <div className="flex flex-col items-center justify-center h-screen w-full bg-background text-main gap-4">
                 <Icon name="line-md:loading-twotone-loop" height="30" width="30" />
 
                 <div className="space-y-1 text-center">
-                    <h3 className="text-h45 font-semibold text-main">Getting things ready...</h3>
+                    <h3 className="text-h45 font-semibold">Getting things ready...</h3>
                     <p className="text-caption text-muted">
                         We're preparing your course content for you.
                     </p>

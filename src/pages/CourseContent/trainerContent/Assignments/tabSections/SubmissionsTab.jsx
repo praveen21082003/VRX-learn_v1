@@ -15,7 +15,7 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
     const [filtersOpen, setFiltersOpen] = useState(false);
 
 
-    
+
     // handle functions
     const handleFilterChange = (field, value) => {
         setParms((prev) => ({
@@ -44,7 +44,7 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
         switch (col.key) {
             case "student": return {
                 ...col, render: (row) =>
-                    <div className="flex items-center text-main gap-2">
+                    <div className="flex items-center text-main gap-2 hover:text-primary hover:font-bold hover:cursor-pointer" onClick={() => { setActiveTab("view_submission"); setActiveAssignmentId(row.id) }}>
                         <Avatar name={row.username} />
                         <div>
                             <p className='text-body'>{row.username}</p>
@@ -138,7 +138,7 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
             <div className='lg:hidden border border-default rounded-lg'>
                 {/* header — always visible */}
                 <button
-                    className='w-full flex justify-between items-center px-4 py-3 bg-muted'
+                    className='w-full flex justify-between items-center px-4 py-3 bg-menu-header'
                     onClick={() => setFiltersOpen(prev => !prev)}
                 >
                     <span className='text-h5 font-medium'>Filters</span>

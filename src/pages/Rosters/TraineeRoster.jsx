@@ -1,7 +1,9 @@
 //  Trainee roster for trainer 
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
+import { useDebounce } from '@/hooks/useDebounce';
+
 
 import useTraineeRosterData from './hooks/useTraineeRosterData'
 import formatDateTime from '@/utils/formatDateTime'
@@ -20,14 +22,12 @@ function TraineeRoster() {
     const INITIAL_FILTERS = {
         search: "",
         role: null,
-        sort: null,
+        sort: "date_asc",
     };
 
     const { courseId } = useParams();
     const { state } = useLocation();
 
-    // hooks
-    const { roster, total, loading } = useTraineeRosterData(courseId);
 
 
     // states
@@ -36,7 +36,48 @@ function TraineeRoster() {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
+
+
+    // hooks
+    const debouncedSearch = useDebounce(filters.search, 500);
+
+    const { roster, total, loading, fetchRoster } = useTraineeRosterData(courseId, filters);
+
     const noOfTrainees = state.noOfTrainees
+
+
+    // fetch table data 
+    // auto fetch
+    useEffect(() => {
+
+        const sortMapping = {
+            date_asc: { sortByEnrollmentDate: "desc" },
+            date_desc: { sortByEnrollmentDate: "asc" },
+            user_asc: { sortByUsername: "asc" },
+            user_desc: { sortByUsername: "desc" },
+        };
+
+        const { sort, role } = filters;
+
+        const params = {
+            page: page,
+            limit: pageSize,
+            name: debouncedSearch || undefined,
+            role: role,
+            ...(sortMapping[sort] || {}),
+        }
+
+        Object.keys(params).forEach(key =>
+            (params[key] === undefined || params[key] === null) && delete params[key]
+        );
+
+
+        if (courseId) {
+            fetchRoster(courseId, params);
+            console.log("fetch", params)
+
+        }
+    }, [page, pageSize, debouncedSearch, filters.sort, filters.role, fetchRoster]);
 
 
     // ------------Table Columns------------
@@ -132,6 +173,13 @@ function TraineeRoster() {
             ...prev,
             [key]: value
         }));
+        setPage(1);
+    };
+
+    // Clear Filters
+    const clearFilters = () => {
+        setFilters(INITIAL_FILTERS);
+        setPage(1);
     };
 
 
@@ -181,6 +229,7 @@ function TraineeRoster() {
                         pageSize={pageSize}
                         setPageSize={setPageSize}
                         total={total}
+                        clearFilters={clearFilters}
                         renderMobileCard={(row) => (
                             <RosterTableMobileCard row={row} />
                         )}

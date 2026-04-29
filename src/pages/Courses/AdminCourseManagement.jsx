@@ -23,7 +23,7 @@ function AdminCourseManagement() {
 
     const INITIAL_FILTERS = {
         search: "",
-        sort: null,
+        sort: "create_desc",
     };
 
     const { resetBreadcrumbs } = useBreadcrumbs();
@@ -64,7 +64,7 @@ function AdminCourseManagement() {
                 return {
                     ...col,
                     render: (row) => (
-                        <div className="hover:text-primary hover:cursor-pointer transition-colors" onClick={() => handleOpenOverview(row.id)}>
+                        <div className="hover:text-primary hover:font-bold hover:cursor-pointer transition-colors" onClick={() => handleOpenOverview(row.id)}>
                             {row.title}
                         </div>
                     ),
@@ -274,7 +274,7 @@ function AdminCourseManagement() {
     return (
         <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
 
-            <div className="p-4 flex-shrink-0">
+            <div className="p-4 shrink-0">
                 <TableToolbar
                     headerLabel="Course Management"
                     selectedRows={selectedRows}

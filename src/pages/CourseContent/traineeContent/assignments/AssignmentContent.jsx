@@ -76,6 +76,9 @@ function AssignmentContent() {
     }, [assignmentDetail?.id]);
 
     const getButtonText = () => {
+        if (submitting){
+            return "Submiting..."
+        }
         if (submitting && uploadProgress > 0 && uploadProgress < 100) {
             return "Uploading...";
         }

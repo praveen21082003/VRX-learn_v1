@@ -82,7 +82,7 @@ function Input({
                         ${bgClass}
                         focus:ring-1 focus:ring-brand
                         focus:border-brand
-                        disabled:bg-gray-100 disabled:cursor-not-allowed
+                        disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed
                         [&::-ms-reveal]:hidden
                         [&::-ms-clear]:hidden
                         `}

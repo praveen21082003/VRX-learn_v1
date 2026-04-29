@@ -63,6 +63,13 @@
         background-color: var(--color-secondary-surface);
     }
 
+    .bg-menu-header {
+        background-color: var(--color-header-menu);
+    }
+    .dark .bg-menu-header{
+        background-color: var(--color-surface-primary-dark);
+    }
+
 
 
 

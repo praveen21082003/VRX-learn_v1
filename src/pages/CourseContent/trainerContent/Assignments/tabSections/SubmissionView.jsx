@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import GradeImg from "@/assets/images/Grade.svg"
+
 import { Button, Avatar, StatusPill, Icon, Input } from "@/components/ui";
 import { useClickOutside } from '@/hooks/useClickOutside'
 
@@ -318,6 +320,13 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                             className="px-4 py-2 rounded"
                             disabled={grading}
                             onClick={handleSubmit}
+                        />
+                    </div>
+                    <div className="hidden w-full lg:flex justify-center ">
+                        <img
+                            src={GradeImg}
+                            alt="grading"
+                            className="w-56"
                         />
                     </div>
 

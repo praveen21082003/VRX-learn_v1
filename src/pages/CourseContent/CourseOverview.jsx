@@ -130,7 +130,7 @@ function CourseOverview() {
     }
 
 
-    if (loading) return <div className='flex h-screen w-full justify-center items-center'><Icon name="line-md:loading-twotone-loop" height="30" width="30" />Loading...</div>;
+    if (loading) return <div className='flex h-screen w-full justify-center text-main items-center'><Icon name="line-md:loading-twotone-loop" height="30" width="30" />Loading...</div>;
     if (error) return (
         <div className='flex flex-col h-screen w-full justify-center items-center text-red-500'>
             <Icon name="fluent:mail-error-16-filled" height="40" width="40" />
