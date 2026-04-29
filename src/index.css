@@ -4,7 +4,7 @@
 /* Dark mode variant */
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme{
+@theme {
   --color-primary: #840227;
 }
 
@@ -46,6 +46,8 @@
   --color-logo-rgb: 217, 217, 217;
   --color-border-rgb: 226, 228, 231;
 
+  --color-header-menu: #F8F9FA;
+
 
 
   --font-h0: 48px;
@@ -71,17 +73,13 @@
   --font-emphasis: 12px;
   --font-caption: 12px;
   --font-small: 11px;
-  --font-typo:22px
-
-  --lh-ll: 26px;
+  --font-typo: 22px --lh-ll: 26px;
   --lh-large: 24px;
   --lh-normal: 22px;
   --lh-emphasis: 22px;
   --lh-caption: 18px;
   --lh-small: 16px;
-  --lh-typo:32px
-
-  --fw-medium: 500;
+  --lh-typo: 32px --fw-medium: 500;
 }
 
 

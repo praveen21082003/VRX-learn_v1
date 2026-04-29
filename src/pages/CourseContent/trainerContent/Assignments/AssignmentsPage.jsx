@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useCourse, useAssignmentContext } from "../layout/CourseManagementLayout";
 import useDeleteAssignment from './hooks/useDeleteAssignment';
 
-import { Button, Icon, Input, Dropdown, Modal, CourseContentEmptyState, DeleteConfirmContent } from '@/components/ui'
+import { Button, BackButton, Icon, Input, Dropdown, Modal, CourseContentEmptyState, DeleteConfirmContent } from '@/components/ui'
 import { ContentLoading } from "@/components/ui/loading"
 import { getAssignmentButtons } from '@/config/dropdownButtons';
 import { useToast } from '@/context/ToastProvider';
@@ -108,165 +108,170 @@ function AssignmentsPage() {
 
 
   return (
-    <div className="space-y-6" onClick={() => setRenameAssignmentId(null)}>
-      <div className='flex justify-between'>
-        <h2 className="text-h3">Assignments</h2>
-        <NavLink to={`/course/${courseId}/content/assignments/create`}>
-          <Button
-            buttonName="Add New Assignment"
-            frontIconName="ic:baseline-plus"
-            frontIconWidth="24px"
-            frontIconHeght="24px"
-            className="p-1 rounded font-semibold text-md"
-            bgClass=""
-            textClass="hover:text-primary dark:hover:text-white/70"
-            isMobile={isMobile}
-          />
-        </NavLink>
+    <>
+      <div className="block md:hidden border-b border-default p-2 px-4">
+        <BackButton to={`/course/${courseId}/content`} label="Back" />
       </div>
-
-      <ul className="flex flex-col">
-        {assignmentListLoading ? (
-          <div className="h-full w-full">
-            <ContentLoading count={7} />
-          </div>
-
-        ) : assingnmentListError ? (
-          <div className="text-center py-6 text-red-500">
-            {assingnmentListError}
-          </div>
-
-        ) : assignmentList?.length > 0 ? (
-          assignmentList.map((assignment) => {
-            const isOpen = isOpenDropdown === assignment.id;
-            return (
-              <li
-                key={assignment.id}
-                ref={(el) => (rowRefs.current[assignment.id] = el)}
-              >
-                <NavLink
-                  to={`/course/${courseId}/content/assignments/${assignment.id}`}
-                  onDoubleClick={() => navigate(`/course/${courseId}/content/assignments/${assignment.id}/view`)}
-                  onClick={(e) => {
-                    if (isOpenDropdown === assignment.id) {
-                      e.preventDefault();
-                      setIsOpenDropdown(null);
-                    }
-                  }}
-                  className={clsx(
-                    "flex items-center justify-between px-5 py-3 rounded-md hover:bg-primary/16 dark:hover:bg-primary transition-colors cursor-pointer",
-                    (isOpenDropdown === assignment.id || renameAssignmentId === assignment.id) && "bg-primary/16"
-                  )}
-                >
-                  {/* Left side */}
-                  <div className="flex items-center w-full min-w-0 gap-3">
-                    <Icon
-                      name="material-symbols:assignment-outline"
-                      height="25"
-                      width="25"
-                      className="text-muted-foreground"
-                    />
-                    <div className='flex flex-col w-full'>
-                      {renameAssignmentId === assignment.id ? (
-                        <span
-                          className='flex-1'
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                        >
-                          <Input
-                            ref={inputRef}
-                            className="text-sm"
-                            paddingClass="p-2"
-                            bgClass="bg-primary-border"
-                            value={renameValue}
-                            autoFocus
-                            onChange={(e) => setRenameValue(e.target.value)}
-                            onBlur={() => setRenameAssignmentId(null)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.preventDefault();
-                                const trimmed = renameValue.trim();
-                                const original = assignment.title.trim();
-                                if (trimmed === original) {
-                                  setRenameAssignmentId(null);
-                                  return;
-                                }
-                                if (!trimmed) return;
-                                renameAssignmentHandler(assignment.id);
-                              }
-                              if (e.key === "Escape") {
-                                setRenameAssignmentId(null);
-                                setRenameValue(assignment.title);
-                              }
-                            }}
-                          />
-                        </span>
-                      ) : (
-                        <span className="text-h45 text-foreground">
-                          {assignment.title}
-                        </span>
-                      )}
-                      <span className='text-caption text-muted-foreground'>
-                        Due: {formatDateTime(assignment.dueDate)}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Right side - kebab */}
-                  <div
-                    className='relative w-20 h-auto flex justify-center'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setIsOpenDropdown(prev =>
-                        prev === assignment.id ? null : assignment.id
-                      );
-                    }}
-                  >
-                    <Icon
-                      name="iconamoon:menu-kebab-horizontal"
-                      height="32px"
-                      width="32px"
-                      className="cursor-help"
-                    />
-                    {isOpen && (
-                      <Dropdown
-                        buttons={getAssignmentButtons(courseId, assignment.id, handleRename, setDeleteAssignmentId, navigate)}
-                        closeDropdown={() => setIsOpenDropdown(null)}
-                      />
-                    )}
-                    {deleteAssignmentId === assignment.id && (
-                      <Modal
-                        isOpen={true}
-                        onClose={() => setDeleteAssignmentId(null)}
-                        title="Are you absolutely sure?"
-                      >
-                        <DeleteConfirmContent
-                          onClose={() => setDeleteAssignmentId(null)}
-                          onConfirm={() => handleDelete(assignment.id)}
-                          confirmText={assignment.title}
-                          entityName="assignment"
-                          loading={deleting}
-                          message={`You are about to permanently delete ${assignment.title}.`}
-                        />
-                      </Modal>
-                    )}
-                  </div>
-                </NavLink>
-              </li>
-            );
-          })
-        ) : (
-          <div className="py-10">
-            <CourseContentEmptyState
-              title="No Assignments Found"
-              description="You have not added any assignments yet. Start by creating one."
-              buttonText="Add New Assignment"
-              onButtonClick={() => navigate(`/course/${courseId}/content/assignments/create`)}
+      <div className="space-y-6 p-4" onClick={() => setRenameAssignmentId(null)}>
+        <div className='flex justify-between'>
+          <h2 className="text-h3">Assignments</h2>
+          <NavLink to={`/course/${courseId}/content/assignments/create`}>
+            <Button
+              buttonName="Add New Assignment"
+              frontIconName="ic:baseline-plus"
+              frontIconWidth="24px"
+              frontIconHeght="24px"
+              className="p-1 rounded font-semibold text-md"
+              bgClass=""
+              textClass="hover:text-primary dark:hover:text-white/70"
+              isMobile={isMobile}
             />
-          </div>
-        )}
-      </ul>
-    </div>
+          </NavLink>
+        </div>
+
+        <ul className="flex flex-col">
+          {assignmentListLoading ? (
+            <div className="h-full w-full">
+              <ContentLoading count={7} />
+            </div>
+
+          ) : assingnmentListError ? (
+            <div className="text-center py-6 text-red-500">
+              {assingnmentListError}
+            </div>
+
+          ) : assignmentList?.length > 0 ? (
+            assignmentList.map((assignment) => {
+              const isOpen = isOpenDropdown === assignment.id;
+              return (
+                <li
+                  key={assignment.id}
+                  ref={(el) => (rowRefs.current[assignment.id] = el)}
+                >
+                  <NavLink
+                    to={`/course/${courseId}/content/assignments/${assignment.id}`}
+                    onDoubleClick={() => navigate(`/course/${courseId}/content/assignments/${assignment.id}/view`)}
+                    onClick={(e) => {
+                      if (isOpenDropdown === assignment.id) {
+                        e.preventDefault();
+                        setIsOpenDropdown(null);
+                      }
+                    }}
+                    className={clsx(
+                      "flex items-center justify-between px-5 py-3 rounded-md hover:bg-primary/16 dark:hover:bg-primary transition-colors cursor-pointer",
+                      (isOpenDropdown === assignment.id || renameAssignmentId === assignment.id) && "bg-primary/16"
+                    )}
+                  >
+                    {/* Left side */}
+                    <div className="flex items-center w-full min-w-0 gap-3">
+                      <Icon
+                        name="material-symbols:assignment-outline"
+                        height="25"
+                        width="25"
+                        className="text-muted-foreground"
+                      />
+                      <div className='flex flex-col w-full'>
+                        {renameAssignmentId === assignment.id ? (
+                          <span
+                            className='flex-1'
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          >
+                            <Input
+                              ref={inputRef}
+                              className="text-sm"
+                              paddingClass="p-2"
+                              bgClass="bg-primary-border"
+                              value={renameValue}
+                              autoFocus
+                              onChange={(e) => setRenameValue(e.target.value)}
+                              onBlur={() => setRenameAssignmentId(null)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  const trimmed = renameValue.trim();
+                                  const original = assignment.title.trim();
+                                  if (trimmed === original) {
+                                    setRenameAssignmentId(null);
+                                    return;
+                                  }
+                                  if (!trimmed) return;
+                                  renameAssignmentHandler(assignment.id);
+                                }
+                                if (e.key === "Escape") {
+                                  setRenameAssignmentId(null);
+                                  setRenameValue(assignment.title);
+                                }
+                              }}
+                            />
+                          </span>
+                        ) : (
+                          <span className="text-h45 text-foreground">
+                            {assignment.title}
+                          </span>
+                        )}
+                        <span className='text-caption text-muted-foreground'>
+                          Due: {formatDateTime(assignment.dueDate)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Right side - kebab */}
+                    <div
+                      className='relative w-20 h-auto flex justify-center'
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsOpenDropdown(prev =>
+                          prev === assignment.id ? null : assignment.id
+                        );
+                      }}
+                    >
+                      <Icon
+                        name="iconamoon:menu-kebab-horizontal"
+                        height="32px"
+                        width="32px"
+                        className="cursor-help"
+                      />
+                      {isOpen && (
+                        <Dropdown
+                          buttons={getAssignmentButtons(courseId, assignment.id, handleRename, setDeleteAssignmentId, navigate)}
+                          closeDropdown={() => setIsOpenDropdown(null)}
+                        />
+                      )}
+                      {deleteAssignmentId === assignment.id && (
+                        <Modal
+                          isOpen={true}
+                          onClose={() => setDeleteAssignmentId(null)}
+                          title="Are you absolutely sure?"
+                        >
+                          <DeleteConfirmContent
+                            onClose={() => setDeleteAssignmentId(null)}
+                            onConfirm={() => handleDelete(assignment.id)}
+                            confirmText={assignment.title}
+                            entityName="assignment"
+                            loading={deleting}
+                            message={`You are about to permanently delete ${assignment.title}.`}
+                          />
+                        </Modal>
+                      )}
+                    </div>
+                  </NavLink>
+                </li>
+              );
+            })
+          ) : (
+            <div className="py-10">
+              <CourseContentEmptyState
+                title="No Assignments Found"
+                description="You have not added any assignments yet. Start by creating one."
+                buttonText="Add New Assignment"
+                onButtonClick={() => navigate(`/course/${courseId}/content/assignments/create`)}
+              />
+            </div>
+          )}
+        </ul>
+      </div>
+    </>
   );
 }
 

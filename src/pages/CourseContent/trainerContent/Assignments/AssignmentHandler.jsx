@@ -26,8 +26,17 @@ function AssignmentHandler({ mode }) {
 
     if (isEdit && detailsLoading) {
         return (
-            <div className="flex h-screen w-full justify-center items-center">
+            <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
                 <Icon name="line-md:loading-twotone-loop" height="30" width="30" />
+
+                <div className="space-y-1 text-center">
+                    <h3 className="text-h45 font-semibold text-main">
+                        Loading Assignment Details...
+                    </h3>
+                    <p className="text-caption text-muted">
+                        Fetching existing data so you can review and update the assignment.
+                    </p>
+                </div>
             </div>
         );
     }
@@ -38,8 +47,13 @@ function AssignmentHandler({ mode }) {
 
 
     return (
-        <div>
-            <BackButton to={`/course/${courseId}/content/assignments`} label={`${course?.title || "Loading..."} - Assignments`} />
+        <div className='p-4 mb-30 lg:mb-0'>
+            {
+                (mode === "create" || mode === "edit") &&
+                <BackButton to={`/course/${courseId}/content/assignments`} label={`${course?.title || "Loading..."} - Assignments`} />
+
+            }
+
 
             {mode === "view" ? (
                 <AssignmentView assignment={initialData} />

@@ -15,13 +15,15 @@ import CourseActionHandler from './CourseActionHandler';
 import formatDateTime from '@/utils/formatDateTime'
 import { useNavigate } from 'react-router-dom';
 
+import CourseTableMobileCard from './CourseTableMobileCard';
+
 
 
 function AdminCourseManagement() {
 
     const INITIAL_FILTERS = {
         search: "",
-        sort: null,
+        sort: "create_desc",
     };
 
     const { resetBreadcrumbs } = useBreadcrumbs();
@@ -62,7 +64,7 @@ function AdminCourseManagement() {
                 return {
                     ...col,
                     render: (row) => (
-                        <div className="hover:text-primary hover:cursor-pointer transition-colors" onClick={() => handleOpenOverview(row.id)}>
+                        <div className="hover:text-primary hover:font-bold hover:cursor-pointer transition-colors" onClick={() => handleOpenOverview(row.id)}>
                             {row.title}
                         </div>
                     ),
@@ -270,56 +272,61 @@ function AdminCourseManagement() {
 
 
     return (
-        <div className="w-full p-4 bg-transparent text-main border-b border-gray-200">
-            <TableToolbar
-                headerLabel="Course Management"
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                search={filters.search}
-                searchPlaceholder="Search by Course name or Trainer names"
-                setSearch={(val) => {
-                    handleFilterChange('search', val);
-                    setPage(1);
-                }}
-                onAdd={() => handleOpenCreate()}
-                onExport={() => handleExport()}
-                addLabel="Add New Course"
-            // BulK Action ui can add here
-            // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}
-            >
-                <Select
-                    label="Sort by:"
-                    value={filters.sort}
-                    onChange={(value) => handleFilterChange('sort', value)}
-                    options={COURSE_SORT_OPTION}
-                    disabled={isSearchActive}
+        <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
+
+            <div className="p-4 shrink-0">
+                <TableToolbar
+                    headerLabel="Course Management"
+                    selectedRows={selectedRows}
+                    setSelectedRows={setSelectedRows}
+                    search={filters.search}
+                    searchPlaceholder="Search by Course name or Trainer names"
+                    setSearch={(val) => {
+                        handleFilterChange('search', val);
+                        setPage(1);
+                    }}
+                    onAdd={() => handleOpenCreate()}
+                    onExport={() => handleExport()}
+                    addLabel="Add New Course"
+                // BulK Action ui can add here
+                // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}
+                >
+                    <Select
+                        label="Sort by:"
+                        value={filters.sort}
+                        onChange={(value) => handleFilterChange('sort', value)}
+                        options={COURSE_SORT_OPTION}
+                        disabled={isSearchActive}
+                    />
+
+                </TableToolbar>
+            </div>
+
+
+            <div className="md:px-4 md:pb-4 flex-1 overflow-hidden px-2 pb-4 min-h-0">
+                {/* Course Table */}
+                <DataTable
+                    loading={loading}
+                    mobileLoadingType="course"
+                    selectedRows={selectedRows}
+                    columns={finalColumns}
+                    data={courses}
+                    page={page}
+                    setPage={setPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                    total={total}
+                    clearFilters={clearFilters}
+                    renderMobileCard={(row, key) => (
+                        <CourseTableMobileCard
+                            key={key}
+                            row={row}
+                            columns={finalColumns}
+                            loading={loading}
+                        />
+                    )}
                 />
-
-            </TableToolbar>
-
-
-            {/* Course Table */}
-            <DataTable
-                loading={loading}
-                selectedRows={selectedRows}
-                columns={finalColumns}
-                data={courses}
-                page={page}
-                setPage={setPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                total={total}
-                clearFilters={clearFilters}
-            // renderMobileCard={(row, key) => (
-            //     <CourseCard
-            //         key={key}
-            //         row={row}
-            //         columns={coursesManagementColumns}
-            //         loading={loading}
-            //     />
-            // )}
-            />
-
+            </div>
 
             {open && (
                 <Modal

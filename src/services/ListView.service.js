@@ -27,7 +27,8 @@ export const getCourses = (params = {}) => {
 
 // trainee roster for trainer
 export const getTraineesRoster = (courseId, params = {}) => {
-    return axiosInstance.get(`/api/v1/list/trainer/trainees/${courseId}`,{
+    console.log("service",courseId, params);
+    return axiosInstance.get(`/api/v1/list/trainer/trainees/${courseId}`, {
         params,
     })
 }

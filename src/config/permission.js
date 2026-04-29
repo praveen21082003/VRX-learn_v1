@@ -15,7 +15,7 @@ export const ROLE_PERMISSION = {
         "UPDATE_USER",
         "UPDATE_COURSE",
         "UPDATE_MODULES",
-        "UPDATE_ASSIGNMENTS",
+        "UPDATE_ASSIGNMENT",
         "UPDATE_QUIZ",
         "UPDATE_LABS",
     ],
@@ -41,7 +41,8 @@ export const ROLE_PERMISSION = {
     trainee: [
         "VIEW_COURSE",
         "SUBMIT_ASSIGNMENT",
-        "BREADCRUMBS_DASHBOARD"
+        "BREADCRUMBS_DASHBOARD",
+        "FILE_UPLOAD_UI"
     ]
 }
 

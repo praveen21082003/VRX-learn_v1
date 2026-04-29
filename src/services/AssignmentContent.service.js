@@ -21,7 +21,7 @@ export const getTrainerAssignmentDetail = async (assignmentId) => {
 
 
 // Assignment Submissions to list sbmission table
-export const getSubmissionsData = async (assignmentId, params = {}) => {
+export const getAssignmentSubmission = async (assignmentId, params = {}) => {
     return axiosInstance.get(`/api/v1/assignment-contents/trainer/submissions/${assignmentId}`, {
         params,
     })

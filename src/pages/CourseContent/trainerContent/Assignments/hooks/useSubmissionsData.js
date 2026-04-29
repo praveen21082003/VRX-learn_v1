@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getSubmissionsData } from "@/services/AssignmentContent.service";
+import { getAssignmentSubmission } from "@/services/AssignmentContent.service";
 
 export const useSubmissionsData = (assignmentId, params) => {
   const [submissions, setSubmissions] = useState([]);
@@ -16,13 +16,15 @@ export const useSubmissionsData = (assignmentId, params) => {
       setLoading(true);
       setError(null);
 
-      const response = await getSubmissionsData(assignmentId, params);
+      const response = await getAssignmentSubmission(assignmentId, params);
+      console.log(response)
 
       const data = response?.data || [];
       const list = Array.isArray(data) ? data : [];
 
       setSubmissions(list);
     } catch (err) {
+      console.log(err)
       let message = "Failed to load submissions";
 
       if (err.response?.status === 404) message = "No submissions found";

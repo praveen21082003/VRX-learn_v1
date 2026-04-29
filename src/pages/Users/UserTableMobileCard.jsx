@@ -4,11 +4,12 @@ import React from "react";
 function UserTableMobileCard({ row, columns }) {
     const getCol = (key) => columns.find((c) => c.key === key);
 
+
     return (
-        <div className="relative p-2 border border-default rounded-lg shadow-sm bg-white dark:bg-muted/5">
+        <div className="relative p-3 mt-2 border border-default items-center rounded-sm shadow-sm">
 
             {/* 1. BADGES: Keep absolute but ensure they are contained */}
-            <div className="absolute top-3 right-3 flex flex-col gap-1 items-end">
+            <div className="absolute top-3 right-3 flex gap-1 items-end">
                 {getCol("role")?.render?.(row)}
                 {getCol("status")?.render?.(row)}
             </div>
@@ -23,11 +24,11 @@ function UserTableMobileCard({ row, columns }) {
                     <div className="text-h5 font-bold text-main truncate leading-tight">
                         {getCol("name")?.render ? getCol("name").render(row) : row.name}
                     </div>
-                    <div className="text-caption text-main truncate">
+                    <div className="text-body text-main truncate">
                         {row.email}
                     </div>
-                    <div className="text-[10px] text-muted mt-2">
-                        Created: {getCol("createdAt")?.render?.(row)}
+                    <div className="text-caption text-muted mt-2">
+                        Created At: {getCol("createdAt")?.render?.(row)}
                     </div>
                 </div>
             </div>

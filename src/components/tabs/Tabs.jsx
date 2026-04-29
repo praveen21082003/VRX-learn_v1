@@ -13,8 +13,8 @@ function Tabs({ tabs, activeTab, setActiveTab }) {
                             setActiveTab(Array.isArray(tab.value) ? tab.value[0] : tab.value)
                         }
                         className={`pb-2 text-h4 transition-colors ${isActive
-                            ? "border-b-2 border-primary text-primary  dark:text-background"
-                            : "text-muted hover:text-foreground"
+                            ? "border-b-2 border-brand text-primary"
+                            : "text-muted hover:border-b"
                             }`}
                     >
                         {tab.label}

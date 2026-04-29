@@ -1,21 +1,24 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getMe } from "../services/User.service"
+import { AppLoading } from "../components/ui/loading";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [viewRole, setViewRole] = useState(null); // ✅ always start null
+    const [viewRole, setViewRole] = useState(null); // always start null
 
     useEffect(() => {
+        setUser(null)
+        setViewRole(null)
         const initAuth = async () => {
             try {
                 const data = await getMe();
-                setUser(data);
-
                 const role = data?.role?.toLowerCase();
-                setViewRole(role === "trainer" ? "trainer" : null);
+
+                setUser(data);
+                setViewRole(role);
             } catch (err) {
                 setUser(null);
                 setViewRole(null);
@@ -26,12 +29,14 @@ export function AuthProvider({ children }) {
         initAuth();
     }, []);
 
-    // ✅ REMOVED - no localStorage persistence for viewRole
+    // REMOVED - no localStorage persistence for viewRole
 
     const logout = () => {
         setUser(null);
         setViewRole(null);
-        window.location.href = "/login";
+        // localStorage.removeItem('viewRole')
+        localStorage.removeItem('token');
+        window.location.href = '/login';
     };
 
     const value = {
@@ -47,7 +52,7 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={value}>
-            {loading ? <div style={{ padding: "20px" }}>Loading App...</div> : children}
+            {loading ? <AppLoading /> : children}
         </AuthContext.Provider>
     );
 }

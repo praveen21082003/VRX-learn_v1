@@ -244,51 +244,55 @@ function UserManagement() {
     }
 
     return (
-        <div className="w-full p-4 bg-transparent text-main border-b border-gray-200">
-            <TableToolbar
-                headerLabel="User Management"
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                search={filters.search}
-                setSearch={(val) => {
-                    handleFilterChange('search', val);
-                    setPage(1);
-                }}
-                onAdd={() => handleOpenCreate()}
-                onExport={() => handleExport()}
-                addLabel="Add New User"
-            // BulK Action ui can add here
-            // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}
-            >
-            
-                <Select
-                    label="Role:"
-                    value={filters.role}
-                    onChange={(val) => handleFilterChange('role', val)}
-                    options={ROLE_OPTIONS}
-                    disabled={isSearchActive}
-                />
+        <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
+            <div className="p-4 flex-shrink-0">
 
-                <Select
-                    label="Sort:"
-                    value={filters.sort}
-                    onChange={(val) => handleFilterChange('sort', val)}
-                    options={SORT_OPTIONS}
-                    disabled={isSearchActive}
+                <TableToolbar
+                    headerLabel="User Management"
+                    selectedRows={selectedRows}
+                    setSelectedRows={setSelectedRows}
+                    search={filters.search}
+                    setSearch={(val) => {
+                        handleFilterChange('search', val);
+                        setPage(1);
+                    }}
+                    onAdd={() => handleOpenCreate()}
+                    onExport={() => handleExport()}
+                    addLabel="Add New User"
+                // BulK Action ui can add here
+                // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}
+                >
 
-                />
+                    <Select
+                        label="Role:"
+                        value={filters.role}
+                        onChange={(val) => handleFilterChange('role', val)}
+                        options={ROLE_OPTIONS}
+                        disabled={isSearchActive}
+                    />
 
-                <Select
-                    label="Status:"
-                    value={filters.status}
-                    onChange={(val) => handleFilterChange('status', val)}
-                    options={STATUS_OPTIONS}
-                    disabled={isSearchActive}
-                />
-            </TableToolbar>
+                    <Select
+                        label="Sort:"
+                        value={filters.sort}
+                        onChange={(val) => handleFilterChange('sort', val)}
+                        options={SORT_OPTIONS}
+                        disabled={isSearchActive}
+
+                    />
+
+                    <Select
+                        label="Status:"
+                        value={filters.status}
+                        onChange={(val) => handleFilterChange('status', val)}
+                        options={STATUS_OPTIONS}
+                        disabled={isSearchActive}
+                    />
+                </TableToolbar>
+            </div>
+
 
             {/* Table Component */}
-            <div className="w-full overflow-x-auto">
+            <div className="md:px-4 md:pb-4 flex-1 overflow-hidden px-2 pb-4 min-h-0">
                 <DataTable
                     total={total}
                     loading={loading}

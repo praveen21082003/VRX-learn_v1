@@ -147,7 +147,7 @@ function CourseManagementSidebar({ courseContent }) {
                   {children.map((child) => (
                     <li key={child.id}>
                       <NavLink
-                        to={`/course/${courseId}/content/${section.key}/${child.id}`}
+                        to={`/course/${courseId}/content/${section.key}/${child.id}/view`}
                         className={({ isActive }) =>
                           clsx(
                             "group flex items-center justify-between pl-10 px-2 py-3 text-h5",

@@ -38,10 +38,11 @@ export function useAssignmentSubmission() {
 
         try {
             const response = await createAssignmentSubmission(payload);
-            const { uploadUrl, mediaId } = response || {};
+            console.log("1st", response)
+            const { media: { uploadUrl, mediaId } = {} } = response || {};
 
             if (!uploadUrl || !mediaId) {
-                throw new Error("Invalid upload response");
+                throw new Error("Invalid upload response: Missing URL or Media ID");
             }
 
             if (file) {
@@ -50,6 +51,8 @@ export function useAssignmentSubmission() {
                         setUploadProgress(percent);
                         setLoadedData(loaded);
                     });
+
+                    console.log("2nd", uploadRes);
 
                     if (uploadRes.status !== 200) {
                         throw new Error("File upload failed");
@@ -61,6 +64,7 @@ export function useAssignmentSubmission() {
                     setMediaStatus(mediaData?.status);
 
                 } catch (uploadError) {
+                    console.error(uploadError)
                     setError(uploadError?.message || "File upload failed");
                     throw uploadError;
                 }

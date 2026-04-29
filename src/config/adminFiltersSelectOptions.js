@@ -50,7 +50,6 @@ export const EROLLMENT_STATUS_OPTIONS = [
 
 
 export const COURSE_SORT_OPTION = [
-    { label: "None", value: null },
     { label: "Newest First", value: "create_desc" },
     { label: "Oldest First", value: "create_asc" },
     { label: "Name (A - Z)", value: "course_asc" },
@@ -62,7 +61,6 @@ export const COURSE_SORT_OPTION = [
 
 // sort option for the trainee roster
 export const TRAINEE_ROSTER_SORT_OPTIONS = [
-    { label: "None", value: null },
     { label: "Newest First", value: "date_asc" },
     { label: "Oldest First", value: "date_desc" },
     { label: "Name (A - Z)", value: "name_asc" },

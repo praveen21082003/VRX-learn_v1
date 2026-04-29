@@ -11,11 +11,13 @@ import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 
 createRoot(document.getElementById('root')).render(
-  <AuthProvider>
-    <ThemeProvider>
+  <ThemeProvider>
+    <AuthProvider>
+
       <ToastProvider>
         <App />
       </ToastProvider>
-    </ThemeProvider>
-  </AuthProvider>,
-)
+    </AuthProvider>
+  </ThemeProvider>
+
+);

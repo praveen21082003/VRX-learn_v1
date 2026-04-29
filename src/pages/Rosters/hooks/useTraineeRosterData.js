@@ -1,12 +1,13 @@
 import { useState, useCallback, useEffect } from "react";
 import { getTraineesRoster } from "@/services/ListView.service.js";
 
-export default function useTraineeRosterData(courseId, params = null) {
+export default function useTraineeRosterData() {
     const [roster, setRoster] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [total, setTotal] = useState(0);
 
-    const fetchRoster = useCallback(async (courseId, params = null) => {
+    const fetchRoster = useCallback(async (courseId, params = {}) => {
         if (!courseId) return;
 
         setLoading(true);
@@ -18,6 +19,7 @@ export default function useTraineeRosterData(courseId, params = null) {
             const data = response?.data || response;
 
             setRoster(data || []);
+            setTotal(response?.totalItems || 0);
 
             return {
                 success: true,
@@ -38,6 +40,7 @@ export default function useTraineeRosterData(courseId, params = null) {
             }
 
             setError(message);
+            setTotal(0);
 
             return {
                 success: false,
@@ -49,12 +52,6 @@ export default function useTraineeRosterData(courseId, params = null) {
         }
     }, []);
 
-    // auto fetch
-    useEffect(() => {
-        if (courseId) {
-            fetchRoster(courseId, params);
-        }
-    }, [courseId, params, fetchRoster]);
 
     return {
         roster,
@@ -63,6 +60,8 @@ export default function useTraineeRosterData(courseId, params = null) {
         loading,
         error,
         setError,
+
+        total,
 
         fetchRoster,
     };
