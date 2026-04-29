@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Input } from "@/components/ui"
+import { Button, Input, Icon } from "@/components/ui"
 import PDFViewer from './PDFViewer';
 import { useKeyboardShortcuts } from '../../../hooks/useKeyboardShortcuts';
 function DocumentControls({
@@ -8,7 +8,6 @@ function DocumentControls({
     key
 }) {
 
-    console.log(fileUrl);
 
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [showControls, setShowControls] = useState(true);
@@ -17,10 +16,20 @@ function DocumentControls({
     const [currentPage, setCurrentPage] = useState(1);
     const [scale, setScale] = useState(1);
 
+    const [docLoading, setDocLoading] = useState(true);
+    const [docError, setDocError] = useState(false);
+
 
     const containerRef = useRef();
     const hideTimerRef = useRef();
     const isHoveringControlsRef = useRef(false);
+
+
+
+    useEffect(() => {
+        setDocLoading(true);
+        setDocError(false);
+    }, [fileUrl]);
 
 
     const Divider = () => (
@@ -189,10 +198,8 @@ function DocumentControls({
 
 
     return (
-        <div ref={containerRef} className={`relative flex flex-col h-dvh w-full overflow-hidden rounded-md ${isFullscreen ? "bg-black" : "bg-[#525659]"}`}>
-            {/* <header className="flex-shrink-0 flex items-center justify-between px-4 h-12 bg-[#323639] text-white shadow-md shrink-0 z-20"> */}
-            {/* //Updated */}
-            <header className="flex-shrink-0 sticky top-0 z-30 flex items-center justify-between px-4 h-12 bg-[#323639] text-white shadow-md">
+        <div ref={containerRef} className={`relative flex flex-col aspect-[1/1.414] w-full overflow-hidden shadow-xl border border-gray-300 rounded-md ${isFullscreen ? "bg-black" : "bg-[#525659]"}`}>
+            <header className="shrink-0 sticky top-0 z-30 flex items-center justify-between px-4 h-12 bg-[#323639] text-white shadow-md">
 
                 <h2 className="text-sm font-medium truncate">
                     {title}
@@ -221,21 +228,49 @@ function DocumentControls({
 
             </header>
             {/* <div className="flex-1 overflow-hidden"> */}
-            <div className="flex-1 overflow-y-auto w-full flex flex-col items-center custom-scrollbar">
 
+
+            {/* docs loader */}
+            {docLoading && (
+                <div className="flex flex-col items-center justify-center flex-1 gap-3">
+                    <Icon name="line-md:loading-twotone-loop" height="40" width="40" className="text-primary" />
+                    <p className="text-white text-caption">Loading document...</p>
+                </div>
+            )}
+
+            {/* docs file */}
+            <div className={`flex-1 overflow-y-auto w-full flex flex-col items-center custom-scrollbar ${docLoading ? "hidden" : ""}`}>
                 <PDFViewer
                     url={fileUrl}
                     scale={scale}
                     currentPage={currentPage}
-                    setTotalPages={setTotalPages}
+                    setTotalPages={(pages) => {
+                        setTotalPages(pages);
+                        setDocLoading(false); // PDF loaded when total pages are known
+                    }}
                     pdfDoc={pdfDoc}
                     setPdfDoc={setPdfDoc}
+                    onError={() => {
+                        setDocLoading(false);
+                        setDocError(true);
+                    }}
                 />
-                {/* </div> */}
-                <div className="h-10 w-full flex-shrink-0" />
+                <div className="h-10 w-full shrink-0" />
             </div>
-            <div
 
+            {/* docs error  */}
+            {docError && (
+                <div className="flex flex-col items-center justify-center h-full gap-3 text-red-500">
+                    <Icon name="fluent:document-error-16-filled" height="40" width="40" />
+                    <p>Failed to load document</p>
+                    {/* <a href={fileUrl} target="_blank" rel="noreferrer">
+                        <Button buttonName="Open in new tab" />
+                    </a> */}
+                </div>
+            )}
+
+
+            <div
                 onMouseEnter={() => {
                     isHoveringControlsRef.current = true;
                 }}

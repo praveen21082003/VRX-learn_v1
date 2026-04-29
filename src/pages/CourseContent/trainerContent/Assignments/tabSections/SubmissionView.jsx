@@ -183,7 +183,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                 <div className="relative" ref={ref}>
                     {/* trigger — full width */}
                     <div
-                        className="flex items-center justify-center lg:justify-between gap-1 lg:gap-3 px-4 py-2 border border-default rounded lg:min-w-72 cursor-pointer"
+                        className="flex items-center justify-center lg:justify-between gap-1 lg:gap-3 px-4 py-2 border border-default rounded min-w-72 cursor-pointer"
                         onClick={toggle}
                     >
                         <div className="flex items-center gap-2">
@@ -234,7 +234,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                 </div>
 
                 {/* next/prev — placeholder for dropdown later */}
-                <div className="flex items-center gap-2 ml-10">
+                <div className="flex items-center gap-2 lg:ml-10">
                     <Button
                         frontIconName="mingcute:left-fill"
                         frontIconHeght="24"

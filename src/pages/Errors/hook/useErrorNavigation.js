@@ -11,3 +11,11 @@ export const useErrorNavigation = () => {
         else if (status >= 500) navigate('/server-error');
     };
 };
+
+
+// can use specific places
+// 1. useCourseContent — course not found or no access
+// 2. useCourseOverview — same
+// 3. useTraineeRosterData — 403 if not trainer
+// 4. useAssignmentList — 403/404
+// 5. useLessons — 404

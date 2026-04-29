@@ -166,7 +166,7 @@ function CourseManagementSidebar({ courseContent }) {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              navigate(`/course/${courseId}/content/${section.key}/create`);
+                              navigate(`/course/${courseId}/content/${section.key}/${child.id}/lesson/create`);
                             }}
                           >
                             <Icon

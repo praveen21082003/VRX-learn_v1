@@ -3,6 +3,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useTheme } from "@/context/ThemeProvider";
 import { Icon, InputWarnMessage } from '@/components/ui';
 
+import LearningIllustration from '@/assets/images/Learning-Illustration.png'
+
 function AuthLayout() {
     const { darkMode, toggleTheme } = useTheme();
     const [warnMsg, setWarnMsg] = useState("");
@@ -21,12 +23,12 @@ function AuthLayout() {
 
                 <div className="hidden md:block relative w-lg bg-brand overflow-hidden">
                     <img
-                        src="/src/assets/images/Learning-Illustration.png"
+                        src={LearningIllustration}
                         alt="Background Decor"
                         className="absolute top-20 left-[-11%] opacity-10 scale-110 pointer-events-none"
                     />
                     <img
-                        src="/src/assets/images/Learning-Illustration.png"
+                        src={LearningIllustration}
                         alt="Login Illustration"
                         className="absolute bottom-1 right-6 object-contain z-10"
                     />

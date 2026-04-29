@@ -1,7 +1,12 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { getTraineeCourseContent } from "@/services/CourseContent.service";
 
+import { useErrorNavigation } from '@/pages/Errors/hook/useErrorNavigation';
+
 export const useCourseContent = (courseId) => {
+
+    const navigateError = useErrorNavigation();
+
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -23,6 +28,13 @@ export const useCourseContent = (courseId) => {
             setError(
                 err.response?.data?.message || "Error loading content"
             );
+
+            const status = err.response?.status;
+
+            if (status === 403 || status === 404 || status >= 500) {
+                navigateError(status);
+                return;
+            }
         } finally {
             setLoading(false);
         }

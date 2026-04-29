@@ -50,7 +50,7 @@ function AssignmentHandler({ mode }) {
         <div className='p-4 mb-30 lg:mb-0'>
             {
                 (mode === "create" || mode === "edit") &&
-                <BackButton to={`/course/${courseId}/content/assignments`} label={`${course?.title || "Loading..."} - Assignments`} />
+                <BackButton to={`/course/${courseId}/content/assignments`} label='Back to Assignments' />
 
             }
 

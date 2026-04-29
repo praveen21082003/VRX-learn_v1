@@ -11,6 +11,11 @@ function LessonActionHandler({ mode }) {
     const { moduleId } = useParams();
     const { modules, setModules, lessons } = useModuleContext();
 
+
+    const activeModule = moduleId
+        ? modules.find(m => m.id === moduleId)
+        : null;
+
     const { lessonId } = useParams();
 
     const initialData = lessonId
@@ -18,13 +23,19 @@ function LessonActionHandler({ mode }) {
         : null;
 
 
+
+
     const { courseId, course, loading } = useCourse();
     return (
         <div className='p-4'>
             <BackButton to={`/course/${courseId}/content/modules/${moduleId}`} label={`Back to Module`} />
-            <h2 className="text-h3">
-                {isEdit ? "Edit Lesson" : mode === "view" ? "Lesson Preview" : "New Lesson"}
-            </h2>
+            <div className='flex items-center gap-5'>
+                <h2 className="text-h3">
+                    {isEdit ? "Edit Lesson" : mode === "view" ? "Lesson Preview" : "New Lesson"}
+                </h2>
+                <span className='text-caption'>(in {activeModule && activeModule.title})</span>
+            </div>
+
             {mode === "view" ? (
                 <LessonPreview initialData={initialData} />
             ) : (

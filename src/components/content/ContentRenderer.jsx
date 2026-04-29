@@ -6,17 +6,14 @@ import { MediaPlaceholder, FilePlaceholder } from '@/components/ui/loading'
 import { Tabs } from "@/components/tabs";
 import { VideoPlayer } from "./video";
 import DocumentControls from "./document/DocumentControls";
-// import ZoomControls from "../ui/FileViewer/ZoomControls";
-// import PDFViewer from "./document/PDFViewer";
-// import WordViewer from "./document/WordViewer";
 import useMedia from './hook/useMedia';
 
-function ContentRenderer({ lesson, error, setVideoDuration }) {
+function ContentRenderer({ lesson, setVideoDuration }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const mediaId = lesson?.mediaId;
-  const { url, loading: mediaLoading } = useMedia(mediaId);
+  const { url, loading: mediaLoading, error } = useMedia(mediaId);
 
 
 
@@ -27,13 +24,6 @@ function ContentRenderer({ lesson, error, setVideoDuration }) {
 
 
 
-  if (!lesson) {
-    return (
-      <main className="flex-1 flex items-center justify-center">
-        <p className="text-muted-foreground">Loading lesson...</p>
-      </main>
-    );
-  }
 
   const isVideo = lesson?.mimeType?.startsWith("video");
   const isPDF = lesson?.mimeType === "application/pdf";
