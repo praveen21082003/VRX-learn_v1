@@ -6,7 +6,12 @@ import { useDebounce } from '@/hooks/useDebounce';
 
 
 import useTraineeRosterData from './hooks/useTraineeRosterData'
-import formatDateTime from '@/utils/formatDateTime'
+import { usePermission } from '../../hooks/usePermission'
+
+import { exportTraineesRoster } from '@services/ListView.service'
+
+import formatDateTime from '@utils/formatDateTime'
+import { downloadCSV } from '@utils/downloadCSV';
 import { TRAINEE_ROSTER_BASE } from '@/config/tablesColumnConfig'
 
 import { TableToolbar, DataTable } from '@/components/Table'
@@ -28,6 +33,8 @@ function TraineeRoster() {
     const { courseId } = useParams();
     const { state } = useLocation();
 
+    const { can } = usePermission();
+
 
 
     // states
@@ -36,7 +43,7 @@ function TraineeRoster() {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-
+    const [exporting, setExporting] = useState(false);
 
     // hooks
     const debouncedSearch = useDebounce(filters.search, 500);
@@ -176,68 +183,128 @@ function TraineeRoster() {
         setPage(1);
     };
 
+    // Select single Row function
+    const handleSelectRow = (id, checked) => {
+        if (checked) {
+            setSelectedRows((prev) => [...prev, id]);
+        } else {
+            setSelectedRows((prev) => prev.filter((rowId) => rowId !== id));
+        }
+    };
+
+    // Select All rows 
+    const handleSelectAll = (checked) => {
+        if (checked) {
+            setSelectedRows(enrollments.map((row) => row.id));
+        } else {
+            setSelectedRows([]);
+        }
+    };
+
     // Clear Filters
     const clearFilters = () => {
         setFilters(INITIAL_FILTERS);
         setPage(1);
     };
 
+    // Export csv
+    const handleExport = () => {
 
-    return (
-        <>
-            <div className="p-2 border-b-2 border-default w-full block lg:hidden">
+        const sortMapping = {
+            date_asc: { sortByEnrollmentDate: "desc" },
+            date_desc: { sortByEnrollmentDate: "asc" },
+            user_asc: { sortByUsername: "asc" },
+            user_desc: { sortByUsername: "desc" },
+        };
+
+        const { sort, role } = filters;
+
+        const params = {
+            name: debouncedSearch || undefined,
+            role: role,
+            ...(sortMapping[sort] || {}),
+        }
+
+        Object.keys(params).forEach(key =>
+            (params[key] === undefined || params[key] === null) && delete params[key]
+        );
+
+
+        setExporting(true);
+
+        downloadCSV(
+            (params) => exportTraineesRoster(courseId, params),
+            params,
+            "traineeroster.csv"
+        )
+            .then((result) => {
+            if (!result.success) {
+                console.error(result.message);
+            }
+        })
+        .finally(() => {
+            setExporting(false);
+        });
+}
+
+
+
+return (
+    <>
+        <div className="p-2 border-b-2 border-default w-full block lg:hidden">
+            <BackButton to={`/course/${courseId}/overview`} iconName="material-symbols:arrow-back-rounded" label="Back to Overview" />
+        </div>
+        <div className='h-full overflow-y-auto p-6 bg-background text-main'>
+            <div className="mb-2 w-full hidden lg:block">
                 <BackButton to={`/course/${courseId}/overview`} iconName="material-symbols:arrow-back-rounded" label="Back to Overview" />
             </div>
-            <div className='h-full overflow-y-auto p-6 bg-background text-main'>
-                <div className="mb-2 w-full hidden lg:block">
-                    <BackButton to={`/course/${courseId}/overview`} iconName="material-symbols:arrow-back-rounded" label="Back to Overview" />
-                </div>
-                <div className="p-4 border border-default rounded-lg">
-                    <TableToolbar
-                        headerLabel='Trainee Roster'
-                        headerCaption={
-                            <div className="flex items-center gap-2 text-caption text-muted">
-                                <Icon name="mdi:users" height="16" width="16" />
-                                <span>{noOfTrainees} Trainees Enrolled</span>
-                            </div>
-                        }
-                        selectedRows={selectedRows}
-                        setSelectedRows={setSelectedRows}
-                        search={filters.search}
-                        setSearch={(val) => handleFilterChange('search', val)}
-                    >
-                        <Select
-                            label="Sort by:"
-                            value={filters.sort}
-                            onChange={(value) => handleFilterChange('sort', value)}
-                            options={TRAINEE_ROSTER_SORT_OPTIONS}
-                        />
-                        <Select
-                            label="Role:"
-                            value={filters.role}
-                            onChange={(value) => handleFilterChange('role', value)}
-                            options={ROLE_OPTIONS}
-                        />
-                    </TableToolbar>
-                    <DataTable
-                        loading={loading}
-                        selectedRows={selectedRows}
-                        columns={finalColumns}
-                        data={roster}
-                        page={page}
-                        setPage={setPage}
-                        pageSize={pageSize}
-                        setPageSize={setPageSize}
-                        total={total}
-                        clearFilters={clearFilters}
-                        renderMobileCard={(row) => (
-                            <RosterTableMobileCard row={row} />
-                        )}
+            <div className="p-4 border border-default rounded-lg">
+                <TableToolbar
+                    headerLabel='Trainee Roster'
+                    headerCaption={
+                        <div className="flex items-center gap-2 text-caption text-muted">
+                            <Icon name="mdi:users" height="16" width="16" />
+                            <span>{noOfTrainees} Trainees Enrolled</span>
+                        </div>
+                    }
+                    selectedRows={selectedRows}
+                    setSelectedRows={setSelectedRows}
+                    search={filters.search}
+                    setSearch={(val) => handleFilterChange('search', val)}
+                    onExport={can("DOWNLOAD_TRAINEE_ROSTER") ? handleExport : undefined}
+                >
+                    <Select
+                        label="Sort by:"
+                        value={filters.sort}
+                        onChange={(value) => handleFilterChange('sort', value)}
+                        options={TRAINEE_ROSTER_SORT_OPTIONS}
                     />
-                </div>
+                    <Select
+                        label="Role:"
+                        value={filters.role}
+                        onChange={(value) => handleFilterChange('role', value)}
+                        options={ROLE_OPTIONS}
+                    />
+                </TableToolbar>
+                <DataTable
+                    loading={loading}
+                    selectedRows={selectedRows}
+                    columns={finalColumns}
+                    data={roster}
+                    page={page}
+                    setPage={setPage}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                    total={total}
+                    clearFilters={clearFilters}
+                    renderMobileCard={(row) => (
+                        <RosterTableMobileCard row={row} />
+                    )}
+                />
             </div>
-        </>
-    );
+        </div>
+    </>
+);
 }
 
 

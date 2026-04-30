@@ -11,9 +11,10 @@ function TableToolBar({
     setSearch,
     onAdd,
     onExport,
+    exportLoading = false,
     addLabel = "Add New",
-    bulkActions, 
-    children, 
+    bulkActions,
+    children,
 }) {
     // Standardize mobile check
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -31,11 +32,11 @@ function TableToolBar({
                     {headerLabel && <h3 className="text-h3 font-semibold leading-tight">{headerLabel}</h3>}
                     {headerCaption && <div className="text-caption text-muted">{headerCaption}</div>}
                 </div>
-                
+
                 <div className="flex justify-end items-center gap-3">
                     {!isBulkActive && onExport && (
                         <Button
-                            buttonName={isMobile ? "" : "Export as CSV"}
+                            buttonName={isMobile ? "" : exportLoading ? "Exporting CSV" : "Export as CSV"}
                             frontIconName="material-symbols:download"
                             frontIconWidth="24"
                             frontIconHeight="24"

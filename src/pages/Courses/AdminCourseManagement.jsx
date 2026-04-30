@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
+
 
 import { useDebounce } from '@/hooks/useDebounce';
 import { useCourseData } from './hooks/useCoursesData';
@@ -11,11 +13,13 @@ import { COURSE_COLUMNS_BASE } from '@/config/tablesColumnConfig';
 import { COURSE_SORT_OPTION, EROLLMENT_STATUS_OPTIONS, ROLE_OPTIONS } from '@/config/adminFiltersSelectOptions'
 
 import CourseActionHandler from './CourseActionHandler';
-
-import formatDateTime from '@/utils/formatDateTime'
-import { useNavigate } from 'react-router-dom';
-
 import CourseTableMobileCard from './CourseTableMobileCard';
+
+import { exportCourses } from '@services/ListView.service';
+
+import formatDateTime from '@utils/formatDateTime'
+import { downloadCSV } from '@utils/downloadCSV';
+
 
 
 
@@ -41,6 +45,8 @@ function AdminCourseManagement() {
     const [pageSize, setPageSize] = useState(10);
 
     const [selectedRows, setSelectedRows] = useState([]);
+
+    const [exporting, setExporting] = useState(false);
 
     // fileters state
     const [filters, setFilters] = useState(INITIAL_FILTERS);
@@ -266,7 +272,41 @@ function AdminCourseManagement() {
 
     // Export Fuction
     const handleExport = () => {
-        alert("export clciked")
+
+
+        const sortMapping = {
+            create_asc: { sortByCreatedAt: "asc" },
+            create_desc: { sortByCreatedAt: "desc" },
+            course_asc: { sortByCourseName: "asc" },
+            course_desc: { sortByCourseName: "desc" },
+            trainees_asc: { sortByNoOfTrainees: "asc" },
+            trainees_desc: { sortByNoOfTrainees: "desc" },
+        };
+
+        // Destructure for cleaner code inside the call
+        const { sort } = filters;
+
+        const params = {
+            courseNameOrTrainerName: debouncedSearch || undefined,
+            ...(sortMapping[sort] || {}),
+        }
+        Object.keys(params).forEach(key =>
+            (params[key] === undefined || params[key] === null) && delete params[key]
+        );
+
+
+
+        setExporting(true);
+
+        downloadCSV(exportCourses, params, "courses.csv")
+            .then((result) => {
+                if (!result.success) {
+                    console.error(result.message);
+                }
+            })
+            .finally(() => {
+                setExporting(false);
+            });
     }
 
 
@@ -287,6 +327,7 @@ function AdminCourseManagement() {
                     }}
                     onAdd={() => handleOpenCreate()}
                     onExport={() => handleExport()}
+                    exportLoading={exporting}
                     addLabel="Add New Course"
                 // BulK Action ui can add here
                 // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}

@@ -10,10 +10,13 @@ import { ROLE_OPTIONS, SORT_OPTIONS, STATUS_OPTIONS } from '@/config/adminFilter
 import { USER_COLUMNS_BASE } from '../../config/tablesColumnConfig'
 
 import UserActionHandler from './UserActionHandler';
-
-import formatDateTime from '@/utils/formatDateTime'
-
 import UserTableMobileCard from './UserTableMobileCard'
+
+import { exportUsers } from '@services/ListView.service';
+
+import formatDateTime from '@utils/formatDateTime'
+import { downloadCSV } from '@utils/downloadCSV';
+
 
 
 
@@ -27,7 +30,6 @@ function UserManagement() {
 
 
     const { refreshUsers, users, setUsers, loading, total, error } = useUsersData();
-    console.log(loading);
 
     // useSates
     const [open, setOpen] = useState(false);
@@ -40,6 +42,7 @@ function UserManagement() {
 
     const [selectedRows, setSelectedRows] = useState([]);
 
+    const [exporting, setExporting] = useState(false);
 
 
     // fileters state
@@ -240,12 +243,44 @@ function UserManagement() {
 
     // Export Fuction
     const handleExport = () => {
-        alert("export clciked")
+
+        const sortMapping = {
+            create_asc: { sortByCreatedAt: "asc" },
+            create_desc: { sortByCreatedAt: "desc" },
+            user_asc: { sortByUsername: "asc" },
+            user_desc: { sortByUsername: "desc" },
+        };
+
+        // Destructure for cleaner code inside the call
+        const { role, status, sort } = filters;
+
+        const params = {
+            nameOrEmail: debouncedSearch || undefined,
+            role: role || undefined,
+            status: status || undefined,
+            ...(sortMapping[sort] || {}),
+        }
+        Object.keys(params).forEach(key =>
+            (params[key] === undefined || params[key] === null) && delete params[key]
+        );
+
+
+        setExporting(true);
+
+        downloadCSV(exportUsers, params, "users.csv")
+            .then((result) => {
+                if (!result.success) {
+                    console.error(result.message);
+                }
+            })
+            .finally(() => {
+                setExporting(false);
+            });
     }
 
     return (
         <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
-            <div className="p-4 flex-shrink-0">
+            <div className="p-4 shrink-0">
 
                 <TableToolbar
                     headerLabel="User Management"
@@ -258,6 +293,7 @@ function UserManagement() {
                     }}
                     onAdd={() => handleOpenCreate()}
                     onExport={() => handleExport()}
+                    exportLoading={exporting}
                     addLabel="Add New User"
                 // BulK Action ui can add here
                 // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}

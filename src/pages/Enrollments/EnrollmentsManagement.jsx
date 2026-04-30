@@ -12,8 +12,10 @@ import { EROLLMENT_SORT_OPTIONS, EROLLMENT_STATUS_OPTIONS, ROLE_OPTIONS } from '
 import EnrollmentActionHandler from './EnrollmentActionHandler';
 import EnrollmentTableMobileCard from './EnrollmentTableMobileCard'
 
+import { exportEnrollments } from '@services/ListView.service'
 
-import formatDateTime from '@/utils/formatDateTime'
+import formatDateTime from '@utils/formatDateTime'
+import { downloadCSV } from '@utils/downloadCSV';
 
 function EnrollmentsManagement() {
 
@@ -35,6 +37,8 @@ function EnrollmentsManagement() {
     const [pageSize, setPageSize] = useState(10);
 
     const [selectedRows, setSelectedRows] = useState([]);
+
+    const [exporting, setExporting] = useState(false);
 
     // fileters state
     const [filters, setFilters] = useState(INITIAL_FILTERS);
@@ -240,15 +244,48 @@ function EnrollmentsManagement() {
 
 
     // Export Fuction
+    // export csv function
     const handleExport = () => {
-        alert("export clciked")
+
+        const sortMapping = {
+            create_asc: { sortByEnrollmentDate: "asc" },
+            create_desc: { sortByEnrollmentDate: "desc" },
+            course_asc: { sortByCourseName: "asc" },
+            course_desc: { sortByCourseName: "desc" },
+        };
+
+        // Destructure for cleaner code inside the call
+        const { role, status, sort } = filters;
+
+        const params = {
+            nameOrEmail: debouncedSearch || undefined,
+            role: role || undefined,
+            status: status || undefined,
+            ...(sortMapping[sort] || {}),
+        }
+        Object.keys(params).forEach(key =>
+            (params[key] === undefined || params[key] === null) && delete params[key]
+        );
+
+        setExporting(true);
+
+        downloadCSV(exportEnrollments, params, "enrollments.csv")
+            .then((result) => {
+                if (!result.success) {
+                    console.error(result.message);
+                }
+            })
+            .finally(() => {
+                setExporting(false);
+            });
     }
+
 
 
     return (
         <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
 
-            <div className="p-4 flex-shrink-0">
+            <div className="p-4 shrink-0">
 
 
                 <TableToolbar
@@ -262,6 +299,7 @@ function EnrollmentsManagement() {
                     }}
                     onAdd={() => handleOpenCreate()}
                     onExport={() => handleExport()}
+                    exportLoading={exporting}
                     addLabel="Add New Enrollment"
                 // BulK Action ui can add here
                 // eg : bulkActions={<div> Actions ui delete, etc,..., </div>}

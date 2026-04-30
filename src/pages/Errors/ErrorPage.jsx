@@ -38,9 +38,9 @@ export default function ErrorPage({ statusCode }) {
 
     return (
         <div className="h-screen w-screen flex flex-col bg-background text-main">
-            <div className="h-[5vh] min-h-14 shrink-0">
+            {/* <div className="h-[5vh] min-h-14 shrink-0">
                 <Header menu={true} />
-            </div>
+            </div> */}
 
             <div className="flex h-full w-full justify-center items-center">
 

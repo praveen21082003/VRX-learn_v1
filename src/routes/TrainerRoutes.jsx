@@ -33,7 +33,9 @@ export default function TrainerRoutes() {
                         <Route path="lesson/create" element={<LessonActionHandler mode="create" />} />
                         <Route path="lesson/:lessonId/edit" element={<LessonActionHandler mode="edit" />} />
                         <Route path="lesson/:lessonId/preview" element={<LessonActionHandler mode="view" />} />
+                        <Route path="*" element={<Navigate to="/404" replace />} />
                     </Route>
+                    <Route path="*" element={<Navigate to="/404" replace />} />
                 </Route>
                 <Route path="assignments">
                     <Route index element={<AssignmentsPage />} />
@@ -41,7 +43,9 @@ export default function TrainerRoutes() {
                     <Route path="create" element={<AssignmentHandler mode="create" />} />
                     <Route path=':assignmentId/edit' element={<AssignmentHandler mode="edit" />} />
                     <Route path=':assignmentId/view' element={<AssignmentHandler mode="view" />} />
+                    <Route path="*" element={<Navigate to="/404" replace />} />
                 </Route>
+                <Route path="*" element={<Navigate to="/404" replace />} />
             </Route>
             <Route path='roster' element={<TraineeRoster />} >
 

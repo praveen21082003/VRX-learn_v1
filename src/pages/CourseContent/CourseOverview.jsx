@@ -1,5 +1,5 @@
 import React, { use, useEffect } from 'react'
-import { useParams, useOutletContext, NavLink } from "react-router-dom";
+import { useParams, useOutletContext, NavLink, useNavigate } from "react-router-dom";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 
 import { CourseTumbnail, Icon, CourseOverviewPlaceholder, BackButton } from '@/components/ui';
@@ -13,8 +13,22 @@ import { useAuth } from '@/context/AuthContext';
 
 function CourseOverview() {
 
+    const navigate = useNavigate();
+
     const { setCourseBreadcrumb } = useBreadcrumbs();
     const { courseId } = useParams();
+
+    // 🚀 proper redirect
+    useEffect(() => {
+        if (!courseId || courseId === "undefined") {
+            navigate("/404", { replace: true });
+        }
+    }, [courseId, navigate]);
+
+    // ⛔ prevent rest of component from running
+    if (!courseId || courseId === "undefined") {
+        return null;
+    }
     const { can } = usePermission();
     const { viewRole, role } = useAuth();
 

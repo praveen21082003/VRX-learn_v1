@@ -43,6 +43,10 @@ export const useAssignmentContext = () => {
 
 function CourseManagementLayout() {
 
+
+    // navinagte hook from react route
+    const navigate = useNavigate();
+
     // hooks
     const { role, viewRole } = useAuth();
     const { width, isResizing, startResizing } = useResizable(
@@ -73,12 +77,23 @@ function CourseManagementLayout() {
 
 
     // update actions
-    const {updateLessonAction, isUpdating} = useLessonAction();
+    const { updateLessonAction, isUpdating } = useLessonAction();
 
     // 
     if (effectiveRole === "trainee") {
         return <Navigate to="/" replace />;
     }
+
+
+    // useEffect for the undefined courseId in path 
+    useEffect(() => {
+        if (!courseId || courseId === 'undefined') {
+            navigate("/404", { replace: true });
+        }
+    }, [courseId]);
+
+    if (!courseId || courseId === "undefined") return null;
+
 
 
     // handle update success states
