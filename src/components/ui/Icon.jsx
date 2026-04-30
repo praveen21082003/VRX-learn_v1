@@ -3,17 +3,18 @@ import clsx from "clsx";
 
 export default function Icon({
     name,
-    size = 22,
+    size,
+    width,
+    height,
     className,
-    ...props
+    ...rest
 }) {
     return (
         <IconifyIcon
             icon={name}
-            width={size}
-            height={size}
+            width={size || width}
+            height={size || height}
             className={clsx("inline-block shrink-0", className)}
-            {...props}
         />
     );
 }

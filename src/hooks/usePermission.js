@@ -11,10 +11,6 @@ export function usePermission() {
             role === "trainer" && viewRole
                 ? viewRole
                 : role;
-
-        
-
-        console.log(activeRole)
         
         if (!activeRole) return false;
 

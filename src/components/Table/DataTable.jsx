@@ -51,17 +51,14 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
       {/* Mobile body — flex-1 + overflow scroll */}
       <div className="block md:hidden flex-1 overflow-y-auto scrollbar-hide space-y-2 p-2">
         {typeof renderMobileCard === 'function' ? (
-          safeData?.length > 0 ? (
-            safeData.map((row, index) => {
-              if (!row) return null;
-              return (
-                <div key={row.id || index} className="w-full">
-                  {renderMobileCard(row)}
-                </div>
-              );
-            })
-          ) : loading ? (
+          loading ? (
             <TableMobileSkeleton type={mobileLoadingType} />
+          ) : safeData?.length > 0 ? (
+            safeData.map((row, index) => (
+              <div key={row.id || index} className="w-full">
+                {renderMobileCard(row)}
+              </div>
+            ))
           ) : (
             <div className="text-center p-10 text-muted">No data found</div>
           )

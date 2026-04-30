@@ -33,12 +33,13 @@ function Header({ menu }) {
 
     const handleSwitchAccount = () => {
         if (viewRole === "trainee") {
+            // switch back to actual role
             setViewRole(role);
-            navigate("/dashboard");
         } else {
+            // switch to trainee view
             setViewRole("trainee");
-            navigate("/dashboard");
         }
+        navigate("/dashboard");
     };
 
     const onLogoutClick = () => {
@@ -100,7 +101,7 @@ function Header({ menu }) {
             <div className="flex items-center gap-3 md:gap-10">
                 {menu && (
                     <div className="hidden md:block">
-                        <HeaderUserMenu role={role} />
+                        <HeaderUserMenu role={role} viewRole={viewRole}/>
                     </div>
                 )}
                 <HeaderProfile role={role} viewRole={viewRole} user={user} setViewRole={setViewRole} loading={loading} buttons={buttons} />

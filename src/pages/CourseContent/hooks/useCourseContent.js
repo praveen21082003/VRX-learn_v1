@@ -21,7 +21,6 @@ export const useCourseContent = (courseId) => {
             setError(null);
 
             const response = await getTraineeCourseContent(courseId);
-            console.log("Fetching course content");
 
             setData(response);
         } catch (err) {

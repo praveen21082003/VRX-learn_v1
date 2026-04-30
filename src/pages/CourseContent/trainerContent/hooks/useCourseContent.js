@@ -9,7 +9,6 @@ export default function useCourseContent(courseId) {
     const isFetchingRef = useRef(false);
 
     const fetchCourseContent = useCallback(async () => {
-        console.log("starting");
         if (!courseId || isFetchingRef.current) return;
 
         try {

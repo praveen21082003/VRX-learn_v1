@@ -10,7 +10,7 @@ function TableSkeleton({ rowCount = 5, columns = [] }) {
             <td
               key={`skeleton-col-${colIndex}`}
               className="p-2"
-              style={{ width: col.width }} // ✅ FIXED
+              style={{ width: col.width }}
             >
               <div
                 className={`h-4 bg-gray-200 dark:bg-gray-700 rounded-md ${col.align === "center"

@@ -7,11 +7,9 @@ import TrainerDashboard from '../pages/Dashboards/TrainerDashboard';
 
 export const DashboardSwitcher = () => {
     const { role, viewRole } = useAuth();
-    console.log(role);
-    console.log(viewRole)
-    const effectiveRole = (role === 'admin' && viewRole) ? viewRole : role;
 
-    console.log(effectiveRole)
+    const effectiveRole = viewRole ?? role;
+
 
     const dashboards = {
         admin: <AdminDashboard />,

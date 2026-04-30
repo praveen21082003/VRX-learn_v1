@@ -5,13 +5,13 @@ import { Link, useLocation } from "react-router-dom";
 import { roleNavigation } from "@/config/headerMenu";
 
 
-function HeaderUserMenu({role}) {
+function HeaderUserMenu({ role, viewRole }) {
     const location = useLocation();
 
-    
+    const effectiveRole = viewRole ?? role;
 
 
-    const navigationLinks = roleNavigation[role] || [];
+    const navigationLinks = roleNavigation[effectiveRole] || [];
 
     return (
         <nav className="flex items-center gap-8 text-[#fafaf8d3]">

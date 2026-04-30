@@ -43,9 +43,7 @@ function Login() {
         try {
             setLoading(true);
 
-            console.log("login started")
             const data = await login(credentials.email, credentials.password);
-            console.log(data)
 
             if (data.message === "Logged in successfully") {
                
@@ -54,7 +52,7 @@ function Login() {
                 navigate("/dashboard", { replace: true });
             }
         } catch (err) {
-            console.log(err)
+            console.log(err);
             const status = err.response?.status;
             if (status === 401) {
                 setWarnMsg("Invalid email or password.");
@@ -81,6 +79,7 @@ function Login() {
                     onChange={handleChange}
                     bgClass="bg-surface"
                     value={credentials.email}
+                    autoComplete="email"
                 />
 
                 <div className="flex flex-col gap-1">
@@ -95,6 +94,7 @@ function Login() {
                         inputWarning={warning.password}
                         onChange={handleChange}
                         value={credentials.password}
+                        autoComplete="new-password"
                     />
 
                     <p

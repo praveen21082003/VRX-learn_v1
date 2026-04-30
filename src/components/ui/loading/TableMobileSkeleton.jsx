@@ -8,7 +8,7 @@ function SkeletonBlock({ className }) {
 
 function ProfileSkeletonCard() {
     return (
-        <div className="flex items-center justify-between p-3 border border-default rounded-lg">
+        <div className="flex items-center justify-between p-3 py-6 border border-default rounded-lg">
             <div className="flex items-center gap-3">
                 {/* Avatar */}
                 <SkeletonBlock className="w-10 h-10 rounded-full" />
@@ -19,12 +19,15 @@ function ProfileSkeletonCard() {
                     <SkeletonBlock className="w-28 h-3" />
                 </div>
             </div>
-
-            <div className="flex items-center gap-3">
-                <SkeletonBlock className="w-12 h-5 rounded-full" />
-                <SkeletonBlock className="w-12 h-5 rounded-full" />
-                <SkeletonBlock className="w-5 h-5" />
-                <SkeletonBlock className="w-5 h-5" />
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-1">
+                    <SkeletonBlock className="w-12 h-5 rounded" />
+                    <SkeletonBlock className="w-12 h-5 rounded" />
+                </div>
+                <div className="flex justify-end items-end gap-5">
+                    <SkeletonBlock className="w-5 h-5" />
+                    <SkeletonBlock className="w-5 h-5" />
+                </div>
             </div>
         </div>
     );
