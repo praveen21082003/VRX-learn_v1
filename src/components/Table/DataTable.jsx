@@ -73,7 +73,7 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
       </div>
 
       {/* Pagination */}
-      <div className="flex-shrink-0 sticky bottom-0 border-t border-default bg-background z-20">
+      <div className="shrink-0 sticky bottom-0 border-t border-default bg-background z-20">
         <TablePagination
           page={page}
           setPage={setPage}

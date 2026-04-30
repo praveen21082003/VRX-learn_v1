@@ -27,7 +27,7 @@ function UserManagement() {
 
 
     const { refreshUsers, users, setUsers, loading, total, error } = useUsersData();
-
+    console.log(loading);
 
     // useSates
     const [open, setOpen] = useState(false);
@@ -308,6 +308,7 @@ function UserManagement() {
                         <UserTableMobileCard
                             row={row}
                             columns={finalColumns}
+                            loading={loading}
                         />
                     )}
                 />

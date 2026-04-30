@@ -7,7 +7,7 @@ import ProtectedRoute from './routeProtection/ProtectedRoute';
 import { DashboardSwitcher } from './DashboardSwitcher';
 import TraineeRoutes from './TraineeRoutes';
 import TrainerRoutes from './TrainerRoutes';
-import AdminRoutes from './AdminRoutes';
+
 
 import AuthLayout from '../layouts/AuthLayout';
 import AppLayout from '../layouts/AppLayout';
@@ -18,6 +18,9 @@ import Login from '../pages/auth/Login';
 import CourseOverview from '@/pages/CourseContent/CourseOverview';
 import MyCourses from '../pages/Learning/MyLearning';
 import { CoursesSwitcher } from './CoursesSwitcher';
+
+import UserManagement from '../pages/Users/UserManagement';
+import EnrollmentsManagement from '../pages/Enrollments/EnrollmentsManagement';
 
 // error page
 import ErrorPage from '../pages/Errors/ErrorPage';
@@ -43,7 +46,8 @@ function AppRoutes() {
           <Route path="/dashboard" element={<DashboardSwitcher />} />
           <Route path="/learning" element={<MyCourses />} />
           <Route path="/courses" element={<CoursesSwitcher />} />
-          {role === 'admin' && AdminRoutes()}
+          <Route path="/users" element={<UserManagement />} />
+          <Route path="/enrollments" element={<EnrollmentsManagement />} />
         </Route>
 
         <Route path="/course/:courseId" element={<LearningLayout />}>
