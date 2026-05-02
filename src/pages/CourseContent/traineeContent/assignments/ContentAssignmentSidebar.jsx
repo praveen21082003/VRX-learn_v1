@@ -32,7 +32,8 @@ function ContentAssignmentSidebar({
                             >
                                 <Icon name="material-symbols:assignment-outline" height="26" width="26" />
                                 <p className="text-h5 truncate">
-                                    Assignment {assignmentIndex + 1} - {assignment.title}
+                                    {/* Assignment {assignmentIndex + 1} - {assignment.title} */}
+                                    {assignment.title}
                                 </p>
 
                             </button>

@@ -36,8 +36,8 @@ function TableToolBar({
                 <div className="flex justify-end items-center gap-3">
                     {!isBulkActive && onExport && (
                         <Button
-                            buttonName={isMobile ? "" : exportLoading ? "Exporting CSV" : "Export as CSV"}
-                            frontIconName="material-symbols:download"
+                            buttonName={isMobile ? "" : exportLoading ? "Exporting" : "Export as CSV"}
+                            frontIconName={exportLoading ? "line-md:downloading-loop" : "material-symbols:download"}
                             frontIconWidth="24"
                             frontIconHeight="24"
                             className="lg:p-3 lg:py-1.5 text-sm rounded-md"
@@ -100,7 +100,7 @@ function TableToolBar({
                         </div>
 
                         {/* Filters Container: Added flex-wrap for mobile safety */}
-                        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6 w-full gap-3">
                             {children}
                         </div>
                     </div>

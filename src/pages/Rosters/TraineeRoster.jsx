@@ -238,27 +238,26 @@ function TraineeRoster() {
             "traineeroster.csv"
         )
             .then((result) => {
-            if (!result.success) {
-                console.error(result.message);
-            }
-        })
-        .finally(() => {
-            setExporting(false);
-        });
-}
+                if (!result.success) {
+                    console.error(result.message);
+                }
+            })
+            .finally(() => {
+                setExporting(false);
+            });
+    }
 
 
 
-return (
-    <>
-        <div className="p-2 border-b-2 border-default w-full block lg:hidden">
-            <BackButton to={`/course/${courseId}/overview`} iconName="material-symbols:arrow-back-rounded" label="Back to Overview" />
-        </div>
-        <div className='h-full overflow-y-auto p-6 bg-background text-main'>
-            <div className="mb-2 w-full hidden lg:block">
+    return (
+        <>
+            <div className="p-2 border-b-2 border-default w-full block lg:hidden">
                 <BackButton to={`/course/${courseId}/overview`} iconName="material-symbols:arrow-back-rounded" label="Back to Overview" />
             </div>
-            <div className="p-4 border border-default rounded-lg">
+            <div className='h-full overflow-y-auto p-6 bg-background text-main'>
+                <div className="mb-2 w-full hidden lg:block">
+                    <BackButton to={`/course/${courseId}/overview`} iconName="material-symbols:arrow-back-rounded" label="Back to Overview" />
+                </div>
                 <TableToolbar
                     headerLabel='Trainee Roster'
                     headerCaption={
@@ -272,6 +271,7 @@ return (
                     search={filters.search}
                     setSearch={(val) => handleFilterChange('search', val)}
                     onExport={can("DOWNLOAD_TRAINEE_ROSTER") ? handleExport : undefined}
+                    exportLoading={exporting}
                 >
                     <Select
                         label="Sort by:"
@@ -301,10 +301,10 @@ return (
                         <RosterTableMobileCard row={row} />
                     )}
                 />
+
             </div>
-        </div>
-    </>
-);
+        </>
+    );
 }
 
 

@@ -55,7 +55,7 @@ export const getTraineesRoster = (courseId, params = {}) => {
 }
 
 export const exportTraineesRoster = (courseId, params = {}) => {
-    return axiosInstance.get(`/api/v1/list/trainer/trainees/${courseId}/export`, {
+    return axiosInstance.get(`/api/v1/list/admin/trainees/${courseId}/export`, {
         params,
         responseType: "blob",
     })

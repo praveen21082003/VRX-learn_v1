@@ -22,7 +22,7 @@ function EnrollmentsManagement() {
     const INITIAL_FILTERS = {
         search: "",
         role: null,
-        sort: null,
+        sort: "create_desc",
         status: null
     };
 
@@ -332,7 +332,9 @@ function EnrollmentsManagement() {
 
 
             {/* table */}
-            <div className="md:px-4 md:pb-4 flex-1 overflow-hidden px-2 pb-4 min-h-0">
+            {/* <div className="md:px-4 md:pb-4 flex-1 overflow-hidden px-2 pb-4 min-h-0"> */}
+            <div className="md:px-4 md:pb-4 h-full px-2 pb-4 min-h-0">
+
                 <DataTable
                     loading={loading}
                     selectedRows={selectedRows}

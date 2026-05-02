@@ -6,9 +6,9 @@ export default function AppLayout() {
 
 
     return (
-        <div className="h-screen bg-background w-screen flex flex-col overflow-hidden pb-13 md:pb-0">
+        <div className="h-screen bg-background w-screen flex flex-col overflow-hidden">
             <Header menu={true} />
-            <main className="flex-1 md:overflow-y-auto overflow-hidden">
+            <main className="flex-1 overflow-y-auto overflow-hidden">
                 <Outlet />
             </main>
         </div>

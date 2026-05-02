@@ -312,15 +312,15 @@ function AdminCourseManagement() {
 
 
     return (
-        <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
+        <div className="p-4 w-full md:h-auto h-full flex flex-col bg-transparent text-main">
 
-            <div className="p-4 shrink-0">
+            <div className="shrink-0">
                 <TableToolbar
                     headerLabel="Course Management"
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     search={filters.search}
-                    searchPlaceholder="Search by Course name or Trainer names"
+                    searchPlaceholder="Search by Course or Trainer name"
                     setSearch={(val) => {
                         handleFilterChange('search', val);
                         setPage(1);
@@ -344,7 +344,7 @@ function AdminCourseManagement() {
             </div>
 
 
-            <div className="md:px-4 md:pb-4 flex-1 overflow-hidden px-2 pb-4 min-h-0">
+            <div className="flex-1 overflow-hidden min-h-0">
                 {/* Course Table */}
                 <DataTable
                     loading={loading}

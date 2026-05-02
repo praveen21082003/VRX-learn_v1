@@ -24,7 +24,7 @@ function UserManagement() {
     const INITIAL_FILTERS = {
         search: "",
         role: null,
-        sort: null,
+        sort: "create_desc",
         status: null
     };
 
@@ -279,7 +279,7 @@ function UserManagement() {
     }
 
     return (
-        <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
+        <div className="w-full md:h-auto h-full flex flex-col bg-transparent overflow-scroll text-main">
             <div className="p-4 shrink-0">
 
                 <TableToolbar
@@ -328,7 +328,7 @@ function UserManagement() {
 
 
             {/* Table Component */}
-            <div className="md:px-4 md:pb-4 flex-1 overflow-hidden px-2 pb-4 min-h-0">
+            <div className="md:px-4 md:pb-4 h-full px-2 pb-4 min-h-0">
                 <DataTable
                     total={total}
                     loading={loading}

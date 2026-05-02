@@ -10,10 +10,10 @@ function CourseTableMobileCard({ row, columns, loading }) {
     return (
       <div className="relative p-3 mt-2 border border-default rounded-lg shadow-sm animate-pulse">
 
- 
+
         <div className="absolute top-3 right-3 w-20 h-5 bg-gray-200 rounded" />
 
-       
+
         <div className="absolute bottom-3 right-3 flex gap-2">
           <div className="w-5 h-5 bg-gray-200 rounded" />
           <div className="w-5 h-5 bg-gray-200 rounded" />
@@ -38,14 +38,16 @@ function CourseTableMobileCard({ row, columns, loading }) {
     );
   }
 
+  console.log(row)
+
 
   return (
     <div className="relative p-3 mt-2 border border-default rounded-lg shadow-sm">
 
 
       <div className="absolute top-3 right-3">
-        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
-          {row.students} Trainees
+        <span className="text-xs bg-[#D1E7DD] text-[#0F5132] px-2 py-0.5 rounded">
+          {row.noOfTrainees} Trainees
         </span>
       </div>
 
@@ -65,17 +67,19 @@ function CourseTableMobileCard({ row, columns, loading }) {
         {/* Trainers */}
         <p className="text-emphasis text-main flex items-center gap-1">
           <Icon name="mdi:users" height="16" width="16" />
-          Trainer: {getCol("trainers")?.render?.(row)}
+          {/* Trainer: {getCol("trainers")?.render?.(row)} */}
+          Trainer: {row.trainerName}
         </p>
 
         {/* Description */}
-        <p className="text-caption text-muted line-clamp-2">
-          {row.shortDescription}
+        <p title={row.shortDescription} className={`h-10 text-caption overflow-hidden leading-5 line-clamp-2 ${!row.shortDescription ? "text-muted italic" : ""}`}>
+          {row.shortDescription || "No description provided"}
         </p>
 
         {/* Created Date */}
         <p className="text-caption text-muted mt-1">
-          Created At: {getCol("created_at")?.render?.(row)}
+          {/* Created At: {getCol("createdAt")?.render?.(row)} */}
+          Created At: {row.createdAt}
         </p>
       </div>
     </div>

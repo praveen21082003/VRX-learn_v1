@@ -12,8 +12,6 @@ export const ROLE_OPTIONS = [
 ]
 
 export const SORT_OPTIONS = [
-
-    { label: "None", value: null },
     { label: "Newest First", value: "create_desc" },
     { label: "Oldest First", value: "create_asc" },
     { label: "Username (A - Z)", value: "user_asc" },
@@ -31,7 +29,6 @@ export const STATUS_OPTIONS = [
 
 
 export const EROLLMENT_SORT_OPTIONS = [
-    { label: "None", value: null },
     { label: "Newest First", value: "create_desc" },
     { label: "Oldest First", value: "create_asc" },
     { label: "Course Name (A - Z)", value: "course_asc" },

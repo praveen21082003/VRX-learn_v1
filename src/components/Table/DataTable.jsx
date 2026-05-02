@@ -24,10 +24,10 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
   const emptyRows = Math.max(0, pageSize - safeData.length);
 
   return (
-    <div className="h-full md:h-auto w-full md:border-2 border-default flex flex-col overflow-hidden">
+    <div className="md:h-auto w-full md:border-2 border-default flex flex-col">
 
       {/* Desktop header */}
-      <div className="hidden md:block flex-shrink-0">
+      <div className="hidden md:block shrink-0">
         <table className="w-full table-fixed border-b border-default">
           <TableHeader columns={columns} />
         </table>
@@ -48,8 +48,8 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
         </table>
       </div>
 
-      {/* Mobile body — flex-1 + overflow scroll */}
-      <div className="block md:hidden flex-1 overflow-y-auto scrollbar-hide space-y-2 p-2">
+      {/* ----------- Mobile Screen -------------*/}
+      <div className="block md:hidden space-y-2 pb-16">
         {typeof renderMobileCard === 'function' ? (
           loading ? (
             <TableMobileSkeleton type={mobileLoadingType} />
@@ -64,13 +64,13 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
           )
         ) : (
           <div className="p-4 text-center text-muted italic text-sm">
-            Mobile view not implemented for this table.
+            Mobile view not implemented.
           </div>
         )}
       </div>
 
-      {/* Pagination */}
-      <div className="shrink-0 sticky bottom-0 border-t border-default bg-background z-20">
+      {/* Pagination — fixed bottom on mobile, static on desktop */}
+      <div className="md:static md:border-t md:border-default fixed bottom-0 left-0 right-0 border-t border-default bg-background z-20">
         <TablePagination
           page={page}
           setPage={setPage}

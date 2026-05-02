@@ -98,11 +98,11 @@ function ContentLessonSidebar({
                                                             </p>
                                                         </div>
 
-                                                        <Icon
+                                                        {/* <Icon
                                                             name={lesson.status === "completed" ? "mdi:checkbox-marked-circle" : "mdi:checkbox-blank-circle-outline"}
                                                             height="26px"
                                                             width="26px"
-                                                        />
+                                                        /> */}
                                                     </button>
                                                 );
                                             })
@@ -212,48 +212,50 @@ function ContentLessonSidebar({
 
                                     {isModuleOpen && (
                                         <div className="pb-2">
-                                            {module.lessons?.map((lesson, lessonIndex) => {
-                                                const isActive =
-                                                    activeLesson?.lessonId === lesson.id;
+                                            {module.lessons?.length > 0
+                                                ? <>
+                                                    {module.lessons?.map((lesson, lessonIndex) => {
+                                                        const isActive =
+                                                            activeLesson?.lessonId === lesson.id;
 
-                                                return (
-                                                    <button
-                                                        key={lesson.id}
-                                                        onClick={() => {
-                                                            setActiveLesson({
-                                                                moduleIndex,
-                                                                lessonIndex,
-                                                                lessonId: lesson.id,
-                                                            });
+                                                        return (
+                                                            <button
+                                                                key={lesson.id}
+                                                                onClick={() => {
+                                                                    setActiveLesson({
+                                                                        moduleIndex,
+                                                                        lessonIndex,
+                                                                        lessonId: lesson.id,
+                                                                    });
 
-                                                            setShowNextPlaylist(false);
-                                                        }}
-                                                        className={clsx(
-                                                            "w-full flex items-center justify-between px-3 py-2.5 text-muted text-left",
-                                                            isActive
-                                                                ? "bg-primary/10 text-primary"
-                                                                : "hover:bg-primary/5"
-                                                        )}
-                                                    >
-                                                        <div className="flex items-center gap-3 min-w-0">
-                                                            <Icon
-                                                                name={
-                                                                    lesson?.mimeType?.startsWith("video")
-                                                                        ? "ep:video-play"
-                                                                        : "basil:document-outline"
-                                                                }
-                                                                width="18"
-                                                                height="18"
-                                                            />
+                                                                    setShowNextPlaylist(false);
+                                                                }}
+                                                                className={clsx(
+                                                                    "w-full flex items-center justify-between px-3 py-2.5 text-muted text-left",
+                                                                    isActive
+                                                                        ? "bg-primary/10 text-primary"
+                                                                        : "hover:bg-primary/5"
+                                                                )}
+                                                            >
+                                                                <div className="flex items-center gap-3 min-w-0">
+                                                                    <Icon
+                                                                        name={
+                                                                            lesson?.mimeType?.startsWith("video")
+                                                                                ? "ep:video-play"
+                                                                                : "basil:document-outline"
+                                                                        }
+                                                                        width="18"
+                                                                        height="18"
+                                                                    />
 
-                                                            <div className="min-w-0">
-                                                                <p className="truncate text-body">
-                                                                    {moduleIndex + 1}.{lessonIndex + 1} {lesson.title}
-                                                                </p>
-                                                            </div>
-                                                        </div>
+                                                                    <div className="min-w-0">
+                                                                        <p className="truncate text-body">
+                                                                            {moduleIndex + 1}.{lessonIndex + 1} {lesson.title}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
 
-                                                        <Icon
+                                                                {/* <Icon
                                                             name={
                                                                 lesson.status === "completed"
                                                                     ? "mdi:checkbox-marked-circle"
@@ -261,10 +263,17 @@ function ContentLessonSidebar({
                                                             }
                                                             width="18"
                                                             height="18"
-                                                        />
-                                                    </button>
-                                                );
-                                            })}
+                                                        /> */}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </>
+                                                :
+                                                <li className="px-4 py-3 text-sm text-muted-foreground italic">
+                                                    No lessons in this module
+                                                </li>
+                                            }
+
                                         </div>
                                     )}
                                 </div>
