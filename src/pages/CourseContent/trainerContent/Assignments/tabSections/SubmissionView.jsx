@@ -13,7 +13,6 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
     const { addToast } = useToast();
     const [isOpen, ref, setIsOpen, toggle] = useClickOutside();
 
-    console.log("view", submissions);
 
     const [evaluation, setEvaluation] = useState({
         score: "",

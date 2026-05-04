@@ -38,7 +38,6 @@ function CourseTableMobileCard({ row, columns, loading }) {
     );
   }
 
-  console.log(row)
 
 
   return (

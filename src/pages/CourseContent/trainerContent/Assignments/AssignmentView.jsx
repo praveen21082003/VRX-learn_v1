@@ -11,6 +11,8 @@ import formatDateTime from '@/utils/formatDateTime';
 import { InstructionsTab, SubmissionView, SubmissionsTab } from "./tabSections";
 
 function AssignmentView() {
+  const isMobile = window.innerWidth < 768;
+
   const { courseId } = useCourse();
   const { assignment, fetchAssignmentDetails, detailsLoading, detailsError } = useAssignmentContext();
 
@@ -134,6 +136,7 @@ function AssignmentView() {
                 bgClass=""
                 textClass="text-primary dark:text-background"
                 onClick={() => navigate(`/course/${courseId}/content/assignments/${assignmentId}/edit`)}
+                isMobile={isMobile}
               />
             </div>
 
@@ -141,7 +144,7 @@ function AssignmentView() {
 
           {activeTab === "submissions" && (
             <div className='block md:hidden shrink-0'>
-              <Button buttonName="Export as CSV" frontIconName="material-symbols:download" frontIconHeght="24" frontIconWidth="24" className="p-1 px-2 rounded font-semibold text-md" bgClass="" textClass="text-primary dark:text-background" />
+              <Button buttonName="Export as CSV" frontIconName="material-symbols:download" frontIconHeght="24" frontIconWidth="24" className="p-1 px-2 rounded font-semibold text-md" bgClass="" textClass="text-primary dark:text-background" isMobile={isMobile}/>
             </div>
           )}
         </div>

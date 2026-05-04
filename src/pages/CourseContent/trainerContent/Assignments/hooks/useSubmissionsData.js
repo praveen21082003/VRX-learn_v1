@@ -17,7 +17,6 @@ export const useSubmissionsData = (assignmentId, params) => {
       setError(null);
 
       const response = await getAssignmentSubmission(assignmentId, params);
-      console.log(response)
 
       const data = response?.data || [];
       const list = Array.isArray(data) ? data : [];

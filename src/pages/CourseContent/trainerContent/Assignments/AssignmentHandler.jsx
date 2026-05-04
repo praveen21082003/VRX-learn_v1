@@ -43,8 +43,6 @@ function AssignmentHandler({ mode }) {
 
     const initialData = isEdit ? assignment : null;
 
-    console.log(assignment)
-
 
     return (
         <div className='p-4 mb-30 lg:mb-0'>
