@@ -169,6 +169,18 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
         onSuccess(response.data, "update");
         onClose?.();
       } else {
+        if (response.status === 409) {
+          setWarning(prev => ({ ...prev, title: "A course with this title already exists." }));
+          return;
+        }
+        if (response.status === 400) {
+          setWarning(prev => ({ ...prev, trainerId: "The selected user is not a trainer." }));
+          return;
+        }
+        if (response.status === 404) {
+          setWarning(prev => ({ ...prev, trainerId: "Trainer not found. Please select a valid trainer." }));
+          return;
+        }
         addToast(response.message, "error");
       }
     } else {
@@ -187,13 +199,25 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
       };
 
       const response = await createNewCourse(payload);
-      console.log(payload);
+
 
       if (response.success) {
         addToast(response.message, "success");
         onSuccess(response.data, "create");
         onClose?.();
       } else {
+        if (response.status === 409) {
+          setWarning(prev => ({ ...prev, title: "A course with this title already exists." }));
+          return;
+        }
+        if (response.status === 400) {
+          setWarning(prev => ({ ...prev, trainerId: "The selected user is not a trainer." }));
+          return;
+        }
+        if (response.status === 404) {
+          setWarning(prev => ({ ...prev, trainerId: "Trainer not found. Please select a valid trainer." }));
+          return;
+        }
         addToast(response.message, "error");
       }
     }

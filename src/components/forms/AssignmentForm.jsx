@@ -1,13 +1,29 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import { useScrollToError } from "@/hooks/useScrollToError";
+import useAssignmentActions from './hooks/useAssignmentActions'
+
 import { Input, TextEditor, UploadSection, Button, AttachmentCard, BackButton } from '@/components/ui'
 
 import formatDateTimeLocal from '@/utils/formatDateTimeLocal'
-import useAssignmentActions from './hooks/useAssignmentActions'
 
 import { useToast } from '@/context/ToastProvider'
 
 function AssignmentForm({ courseId, mode, initialData, assignments, setAssignments }) {
+
+  const titleRef = useRef(null);
+  const instructionsRef = useRef(null);
+  const fileRef = useRef(null);
+
+  const refs = {
+    title: titleRef,
+    instructions: instructionsRef,
+    file: fileRef,
+  };
+
+  const scrollToError = useScrollToError(refs);
+
   const isEdit = mode === "edit";
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -110,40 +126,59 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // 1. Frontend validation
     const errors = validate();
     if (Object.keys(errors).length > 0) {
       setWarning(errors);
+      scrollToError(errors);
       return;
     }
 
     const file = files?.[0] || null;
 
+    // 2. EDIT MODE
     if (isEdit) {
       const payload = buildUpdatePayload();
 
+      // nothing changed
       if (Object.keys(payload).length === 0) {
         addToast("No changes made", "info");
         return;
       }
 
       const result = await updateAssignment(initialData?.assignment?.id, payload);
-      console.log(result.data)
 
+      // handle field-level backend errors (like duplicate title)
+      const newWarning = {};
+
+      if (result.status === 409) {
+        newWarning.title = "An assignment with this title already exists in this course.";
+      }
+
+      if (Object.keys(newWarning).length > 0) {
+        setWarning(newWarning);
+        scrollToError(newWarning);
+        return;
+      }
+
+      // 🔸 generic failure
       if (!result.success) {
         addToast(result.message, "error");
         return;
       }
 
-      // update context
+      // update context (⚠️ fix ID usage)
       const updated = assignments.map(a =>
-        a.id === initialData.id ? { ...a, ...payload } : a
+        a.id === initialData?.assignment?.id ? { ...a, ...payload } : a
       );
       setAssignments(updated);
 
       addToast(result.message, "success");
       navigate(`/course/${courseId}/content/assignments`);
+    }
 
-    } else {
+    // 3. CREATE MODE
+    else {
       const assignmentData = {
         title: formData.title.trim(),
         instructions: formData.instructions?.trim() || "",
@@ -155,11 +190,26 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
 
       const result = await createAssignment(assignmentData, file);
 
+      // handle field-level backend errors
+      const newWarning = {};
+
+      if (result.status === 409) {
+        newWarning.title = "An assignment with this title already exists in this course.";
+      }
+
+      if (Object.keys(newWarning).length > 0) {
+        setWarning(newWarning);
+        scrollToError(newWarning);
+        return;
+      }
+
+      // full failure (no partial success)
       if (!result.success && !result.partialSuccess) {
         addToast(result.message, "error");
         return;
       }
 
+      // partial success (e.g., file upload failed)
       if (result.partialSuccess) {
         addToast(result.message, "warning");
       } else {
@@ -167,8 +217,8 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
       }
 
       // update context
-      console.log(result.data)
       setAssignments([result.data, ...assignments]);
+
       navigate(`/course/${courseId}/content/assignments`);
     }
   };
@@ -217,19 +267,24 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <Input
-        label="Title"
-        value={formData.title}
-        inputWarning={warning.title}
-        onChange={(e) => handleChange("title", e.target.value)}
-      />
 
-      <TextEditor
-        label="Instructions"
-        value={formData.instructions}
-        onChange={(value) => handleChange("instructions", value)}
-        inputWarning={warning.instructions}
-      />
+      <div ref={titleRef}>
+        <Input
+          label="Title"
+          value={formData.title}
+          inputWarning={warning.title}
+          onChange={(e) => handleChange("title", e.target.value)}
+        />
+      </div>
+
+      <div ref={instructionsRef}>
+        <TextEditor
+          label="Instructions"
+          value={formData.instructions}
+          onChange={(value) => handleChange("instructions", value)}
+          inputWarning={warning.instructions}
+        />
+      </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-2'>
         <Input
@@ -270,20 +325,23 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
 
       {/* file upload only on create */}
       {!isEdit && (
-        <UploadSection
-          files={files}
-          setFiles={(newFiles) => {
-            setFiles(newFiles);
-            setWarning(prev => ({ ...prev, file: null }));
-          }}
-          uploadProgress={uploadProgress}
-          isUploading={creating}
-          isUploaded={uploadProgress === 100}
-          loadedData={uploadedBytes}
-          label="Attachments"
-          optional={true}
-          inputWarning={warning.file}
-        />
+        <div ref={fileRef}>
+
+          <UploadSection
+            files={files}
+            setFiles={(newFiles) => {
+              setFiles(newFiles);
+              setWarning(prev => ({ ...prev, file: null }));
+            }}
+            uploadProgress={uploadProgress}
+            isUploading={creating}
+            isUploaded={uploadProgress === 100}
+            loadedData={uploadedBytes}
+            label="Attachments"
+            optional={true}
+            inputWarning={warning.file}
+          />
+        </div>
       )}
 
       {/* show existing attachment on edit */}

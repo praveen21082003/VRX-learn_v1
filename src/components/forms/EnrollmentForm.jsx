@@ -132,6 +132,11 @@ function EnrollmentForm({ initialData, onClose, onSuccess, mode, isEdit }) {
                 onSuccess?.(response.data, "create");
                 onClose?.();
             } else {
+
+                if (response.status === 409) {
+                    setWarning(prev => ({ ...prev, userId: "This user is already enrolled in the course." }));
+                    return;
+                }
                 addToast(response.message, "error");
             }
         }

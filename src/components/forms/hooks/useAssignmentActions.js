@@ -5,6 +5,8 @@ import {
 } from "@/services/Assignments.service";
 import { UploadMediaToS3 } from "@/services/UploadMediaToS3.service";
 import { updateMediaStatus } from "@/services/Media.service";
+import { extractErrorMessage } from '@/utils/errorUtils';
+
 
 export default function useAssignmentActions() {
     const [creating, setCreating] = useState(false);
@@ -48,7 +50,6 @@ export default function useAssignmentActions() {
                 } : null
             };
 
-            console.log(payload)
 
             const response = await createAssignmentService(payload);
             // console.log("create step - 1", response);
@@ -67,7 +68,7 @@ export default function useAssignmentActions() {
                         setUploadedBytes(loaded);
                     }
                 );
-                console.log("uploading step -2 ", uploadResponse)
+                // console.log("uploading step -2 ", uploadResponse)
 
 
                 if (uploadResponse?.status !== 200) {
@@ -92,15 +93,21 @@ export default function useAssignmentActions() {
             };
 
         } catch (err) {
-            console.log(err)
-            let message = "Failed to create assignment";
-            if (err.response?.status === 400) message = "Please check the entered assignment details";
-            if (err.response?.status === 403) message = "You do not have permission to create assignments";
-            if (err.response?.status === 404) message = "Course not found";
-            if (err.response?.status >= 500) message = "Server error while creating assignment";
+            const status = err.response?.status;
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                400: err.response?.data?.type === "FileSizeExceededError"
+                    ? "File size exceeds the maximum limit of 5MB."
+                    : "Invalid input. Please check the assignment details.",
+
+                403: "You do not have permission to create assignments.",
+
+                404: "The selected course could not be found.",
+
+                409: "An assignment with this title already exists in this course.",
+            });
 
             setError(message);
-            return { success: false, data: null, message };
+            return { success: false, data: null, message, status };
         } finally {
             setCreating(false);
         }
@@ -145,11 +152,12 @@ export default function useAssignmentActions() {
                 message: "Assignment updated successfully",
             };
         } catch (err) {
-            let message = "Failed to update assignment";
-            if (err.response?.status === 400) message = "Please check the entered assignment details";
-            if (err.response?.status === 403) message = "You do not have permission to update this assignment";
-            if (err.response?.status === 404) message = "Assignment not found";
-            if (err.response?.status >= 500) message = "Server error while updating assignment";
+            const status = err.response?.status;
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                403: "You do not have permission to update this assignment.",
+                404: "The selected assignment could not be found.",
+                409: "An assignment with this title already exists in this course.",
+            });
 
             setError(message);
             return { success: false, data: null, message };

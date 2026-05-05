@@ -22,11 +22,13 @@ function AssignmentsPage() {
   const { courseId } = useCourse();
   const {
     assignments,
-    setAssignments,
+    HandlesetAssignments,
     assignmentList,
     fetchAssignments,
     assignmentListLoading,
     assingnmentListError,
+    updateAssignment,
+    updating,
   } = useAssignmentContext();
 
 
@@ -70,7 +72,7 @@ function AssignmentsPage() {
 
   // handlers
   const handleRename = (assignmentId) => {
-    const assignment = assignments.find(a => a.id === assignmentId);
+    const assignment = assignmentList.find(a => a.id === assignmentId);
     setRenameAssignmentId(assignmentId);
     setRenameValue(assignment?.title || "");
     setIsOpenDropdown(null);
@@ -84,13 +86,13 @@ function AssignmentsPage() {
     }
 
     // TODO: add updateAssignment hook call here
-    // const result = await updateAssignment(assignmentId, { title: newTitle });
-    // if (!result.success) { addToast(result.message, "error"); return; }
+    const result = await updateAssignment(assignmentId, { title: newTitle });
+    if (!result.success) { addToast(result.message, "error"); return; }
 
-    const updated = assignments.map(a =>
+    const updated = assignmentList.map(a =>
       a.id === assignmentId ? { ...a, title: newTitle } : a
     );
-    setAssignments(updated);
+    HandlesetAssignments(updated);
     addToast("Assignment Renamed", "success");
     setRenameAssignmentId(null);
   };
@@ -101,7 +103,7 @@ function AssignmentsPage() {
     if (!result.success) { addToast(result.message, "error"); return; }
 
     const updated = assignmentList.filter(a => a.id !== assignmentId);
-    setAssignments(updated);
+    HandlesetAssignments(updated);
     setDeleteAssignmentId(null);
     addToast("Assignment Deleted", "success");
   };
@@ -158,8 +160,9 @@ function AssignmentsPage() {
                       }
                     }}
                     className={clsx(
-                      "flex items-center justify-between px-5 py-3 rounded-md hover:bg-primary/16 dark:hover:bg-primary transition-colors cursor-pointer",
-                      (isOpenDropdown === assignment.id || renameAssignmentId === assignment.id) && "bg-primary/16"
+                      "flex items-center justify-between px-5 py-3 rounded-md hover:bg-primary/16 dark:hover:bg-primary transition-colors",
+                      (isOpenDropdown === assignment.id || renameAssignmentId === assignment.id) && "bg-primary/16",
+                      updating ? "cursor-progress" : "cursor-pointer"
                     )}
                   >
                     {/* Left side */}
@@ -182,8 +185,12 @@ function AssignmentsPage() {
                               paddingClass="p-2"
                               bgClass="bg-primary-border"
                               value={renameValue}
+                              disabled={updating}
                               autoFocus
-                              onChange={(e) => setRenameValue(e.target.value)}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                setRenameValue(value.toUpperCase());
+                              }}
                               onBlur={() => setRenameAssignmentId(null)}
                               onKeyDown={(e) => {
                                 if (e.key === "Enter") {
@@ -195,6 +202,7 @@ function AssignmentsPage() {
                                     return;
                                   }
                                   if (!trimmed) return;
+                                  setRenameAssignmentId(null);
                                   renameAssignmentHandler(assignment.id);
                                 }
                                 if (e.key === "Escape") {

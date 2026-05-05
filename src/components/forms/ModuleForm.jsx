@@ -64,17 +64,21 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // validate
+        // 1. Validate form before API call
         const errors = validate();
         if (Object.keys(errors).length > 0) {
-            setWarning(errors);
+            setWarning(errors);           // show field errors
+
+            // scroll to first error
+            //scrollToError(errors);
             return;
         }
 
+        // 2. EDIT MODE
         if (isEdit) {
             const payload = buildUpdatePayload();
 
-            // nothing changed
+            // nothing changed → stop early
             if (Object.keys(payload).length === 0) {
                 addToast("No changes made", "info");
                 return;
@@ -82,36 +86,67 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
 
             const result = await updateModule(initialData.id, payload);
 
+            // handle field-level backend errors first (like 409)
+            const newWarning = {};
+
+            if (result.status === 409) {
+                newWarning.title = "A module with this title already exists in this course.";
+            }
+
+            if (Object.keys(newWarning).length > 0) {
+                setWarning(newWarning);        // replace warnings
+                
+                // scroll to error field
+                //scrollToError(newWarning);
+
+                return;
+            }
+
+            // handle generic failure (toast)
             if (!result.success) {
                 addToast(result.message, "error");
                 return;
             }
 
-            // update context
+            // success → update UI state
             const updated = modules.map(m =>
                 m.id === initialData.id ? { ...m, ...payload } : m
             );
             setModules(updated);
 
             addToast(result.message, "success");
+        }
 
-        } else {
+        // 3. CREATE MODE
+        else {
             const payload = {
                 title: formData.title.trim(),
                 description: formData.description.trim(),
                 courseId: courseId
             };
 
-            console.log(payload)
-
             const result = await createNewModule(payload);
 
+            // handle field-level backend errors first
+            const newWarning = {};
+
+            if (result.status === 409) {
+                newWarning.title = "A module with this title already exists in this course.";
+            }
+
+            if (Object.keys(newWarning).length > 0) {
+                setWarning(newWarning);
+                // scrollToError(newWarning);
+                return;
+            }
+
+            // handle generic failure
             if (!result.success) {
                 addToast(result.message, "error");
                 return;
             }
 
-            // update context — add new module to list
+            // success → update list + navigate
             setModules([...modules, result.data]);
 
             addToast(result.message, "success");

@@ -4,6 +4,8 @@ import {
     deleteEnrollmentService,
     updateEnrollmentService,
 } from "@/services/Enrollment.service";
+import { extractErrorMessage } from '@/utils/errorUtils';
+
 
 export const useEnrollmentActions = () => {
     const [creating, setCreating] = useState(false);
@@ -23,13 +25,18 @@ export const useEnrollmentActions = () => {
                 message: "Enrollment created successfully",
             };
         } catch (err) {
-            let message = "Unable to create enrollment. Please try again.";
-            if (err.response?.status === 400) message = "Please check the enrollment details.";
-            if (err.response?.status === 409) message = "This user is already enrolled in this course.";
-            if (err.response?.status === 403) message = "You do not have permission to create enrollments.";
-            if (err.response?.status >= 500) message = "Server error while creating enrollment.";
+
+            const status = err.response?.status;
+
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                400: "This user is not allowed to enroll in courses.",
+                403: "You do not have permission to enroll in this course.",
+                404: "The selected course could not be found.",
+                409: "This user is already enrolled in the course.",
+            });
+
             setError(message);
-            return { success: false, data: null, message };
+            return { success: false, data: null, message, status };
         } finally {
             setCreating(false);
         }
@@ -47,10 +54,14 @@ export const useEnrollmentActions = () => {
                 message: "Enrollment updated successfully",
             };
         } catch (err) {
-            let message = "Unable to update enrollment. Please try again.";
-            if (err.response?.status === 404) message = "Enrollment not found.";
-            if (err.response?.status === 403) message = "You do not have permission to update this enrollment.";
-            if (err.response?.status >= 500) message = "Server error while updating enrollment.";
+
+            const status = err.response?.status;
+
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                403: "You do not have permission to update this enrollment.",
+                404: "The selected enrollment could not be found.",
+            });
+
             setError(message);
             return { success: false, data: null, message };
         } finally {

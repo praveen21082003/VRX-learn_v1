@@ -14,6 +14,7 @@ function SearchSelect({
     getLabel = (item) => item.label || "",
     getSubLabel = null,
     renderItem = null,
+    paddingClass = "py-2"
 }) {
 
     const [open, ref, setOpen] = useClickOutside(false);
@@ -28,7 +29,7 @@ function SearchSelect({
 
             <Input
                 icon="ic:twotone-search"
-                paddingClass="py-2"
+                paddingClass={paddingClass}
                 placeholder={placeholder}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}

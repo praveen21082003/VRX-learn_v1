@@ -5,6 +5,8 @@ import {
     deleteCourseService,
 } from "@/services/Course.service";
 
+import { extractErrorMessage } from '@/utils/errorUtils';
+
 export const useCourseActions = () => {
     const [creating, setCreating] = useState(false);
     const [updating, setUpdating] = useState(false);
@@ -16,6 +18,7 @@ export const useCourseActions = () => {
         try {
             setCreating(true);
             setError(null);
+
             const res = await createCourseService(payload);
             return {
                 success: true,
@@ -23,13 +26,19 @@ export const useCourseActions = () => {
                 message: "Course created successfully",
             };
         } catch (err) {
-            let message = "Unable to create course. Please try again.";
-            if (err.response?.status === 400) message = "Please check the course details.";
-            if (err.response?.status === 409) message = "A course with this title already exists.";
-            if (err.response?.status === 403) message = "You do not have permission to create courses.";
-            if (err.response?.status >= 500) message = "Server error while creating course.";
+
+            const status = err.response?.status;
+
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                400: "The selected user is not a trainer.",
+                403: "You do not have permission to create courses.",
+                404: "Trainer not found. Please select a valid trainer.",
+                409: "A course with this title already exists.",
+                // 422: "Some fields have invalid or missing values. Please review and try again.",
+            });
+
             setError(message);
-            return { success: false, data: null, message };
+            return { success: false, data: null, message, status };
         } finally {
             setCreating(false);
         }
@@ -47,12 +56,17 @@ export const useCourseActions = () => {
                 message: "Course updated successfully",
             };
         } catch (err) {
-            let message = "Unable to update course. Please try again.";
-            if (err.response?.status === 404) message = "Course not found.";
-            if (err.response?.status === 403) message = "You do not have permission to update this course.";
-            if (err.response?.status >= 500) message = "Server error while updating course.";
+            const status = err.response?.status;
+            
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                400: "The selected user is not a trainer.",
+                403: "You do not have permission to create courses.",
+                404: "Course not found. Please select a valid Course.",
+                409: "A course with this title already exists.",
+            });
+
             setError(message);
-            return { success: false, data: null, message };
+            return { success: false, data: null, message, status };
         } finally {
             setUpdating(false);
         }

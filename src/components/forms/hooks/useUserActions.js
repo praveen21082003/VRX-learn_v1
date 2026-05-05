@@ -4,6 +4,9 @@ import {
     deleteUserService,
 } from "@/services/User.service";
 
+import { extractErrorMessage } from '@/utils/errorUtils';
+
+
 
 export const useUserActions = () => {
     const [creating, setCreating] = useState(false);
@@ -25,23 +28,15 @@ export const useUserActions = () => {
                 message: "User created successfully",
             };
         } catch (err) {
-            let message = "Unable to create user. Please try again.";
 
-            if (err.response?.status === 400) {
-                message = "Please check the entered user details.";
-            }
+            const status = err.response?.status;
 
-            if (err.response?.status === 409) {
-                message = "A user with this email already exists.";
-            }
-
-            if (err.response?.status === 403) {
-                message = "You do not have permission to create users.";
-            }
-
-            if (err.response?.status >= 500) {
-                message = "Server error while creating user.";
-            }
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                400: "Password and confirm password do not match.",
+                403: "You do not have permission to create users.",
+                409: "A user with this email already exists.",
+                422: "Please check the entered details.",
+            });
 
             setError(message);
 
@@ -49,6 +44,7 @@ export const useUserActions = () => {
                 success: false,
                 data: null,
                 message,
+                status
             };
         } finally {
             setCreating(false);
@@ -71,31 +67,13 @@ export const useUserActions = () => {
                 message: "User deleted successfully",
             };
         } catch (err) {
-            let message = "Unable to delete user. Please try again.";
-
-            if (err.response?.status === 404) {
-                message = "User not found.";
-            }
-
-            if (err.response?.status === 403) {
-                message = "You do not have permission to delete this user.";
-            }
-
-            if (err.response?.status === 409) {
-                message = "This user cannot be deleted right now.";
-            }
-
-            if (err.response?.status >= 500) {
-                message = "Server error while deleting user.";
-            }
-
+            const status = err.response?.status;
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                403: "You do not have permission to delete this user.",
+                422: "Unable to delete user. Please try again.",
+            });
             setError(message);
-
-            return {
-                success: false,
-                data: null,
-                message,
-            };
+            return { success: false, data: null, message, status };
         } finally {
             setDeleting(false);
         }

@@ -3,6 +3,7 @@ import {
     createModule,
     updateModuleById,
 } from "../../../services/Modules.service";
+import { extractErrorMessage } from '@/utils/errorUtils';
 
 export function useModulesAction() {
     const [creating, setCreating] = useState(false);
@@ -31,23 +32,13 @@ export function useModulesAction() {
                 message: "Module created successfully",
             };
         } catch (err) {
-            let message = "Failed to create module";
-
-            if (err.response?.status === 400) {
-                message = "Please check the entered module details";
-            }
-
-            if (err.response?.status === 403) {
-                message = "You do not have permission to create modules";
-            }
-
-            if (err.response?.status === 404) {
-                message = "Course not found";
-            }
-
-            if (err.response?.status >= 500) {
-                message = "Server error while creating module";
-            }
+            const status = err.response?.status;
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                403: "You do not have permission to create modules.",
+                404: "Course not found.",
+                409: "A module with this title already exists in this course.",
+                422: "Please check the entered details.",
+            });
 
             setError(message);
 
@@ -55,6 +46,7 @@ export function useModulesAction() {
                 success: false,
                 data: null,
                 message,
+                status,
             };
         } finally {
             setCreating(false);
@@ -83,30 +75,20 @@ export function useModulesAction() {
                 message: "Module updated successfully",
             };
         } catch (err) {
-            let message = "Failed to update module";
-
-            if (err.response?.status === 400) {
-                message = "Please check the entered module details";
-            }
-
-            if (err.response?.status === 403) {
-                message = "You do not have permission to update this module";
-            }
-
-            if (err.response?.status === 404) {
-                message = "Module not found";
-            }
-
-            if (err.response?.status >= 500) {
-                message = "Server error while updating module";
-            }
-
+            const status = err.response?.status;
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                403: "You do not have permission to update this module.",
+                404: "Module not found.",
+                409: "A module with this title already exists in this course.",
+                422: "Please check the entered details.",
+            });
             setError(message);
 
             return {
                 success: false,
                 data: null,
                 message,
+                status,
             };
         } finally {
             setUpdating(false);

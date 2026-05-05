@@ -1,10 +1,28 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
-import { Input, TextEditor, Button, UploadSection } from '@/components/ui'
+
+import { useScrollToError } from '@/hooks/useScrollToError';
 import useLessonActions from './hooks/useLessonActions';
+
 import { useToast } from '@/context/ToastProvider';
 
+import { Input, TextEditor, Button, UploadSection } from '@/components/ui'
+
 function LessonForm({ mode, initialData, modules, courseId }) {
+
+
+  const titleRef = useRef(null);
+  const fileRef = useRef(null);
+
+  const refs = {
+    title: titleRef,
+    file: fileRef,
+  };
+
+
+  const scrollToError = useScrollToError(refs);
+
+
   const isEdit = mode === "edit";
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -73,12 +91,15 @@ function LessonForm({ mode, initialData, modules, courseId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // 1. Frontend validation
     const errors = validate();
     if (Object.keys(errors).length > 0) {
       setWarning(errors);
+      scrollToError(errors);
       return;
     }
 
+    // 2. EDIT MODE
     if (isEdit) {
       const payload = buildUpdatePayload();
 
@@ -88,18 +109,35 @@ function LessonForm({ mode, initialData, modules, courseId }) {
       }
 
       const result = await updateLessonAction(initialData.id, payload);
+
+      // handle inline field error (title duplicate)
+      const newWarning = {};
+
+      if (result.status === 409) {
+        newWarning.title = "A lesson with this title already exists in this module.";
+      }
+
+      if (Object.keys(newWarning).length > 0) {
+        setWarning(newWarning);
+        scrollToError(newWarning);
+        return;
+      }
+
+      // generic error
       if (!result.success) {
         addToast(result.message, "error");
         return;
       }
 
+      // success
       addToast(result.message, "success");
       navigate(`/course/${courseId}/content/modules/${moduleId}`);
+    }
 
-    } else {
+    // 3. CREATE MODE
+    else {
       const file = files[0];
 
-      // build create payload
       const payload = {
         title: formData.title.trim(),
         description: formData.description.trim(),
@@ -110,11 +148,27 @@ function LessonForm({ mode, initialData, modules, courseId }) {
       };
 
       const result = await createLessonAction(payload, file);
+
+      // handle inline field error (title duplicate)
+      const newWarning = {};
+
+      if (result.status === 409) {
+        newWarning.title = "A lesson with this title already exists in this module.";
+      }
+
+      if (Object.keys(newWarning).length > 0) {
+        setWarning(newWarning);
+        scrollToError(newWarning);
+        return;
+      }
+
+      // generic error
       if (!result.success) {
         addToast(result.message, "error");
         return;
       }
 
+      // success
       addToast(result.message, "success");
       navigate(`/course/${courseId}/content/modules/${moduleId}`);
     }
@@ -135,13 +189,15 @@ function LessonForm({ mode, initialData, modules, courseId }) {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <Input
-        label="Title"
-        placeholder="Lesson name"
-        value={formData.title}
-        onChange={(e) => handleChange("title", e.target.value)}
-        inputWarning={warning.title}
-      />
+      <div ref={titleRef}>
+        <Input
+          label="Title"
+          placeholder="Lesson name"
+          value={formData.title}
+          onChange={(e) => handleChange("title", e.target.value)}
+          inputWarning={warning.title}
+        />
+      </div>
 
       <div className="space-y-2">
         <TextEditor
@@ -154,22 +210,25 @@ function LessonForm({ mode, initialData, modules, courseId }) {
 
       {/* file upload only in create mode */}
       {!isEdit ? (
-        <UploadSection
-          label="Lesson attachment"
-          files={files}
-          setFiles={(newFiles) => {
-            setFiles(newFiles);
-            setWarning(prev => ({ ...prev, file: null }));
-          }}
-          uploadProgress={uploadProgress}
-          isUploading={isCreating}
-          isUploaded={uploadProgress === 100}
-          mediaStatus={mediaStatus}
-          loadedData={loadedData}
-          inputWarning={warning.file}
-          allowedTypes={['pdf', 'mp4']}
-          maxFileSize={30}
-        />
+
+        <div ref={fileRef}>
+          <UploadSection
+            label="Lesson attachment"
+            files={files}
+            setFiles={(newFiles) => {
+              setFiles(newFiles);
+              setWarning(prev => ({ ...prev, file: null }));
+            }}
+            uploadProgress={uploadProgress}
+            isUploading={isCreating}
+            isUploaded={uploadProgress === 100}
+            mediaStatus={mediaStatus}
+            loadedData={loadedData}
+            inputWarning={warning.file}
+            allowedTypes={['pdf', 'mp4']}
+            maxFileSize={30}
+          />
+        </div>
       ) : (
         <div className="text-sm text-muted-foreground">
           Lesson content (pdf or document)

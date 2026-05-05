@@ -20,7 +20,7 @@ function LessonsPage() {
 
     // context
     const { courseId } = useCourse();
-    const { modules, lessons, setLessons, lessonLoading, error, fetchLessons, updateLessonAction, isUpdating, deleteLesson, isDeleting } = useModuleContext();
+    const { modules, lessons, setLessons, lessonLoading, error, fetchLessons, updateLessonAction, isUpdating, deleteLessonAction, isDeleting } = useModuleContext();
 
     // hook
     const { reorderLessons, isUpdating: reOrdering } = useReorder();
@@ -107,7 +107,7 @@ function LessonsPage() {
     };
 
     const handleDeleteLesson = async (lessonId) => {
-        const result = await deleteLesson(lessonId);
+        const result = await deleteLessonAction(lessonId);
         if (!result.success) {
             addToast(result.message, "error");
             return;
@@ -125,7 +125,7 @@ function LessonsPage() {
     return (
         <>
             <div className='border-b lg:border-0 border-default py-1 px-2'>
-                <BackButton to={`/course/${courseId}/content/modules`} label="Back to Modules"/>
+                <BackButton to={`/course/${courseId}/content/modules`} label="Back to Modules" />
             </div>
             <div className="space-y-4 p-4">
                 <div className='flex justify-between'>
@@ -144,14 +144,13 @@ function LessonsPage() {
                             ) : (
                                 <div className='relative flex flex-row gap-px'>
                                     <Button
-                                        buttonName="Edit Details"
+                                        buttonName={isMobile ? "Edit" : "Edit Details"}
                                         frontIconName='mingcute:pencil-line'
                                         frontIconWidth="24px"
                                         frontIconHeght="24px"
-                                        className="p-1 rounded-r-none rounded font-semibold text-md"
+                                        className="p-1 px-2 rounded-r-none rounded font-semibold text-md"
                                         bgClass=""
                                         textClass=""
-                                        isMobile={isMobile}
                                         onClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/edit`)}
                                     />
                                     <Button
@@ -239,7 +238,10 @@ function LessonsPage() {
                                                         ref={inputRef}
                                                         value={renameValue}
                                                         disabled={isUpdating}
-                                                        onChange={(e) => setRenameValue(e.target.value)}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+                                                            setRenameValue(value.toUpperCase());
+                                                        }}
                                                         autoFocus
                                                         className="text-sm"
                                                         bgClass="bg-primary-border"

@@ -14,6 +14,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 import { Icon } from '@/components/ui'
+import useAssignmentActions from "../../../../components/forms/hooks/useAssignmentActions";
 
 // ─── Contexts ───────────────────────────────────────────
 export const CourseContext = createContext(null);
@@ -65,6 +66,8 @@ function CourseManagementLayout() {
         assignments: assignmentList,
         assignment,
 
+        setAssignments,
+
         fetchAssignmentDetails,
         fetchAssignments,
 
@@ -76,8 +79,9 @@ function CourseManagementLayout() {
     } = useAssignmentList();
 
 
-    // update actions
-    const { updateLessonAction, isUpdating } = useLessonAction();
+    // update and delete actions
+    const { updateLessonAction, deleteLessonAction, isUpdating, isDeleting } = useLessonAction();
+    const { updateAssignment, updating } = useAssignmentActions()
 
     // 
     if (effectiveRole === "trainee") {
@@ -114,8 +118,9 @@ function CourseManagementLayout() {
     };
 
     // update assignments
-    const setAssignments = (updated) => {
+    const HandlesetAssignments = (updated) => {
         setCourseContent(prev => ({ ...prev, assignments: updated }))
+        setAssignments(updated);
     }
 
 
@@ -146,7 +151,7 @@ function CourseManagementLayout() {
 
 
     return (
-        <CourseContext.Provider value={{ courseId, course, handleUpdateCourseInfoSuccess }}>
+        <CourseContext.Provider value={{ courseId, course, refreshCourseContent, handleUpdateCourseInfoSuccess }}>
             <ModuleContext.Provider value={{
                 modules,
                 error,
@@ -156,9 +161,11 @@ function CourseManagementLayout() {
                 fetchLessons,
                 lessonLoading,
                 updateLessonAction,
-                isUpdating
+                deleteLessonAction,
+                isUpdating,
+                isDeleting
             }}>
-                <AssignmentContext.Provider value={{ setAssignments, assignmentList, fetchAssignments, assignmentListLoading, assingnmentListError, assignment, fetchAssignmentDetails, detailsLoading, detailsError }}>
+                <AssignmentContext.Provider value={{ HandlesetAssignments, assignmentList, fetchAssignments, assignmentListLoading, assingnmentListError, assignment, fetchAssignmentDetails, detailsLoading, detailsError, updateAssignment, updating }}>
 
                     <div className="flex h-full overflow-hidden bg-background">
                         <aside style={{ width }} className="relative hidden border-r-2 border-default bg-muted/40 py-1 lg:block overflow-y-auto scrollbar-hide">

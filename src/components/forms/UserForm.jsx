@@ -116,6 +116,15 @@ function UserForm({ initialData, onSubmit, onSuccess, onClose, mode }) {
                     onSuccess?.(response.data);
                     onClose?.();
                 } else {
+                    if (response.status === 409) {
+                        setErrors(prev => ({ ...prev, email: "A user with this email already exists." }));
+                        return;
+                    }
+                    if (response.status === 400) {
+                        setErrors(prev => ({ ...prev, confirmPassword: "Password and confirm password do not match." }));
+                        return;
+                    }
+                    addToast(response.message, "error");
                     addToast(response.message, "error");
                 }
             }

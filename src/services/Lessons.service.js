@@ -21,3 +21,8 @@ export const createLesson = (payload) => {
 export const updateLesson = (lessonId, payload) => {
     return axiosInstance.patch(`/api/v1/lessons/${lessonId}/update`, payload)
 }
+
+//delete lesson
+export const deleteLesson = (lessonId) =>{
+    return axiosInstance.delete(`/api/v1/lessons/${lessonId}`)
+}

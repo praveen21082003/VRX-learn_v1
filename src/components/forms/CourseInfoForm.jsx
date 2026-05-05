@@ -1,26 +1,69 @@
-import React, { useState, useEffect, useRef } from 'react'
-import useUpdateCourseInfo from './hooks/useUpdateCourseInfo';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useCourseActions } from "./hooks/useCourseActions";
+import useDebouncedSearch from "./hooks/useDebouncedSearch";
+import { useScrollToError } from '@/hooks/useScrollToError';
+
+import { searchUser } from "../../services/AdminSearch.service";
+
 import { useToast } from '@/context/ToastProvider'
+import { usePermission } from '@/hooks/usePermission'
 
-import { Input, CourseTumbnail, Button, TextEditor } from '@/components/ui'
+import { Input, CourseTumbnail, Button, TextEditor, SearchSelect } from '@/components/ui'
 
 
 
 
-function CourseInfoForm({ courseInfo, onSuccess }) {
+
+function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
+    const refs = {
+        title: useRef(null),
+        trainerId: useRef(null),
+    };
+
+    // hooks, context
+    const scrollToError = useScrollToError(refs);
     const { addToast } = useToast();
+    const { can } = usePermission();
 
     const courseId = courseInfo?.id;
-    const { updateCourseDetails, updating, error } = useUpdateCourseInfo();
+
+    const handleSearchUser = useCallback(async ({ query, role }) => {
+        return await searchUser({
+            username_or_email: query,
+            role,
+        });
+    }, []);
+
+    const memoizedParams = useMemo(
+        () => ({
+            role: "trainer",
+        }),
+        [],
+    );
+
+    const { search, setSearch, results, searching } = useDebouncedSearch({
+        searchFn: handleSearchUser,
+        extraParams: memoizedParams,
+    });
+
+    const {
+        updateCourse,
+        updating,
+        error
+    } = useCourseActions();
 
     const fileInputRef = useRef(null);
 
     const [formData, setFormData] = useState({
         title: "",
         trainerName: "",
+        trainerId: "",
         shortDescription: "",
         longDescription: "",
         thumbnail: null
+    });
+
+    const [warning, setWarning] = useState({
     });
 
 
@@ -29,10 +72,13 @@ function CourseInfoForm({ courseInfo, onSuccess }) {
             setFormData({
                 title: courseInfo.title || "",
                 trainerName: courseInfo.trainerName || "",
+                trainerId: courseInfo.trainerId || "",
                 shortDescription: courseInfo.shortDescription || "",
                 longDescription: courseInfo.longDescription || "",
                 thumbnail: courseInfo.thumbnail || null
             });
+
+            setSearch(courseInfo.trainerName || "");
         }
     }, [courseInfo]);
 
@@ -42,6 +88,9 @@ function CourseInfoForm({ courseInfo, onSuccess }) {
         const processedValue = field === "title" ? value.toUpperCase() : value;
 
         setFormData(prev => ({ ...prev, [field]: processedValue }));
+
+        setWarning(prev => ({ ...prev, [field]: "" }));
+
     };
 
     // Handle thumbnail upload file handleing
@@ -55,12 +104,39 @@ function CourseInfoForm({ courseInfo, onSuccess }) {
             ...prev,
             thumbnail: imageURL,
         }));
+
     };
+
+
+    // validation function
+    const validateForm = (formData, canEditAuthor) => {
+        const errors = {};
+
+        if (!formData.title?.trim()) {
+            errors.title = "Course title cannot be empty.";
+        }
+
+        if (canEditAuthor && !formData.trainerId) {
+            errors.trainerId = "Please select a valid author.";
+        }
+
+        return errors;
+    };
+
 
 
     // handle submit Form
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // VALIDATION FIRST
+        const validationErrors = validateForm(formData, can('UPDATE_AUTHOR'));
+
+        if (Object.keys(validationErrors).length > 0) {
+            setWarning(validationErrors);
+            scrollToError(validationErrors);
+            return;
+        }
 
         const payload = {};
 
@@ -84,22 +160,45 @@ function CourseInfoForm({ courseInfo, onSuccess }) {
                 formData.longDescription.trim() || null;
         }
 
+        if (formData.trainerId !== courseInfo?.trainerId) {
+            payload.trainerId = formData.trainerId || null;
+        }
+
         // always send these for now
         payload.thumbnail = null;
-        payload.trainerId = null;
 
         const editedFields = Object.keys(payload).filter(
             (key) =>
-                !["thumbnail", "trainerId"].includes(key) &&
+                key !== "thumbnail" &&
                 payload[key] !== undefined
         );
 
         if (editedFields.length === 0) {
-            addToast("No changes detected.Please Update the Fields first", "warning");
+            addToast("No changes detected.Please Update the Fields first", "info");
             return;
         }
 
-        const response = await updateCourseDetails(courseId, payload);
+        const response = await updateCourse(courseId, payload);
+
+        const newWarning = {};
+
+        if (response.status === 409) {
+            newWarning.title = "A course with this title already exists.";
+        }
+
+        if (response.status === 400) {
+            newWarning.trainerId = "The selected user is not a trainer.";
+        }
+
+        if (response.status === 404) {
+            newWarning.trainerId = "Trainer not found. Please select a valid trainer.";
+        }
+
+        if (Object.keys(newWarning).length > 0) {
+            setWarning(newWarning);
+            scrollToError(newWarning);
+            return;
+        }
 
         addToast(
             response.message,
@@ -107,6 +206,7 @@ function CourseInfoForm({ courseInfo, onSuccess }) {
         );
         if (response.success && onSuccess) {
             onSuccess(payload);
+            setIsRefresh(true);
         }
     };
 
@@ -116,20 +216,53 @@ function CourseInfoForm({ courseInfo, onSuccess }) {
         <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="flex flex-col-reverse md:flex-row gap-4 md:h-49">
                 <div className="flex flex-col gap-8 md:w-[65%] xl:w-[70%] justify-end">
+                    <div ref={refs.title} className="flex flex-col gap-1 min-h-[72px]">
+                        <Input
+                            label="Title"
+                            value={formData.title}
+                            onChange={(e) => handleChange("title", e.target.value)}
+                            bgClass="bg-input-bg"
+                            inputWarning={warning.title}
+                        />
+                    </div>
 
-                    <Input
-                        label="Title"
-                        value={formData.title}
-                        onChange={(e) => handleChange("title", e.target.value)}
-                        bgClass="bg-input-bg"
-                    />
-                    <Input
-                        label="Author"
-                        value={formData.trainerName}
-                        disabled
-                        title="Cant edit author"
-                        bgClass="bg-input-bg"
-                    />
+
+                    {can('UPDATE_AUTHOR')
+                        ? (
+                            <div ref={refs.trainerId} className="flex flex-col gap-1 min-h-[72px]">
+                                <SearchSelect
+                                    label="Author"
+                                    value={search}
+                                    onChange={(value) => {
+                                        setSearch(value);
+                                        if (!value) {
+                                            handleChange("trainerId", "");
+                                        }
+                                    }}
+                                    results={results}
+                                    loading={searching}
+                                    getLabel={(item) => item.username}
+                                    getSubLabel={(item) => item.email}
+                                    onSelect={(item) => {
+                                        handleChange("trainerId", item.id);
+                                        setSearch(item.username);
+                                    }}
+                                    inputWarning={warning.trainerId}
+                                    paddingClass="py-2.5"
+                                />
+                            </div>
+
+                        ) : (
+                            <Input
+                                label="Author"
+                                value={formData.trainerName}
+                                disabled
+                                title="Cant edit author"
+                                bgClass="bg-input-bg"
+                                inputWarning={warning.trainerId}
+                            />
+                        )
+                    }
                 </div>
                 <div className="relative noise-overlay flex flex-col md:w-[35%]  xl:w-[30%]">
                     <CourseTumbnail
@@ -145,6 +278,8 @@ function CourseInfoForm({ courseInfo, onSuccess }) {
                         onChange={handleFileChange}
                         disabled
                     />
+
+
                     <Button
                         type="button"
                         buttonName="Upload"
