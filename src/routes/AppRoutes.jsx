@@ -70,7 +70,7 @@ function AppRoutes() {
       <Route path="/maintenance" element={<ErrorPage statusCode={503} />} />
       <Route path="/404" element={<ErrorPage statusCode={404} />} />
 
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
       <Route path="*" element={<ErrorPage statusCode={404} />} />
     </Routes>

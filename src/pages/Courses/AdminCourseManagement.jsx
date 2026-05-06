@@ -70,7 +70,18 @@ function AdminCourseManagement() {
                 return {
                     ...col,
                     render: (row) => (
-                        <div className="hover:text-primary hover:font-bold hover:cursor-pointer transition-colors" onClick={() => handleOpenOverview(row.id)}>
+                        <div className="
+                            cursor-pointer
+                            transition-all
+                            duration-200
+                            hover:text-primary
+                            hover:underline
+                            hover:underline-offset-4
+                            hover:decoration-1
+                            hover:font-bold
+                            "
+                            onClick={() => handleOpenOverview(row.id)}
+                        >
                             {row.title}
                         </div>
                     ),
