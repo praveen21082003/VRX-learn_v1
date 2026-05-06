@@ -10,7 +10,7 @@ import formatDateTimeLocal from '@/utils/formatDateTimeLocal'
 
 import { useToast } from '@/context/ToastProvider'
 
-function AssignmentForm({ courseId, mode, initialData, assignments, setAssignments }) {
+function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAssignments }) {
 
   const titleRef = useRef(null);
   const instructionsRef = useRef(null);
@@ -171,10 +171,11 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
       const updated = assignments.map(a =>
         a.id === initialData?.assignment?.id ? { ...a, ...payload } : a
       );
-      setAssignments(updated);
-
       addToast(result.message, "success");
+
       navigate(`/course/${courseId}/content/assignments`);
+
+      HandlesetAssignments(updated);
     }
 
     // 3. CREATE MODE
@@ -216,10 +217,10 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
         addToast(result.message, "success");
       }
 
-      // update context
-      setAssignments([result.data, ...assignments]);
-
       navigate(`/course/${courseId}/content/assignments`);
+
+      // update context
+      HandlesetAssignments([result.data, ...assignments]);
     }
   };
 
@@ -231,7 +232,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
     // =========================
     if (!isEdit) {
       if (creating) {
-        if (uploadProgress === 0) return "Preparing for Upload";
+        if (uploadProgress === 0 && !files.length === 0) return "Preparing for Upload";
         if (uploadProgress > 0 && uploadProgress < 100) return "Uploading...";
         if (uploadProgress === 100 && mediaStatus !== "uploaded") return "Finalizing...";
       }
@@ -253,14 +254,14 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
   const getButtonIcon = () => {
     if (!isEdit) {
       if (creating) {
-        if (uploadProgress === 0) return "line-md:loading-loop";
+        if (creating) return "eos-icons:loading";
         if (uploadProgress > 0 && uploadProgress < 100) return "line-md:uploading-loop";
         if (uploadProgress === 100 && mediaStatus !== "uploaded") return "line-md:loading-twotone-loop";
       }
       return null; // ✅ no icon in normal state
     }
 
-    if (updating) return "line-md:loading-loop";
+    if (updating) return "eos-icons:loading";
 
     return null; // ✅ edit idle = no icon
   };
@@ -273,6 +274,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
           label="Title"
           value={formData.title}
           inputWarning={warning.title}
+          placeHolder="Enter title"
           onChange={(e) => handleChange("title", e.target.value)}
         />
       </div>
@@ -292,6 +294,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
           type="datetime-local"
           min={new Date().toISOString().slice(0, 16)}
           value={formatDateTimeLocal(formData.dueDate)}
+          placeHolder="Select due date and time"
           onChange={(e) => handleChange("dueDate", e.target.value)}
         />
         <Input
@@ -302,6 +305,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
           disabled={isEdit}
           value={formData.maxScore ?? ""}
           inputWarning={warning.maxScore}
+          placeHolder="Enter max points"
           onChange={(e) => handleChange("maxScore", e.target.value)}
         />
 
@@ -313,6 +317,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, setAssignmen
           disabled={isEdit}
           value={formData.numberOfAttempts ?? ""}
           inputWarning={warning.numberOfAttempts}
+          placeHolder="Enter max attempts"
           onChange={(e) => handleChange("numberOfAttempts", e.target.value)}
         />
       </div>

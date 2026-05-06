@@ -221,9 +221,9 @@ function ModulesPage() {
                       )}
                     >
                       <li className="flex items-center gap-2 w-full min-w-0">
-                        <span className="hidden md:block shrink-0 text-muted-foreground">
+                        {/* <span className="hidden md:block shrink-0 text-muted-foreground">
                           Module {index + 1} -
-                        </span>
+                        </span> */}
 
                         {renameModuleId === module.id ? (
                           <span
@@ -288,24 +288,24 @@ function ModulesPage() {
                             closeDropdown={() => setIsOpenDropdown(null)}
                           />
                         )}
-                        {deleteModuleId === module.id && (
-                          <Modal
-                            isOpen={true}
-                            onClose={() => setDeleteModuleId(null)}
-                            title="Are you absolutely sure?"
-                          >
-                            <DeleteConfirmContent
-                              onClose={() => setDeleteModuleId(null)}
-                              onConfirm={() => handleDeleteModule(module.id)}
-                              loading={isDeleting}
-                              confirmText={module.title}
-                              entityName="module"
-                              message={`You are about to permanently delete the ${module.title} module. All associated materials...`}
-                            />
-                          </Modal>
-                        )}
                       </div>
                     </div>
+                    {deleteModuleId === module.id && (
+                      <Modal
+                        isOpen={true}
+                        onClose={() => setDeleteModuleId(null)}
+                        title="Are you absolutely sure?"
+                      >
+                        <DeleteConfirmContent
+                          onClose={() => setDeleteModuleId(null)}
+                          onConfirm={() => handleDeleteModule(module.id)}
+                          loading={isDeleting}
+                          confirmText={module.title}
+                          entityName="module"
+                          message={`You are about to permanently delete the ${module.title} module. All associated materials...`}
+                        />
+                      </Modal>
+                    )}
                   </div>
                 );
               })}

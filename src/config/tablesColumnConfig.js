@@ -2,7 +2,7 @@
 
 // User Table
 export const USER_COLUMNS_BASE = [
-  { key: "profile", label: "Profile", width: "8%", align: "center" },
+  { key: "profile", label: "Profile", width: "8%", align: "left" },
   { key: "name", label: "Name", width: "15%", align: "left" },
   { key: "email", label: "Email", align: "left", width: "25%" },
   { key: "role", label: "Role", width: "12%" },
@@ -31,7 +31,7 @@ export const ENROLLMENT_COLUMNS_BASE = [
 export const COURSE_COLUMNS_BASE = [
   { key: "title", label: "Course Title", align: "left", width: "20%" },
   { key: "shortDescription", label: "Short Description", align: "left", width: "30%" },
-  { key: "trainer", label: "Trainer", align: "center", width: "15%" },
+  { key: "trainer", label: "Trainer/SME", align: "center", width: "15%" },
   { key: "noOfTrainees", label: "No.of Trainees", align: "center", width: "10%" },
   { key: "createdAt", label: "Created At", align: "center", width: "10%" },
   { key: "actions", label: "Actions", width: "10%", align: "center" },

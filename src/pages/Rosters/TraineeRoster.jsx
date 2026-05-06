@@ -195,7 +195,7 @@ function TraineeRoster() {
     // Select All rows 
     const handleSelectAll = (checked) => {
         if (checked) {
-            setSelectedRows(enrollments.map((row) => row.id));
+            setSelectedRows(roster.map((row) => row.id));
         } else {
             setSelectedRows([]);
         }

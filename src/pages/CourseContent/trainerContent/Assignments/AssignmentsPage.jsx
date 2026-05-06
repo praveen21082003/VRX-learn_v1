@@ -246,24 +246,24 @@ function AssignmentsPage() {
                           closeDropdown={() => setIsOpenDropdown(null)}
                         />
                       )}
-                      {deleteAssignmentId === assignment.id && (
-                        <Modal
-                          isOpen={true}
-                          onClose={() => setDeleteAssignmentId(null)}
-                          title="Are you absolutely sure?"
-                        >
-                          <DeleteConfirmContent
-                            onClose={() => setDeleteAssignmentId(null)}
-                            onConfirm={() => handleDelete(assignment.id)}
-                            confirmText={assignment.title}
-                            entityName="assignment"
-                            loading={deleting}
-                            message={`You are about to permanently delete ${assignment.title}.`}
-                          />
-                        </Modal>
-                      )}
                     </div>
                   </NavLink>
+                  {deleteAssignmentId === assignment.id && (
+                    <Modal
+                      isOpen={true}
+                      onClose={() => setDeleteAssignmentId(null)}
+                      title="Are you absolutely sure?"
+                    >
+                      <DeleteConfirmContent
+                        onClose={() => setDeleteAssignmentId(null)}
+                        onConfirm={() => handleDelete(assignment.id)}
+                        confirmText={assignment.title}
+                        entityName="assignment"
+                        loading={deleting}
+                        message={`You are about to permanently delete ${assignment.title}.`}
+                      />
+                    </Modal>
+                  )}
                 </li>
               );
             })

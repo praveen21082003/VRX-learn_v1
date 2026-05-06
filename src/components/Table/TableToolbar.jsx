@@ -72,6 +72,7 @@ function TableToolBar({
                                 frontIconHeight="14"
                                 frontIconWidth="14"
                                 bgClass="hover:bg-default/20 rounded-full p-1"
+                                textClass=""
                                 onClick={() => setSelectedRows([])}
                             />
                         </div>
@@ -79,7 +80,7 @@ function TableToolBar({
                             <p className="text-sm font-medium">Bulk Actions:</p>
                             <div className="flex items-center gap-2">
                                 {bulkActions || (
-                                    <p className="text-xs italic text-muted">Selection enabled</p>
+                                    <p className="text-xs italic text-muted">unavailable for now</p>
                                 )}
                             </div>
                         </div>

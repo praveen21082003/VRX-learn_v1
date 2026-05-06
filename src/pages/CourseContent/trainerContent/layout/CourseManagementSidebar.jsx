@@ -16,20 +16,13 @@ import { BackButton, Button, Icon, Dropdown } from '@/components/ui';
 function CourseManagementSidebar({ courseContent }) {
 
   const navigate = useNavigate();
-  const { courseId } = useParams();
+  const { courseId, assignmentId, moduleId, lessonId } = useParams();
   const [isDropdownOpen, dropdownRef, setIsDropdownOpen, toggle] = useClickOutside(false);
   const [open, setOpen] = React.useState(null);
   // console.log(modules, assignments)
   // console.log(courseId);
 
   const sections = COURSE_EDIT_SECTIONS(courseId);
-
-
-  // create dropdown options
-  const createButtons = CREATE_BUTTON_OPTIONS({
-    navigate,
-    courseId
-  });
 
 
   // 
@@ -40,6 +33,8 @@ function CourseManagementSidebar({ courseContent }) {
     // quiz: [],
     // feedback: [],
   };
+
+
 
 
   const toggleSection = (key) => {
@@ -66,7 +61,7 @@ function CourseManagementSidebar({ courseContent }) {
           />
           {isDropdownOpen && (
             <Dropdown
-              buttons={createButtons}
+              buttons={CREATE_BUTTON_OPTIONS({ navigate, courseID: courseId })}
               closeDropdown={() => setIsDropdownOpen((prev) => !prev)}
             />
           )}
@@ -144,42 +139,52 @@ function CourseManagementSidebar({ courseContent }) {
                 <ul
                   className='space-y-1 overflow-hidden'
                 >
-                  {children.map((child) => (
-                    <li key={child.id}>
-                      <NavLink
-                        to={`/course/${courseId}/content/${section.key}/${child.id}/view`}
-                        className={({ isActive }) =>
-                          clsx(
-                            "group flex items-center justify-between pl-10 px-2 py-3 text-h5",
-                            isActive
-                              ? "bg-primary/16 dark:bg-primary text-primary dark:text-background"
-                              : "text-muted hover:bg-primary/16 dark:hover:bg-surface-primary-dark"
-                          )
-                        }
-                      >
-                        <span className="truncate flex-1">
-                          {child.title}
-                        </span>
-                        {section.key === "modules" &&
-                          <span
-                            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              navigate(`/course/${courseId}/content/${section.key}/${child.id}/lesson/create`);
-                            }}
-                          >
-                            <Icon
-                              name="ic:baseline-plus"
-                              height="26"
-                              width="26"
-                              className="text-muted-foreground"
-                            />
+                  {children.map((child) => {
+
+                    const isChildActive =
+                      child.id === assignmentId ||
+                      child.id === moduleId ||
+                      child.id === lessonId;
+
+                    return (
+                      <li key={child.id}>
+                        <NavLink
+                          to={`/course/${courseId}/content/${section.key}/${child.id}/view`}
+                          className={({ isActive }) => {
+                            const active = isActive || isChildActive;
+
+                            return clsx(
+                              "group flex items-center justify-between pl-10 px-2 py-3 text-h5",
+                              active
+                                ? "bg-primary/16 dark:bg-primary text-primary dark:text-background"
+                                : "text-muted hover:bg-primary/16 dark:hover:bg-surface-primary-dark"
+                            );
+                          }}
+                        >
+                          <span className="truncate flex-1">
+                            {child.title}
                           </span>
-                        }
-                      </NavLink>
-                    </li>
-                  ))}
+                          {section.key === "modules" &&
+                            <span
+                              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                navigate(`/course/${courseId}/content/${section.key}/${child.id}/lesson/create`);
+                              }}
+                            >
+                              <Icon
+                                name="ic:baseline-plus"
+                                height="26"
+                                width="26"
+                                className="text-muted-foreground"
+                              />
+                            </span>
+                          }
+                        </NavLink>
+                      </li>
+                    )
+                  })}
                 </ul>
               )}
             </div>

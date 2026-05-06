@@ -279,7 +279,7 @@ function UserManagement() {
     }
 
     return (
-        <div className="w-full md:h-auto h-full flex flex-col bg-transparent overflow-scroll text-main">
+        <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
             <div className="p-4 shrink-0">
 
                 <TableToolbar

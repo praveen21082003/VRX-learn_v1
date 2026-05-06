@@ -1,10 +1,16 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui'
 
 
-function AdminTopCourses({ loading, courses, error }) {
+function AdminTopCourses({ loading, courses, error, isRefresh, setIsRefresh, refreshTopCourses }) {
 
     const navigate = useNavigate();
+
+    // View (navigate to course OverView)
+    const handleOpenOverview = (courseId) => {
+        navigate(`/course/${courseId}/overview`)
+    }
 
 
     if (loading) {
@@ -43,9 +49,14 @@ function AdminTopCourses({ loading, courses, error }) {
         <div className="p-4 border-2 border-default rounded">
             <div className="flex justify-between items-start mb-3">
                 <div>
-                    <h4 className="text-h4">Top Courses</h4>
+                    <span className='flex'>
+                        <h4 className="text-h4">Top Courses</h4>
+                        {courses.length < 5 && isRefresh && <Button frontIconName="material-symbols:refresh" frontIconHeight="26" frontIconWidth="26" bgClass="" textClass="" onClick={() => { refreshTopCourses(); setIsRefresh(false) }} />}
+                    </span>
                     <span className="text-caption text-muted">By Enrollment</span>
+
                 </div>
+
 
                 <button className="text-muted text-body hover:underline cursor-pointer"
                     onClick={() => navigate('/courses')}
@@ -67,9 +78,21 @@ function AdminTopCourses({ loading, courses, error }) {
                             </span>
 
                             <div>
-                                <p className="text-body font-medium">
+                                <div className="
+                                    cursor-pointer
+                                    transition-all
+                                    duration-200
+                                    hover:text-primary
+                                    hover:underline
+                                    hover:underline-offset-4
+                                    hover:decoration-1
+                                    hover:font-bold
+                                    text-body
+                                    "
+                                    onClick={() => handleOpenOverview(course.id)}
+                                >
                                     {course.courseName}
-                                </p>
+                                </div>
 
                                 <p className="text-caption text-muted">
                                     {course.trainerName}

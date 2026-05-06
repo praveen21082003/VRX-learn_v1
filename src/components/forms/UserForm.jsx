@@ -168,6 +168,7 @@ function UserForm({ initialData, onSubmit, onSuccess, onClose, mode }) {
                         name="username"
                         value={formData.username}
                         onChange={(e) => handleChange("username", e.target.value)}
+                        placeholder="Enter username"
                         inputWarning={errors.username}
                     />
                     <Input
@@ -176,6 +177,7 @@ function UserForm({ initialData, onSubmit, onSuccess, onClose, mode }) {
                         value={formData.email}
                         onChange={(e) => handleChange("email", e.target.value)}
                         autoComplete="email"
+                        placeholder="Enter email"
                         inputWarning={errors.email}
                     />
                     <Select
@@ -200,6 +202,7 @@ function UserForm({ initialData, onSubmit, onSuccess, onClose, mode }) {
                                 value={formData.password}
                                 onChange={(e) => handleChange("password", e.target.value)}
                                 autoComplete="new-password"
+                                placeholder="Enter password"
                                 inputWarning={errors.password}
                             />
                             <Input
@@ -209,6 +212,7 @@ function UserForm({ initialData, onSubmit, onSuccess, onClose, mode }) {
                                 value={formData.confirmPassword}
                                 onChange={(e) => handleChange("confirmPassword", e.target.value)}
                                 autoComplete="new-password"
+                                placeholder="Confirm password"
                                 inputWarning={errors.confirmPassword}
                             />
                         </>

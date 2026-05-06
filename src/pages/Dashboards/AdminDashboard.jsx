@@ -19,11 +19,12 @@ function AdminDashboard() {
 
   const [activeAction, setActiveAction] = useState();
   const [open, setOpen] = useState(false);
+  const [isRefresh, setIsRefresh] = useState(false);
 
 
   const { user, role } = useAuth();
   const { kpis, loading, setKpis, error: kpisError } = useDashboardKPIs(role);
-  const { topCourses, loading: topCoursesLoading, error: topCourseError } = useAdminTopCourses();
+  const { topCourses, loading: topCoursesLoading, error: topCourseError, refresh } = useAdminTopCourses();
 
   // Maping the config to the actual API data
   const statsWithData = ADMIN_STAT_CARDS.map((card) => ({
@@ -116,6 +117,9 @@ function AdminDashboard() {
         courses={topCourses}
         loading={topCoursesLoading}
         error={topCourseError}
+        isRefresh={isRefresh}
+        setIsRefresh={setIsRefresh}
+        refreshTopCourses={refresh}
       />
 
       {open && (
@@ -140,15 +144,16 @@ function AdminDashboard() {
           {activeAction === "course" && (
             <CreateCourse
               onClose={() => setOpen(false)}
-              onSuccess={() =>
+              onSuccess={() => {
                 setKpis((prev) => ({
                   ...prev,
                   totalCourses: (prev?.totalCourses || 0) + 1,
-                }))
-              }
+                }));
+                setIsRefresh(true);
+              }}
             />
           )}
-          
+
           {activeAction === "enroll" && (
             <CreateEnrollment
               onSuccess={

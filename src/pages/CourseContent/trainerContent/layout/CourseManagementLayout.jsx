@@ -119,7 +119,17 @@ function CourseManagementLayout() {
 
     // update assignments
     const HandlesetAssignments = (updated) => {
-        setCourseContent(prev => ({ ...prev, assignments: updated }))
+
+        const minimalAssignments = updated.map(a => ({
+            id: a.id,
+            title: a.title,
+        }));
+
+        setCourseContent(prev => ({
+            ...prev,
+            assignments: minimalAssignments,
+        }));
+        
         setAssignments(updated);
     }
 

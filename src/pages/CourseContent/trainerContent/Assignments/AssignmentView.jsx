@@ -109,7 +109,7 @@ function AssignmentView() {
 
   return (
     <>
-      <div className="">
+      <div className="p-2 px-2">
         <BackButton
           to={clsx(
             (activeTab === "instructions" || activeTab === "submissions") && `/course/${courseId}/content/assignments`,
@@ -122,7 +122,7 @@ function AssignmentView() {
         />
       </div>
 
-      <div className="space-y-0">
+      <div className="space-y-0 px-4">
         <div className='flex justify-between'>
           <h2 className="text-h3">{assignmentData?.title}</h2>
           {activeTab === "instructions" && (

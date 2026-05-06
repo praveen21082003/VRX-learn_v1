@@ -19,20 +19,25 @@ function ModuleActionHandler({ mode }) {
         : null;
     return (
 
-        <div className='p-4'>
-            <BackButton to={`/course/${courseId}/content/modules`} label="Back to Modules"/>
-            <h2 className="text-h3">
-                {isEdit ? "Edit Module" : "New Module"}
-            </h2>
+        <>
+            <div className='pt-2 px-4'>
+                <BackButton to={`/course/${courseId}/content/modules`} label="Back to Modules" />
+            </div>
+            <div className='px-4'>
 
-            <ModuleForm
-                mode={mode}
-                initialData={moduleData}
-                setModules={setModules}
-                modules={modules}
-                courseId={courseId}
-            />
-        </div>
+                <h2 className="text-h3">
+                    {isEdit ? "Edit Module" : "New Module"}
+                </h2>
+
+                <ModuleForm
+                    mode={mode}
+                    initialData={moduleData}
+                    setModules={setModules}
+                    modules={modules}
+                    courseId={courseId}
+                />
+            </div>
+        </>
 
     )
 }

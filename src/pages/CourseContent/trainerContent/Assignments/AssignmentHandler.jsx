@@ -12,7 +12,7 @@ import AssignmentView from './AssignmentView';
 function AssignmentHandler({ mode }) {
     const { courseId, course, loading } = useCourse();
     const { assignmentId } = useParams();
-    const { assignment, assignmentList, fetchAssignmentDetails, detailsError, detailsLoading, setAssignments } = useAssignmentContext()
+    const { assignment, assignmentList, fetchAssignmentDetails, detailsError, detailsLoading, HandlesetAssignments } = useAssignmentContext()
 
     const isEdit = mode === "edit";
 
@@ -45,10 +45,12 @@ function AssignmentHandler({ mode }) {
 
 
     return (
-        <div className='p-4 mb-30 lg:mb-0'>
+        <div className='mb-30 lg:mb-0'>
             {
                 (mode === "create" || mode === "edit") &&
-                <BackButton to={`/course/${courseId}/content/assignments`} label='Back to Assignments' />
+                <div className='pt-2 px-4'>
+                    <BackButton to={`/course/${courseId}/content/assignments`} label='Back to Assignments' />
+                </div>
 
             }
 
@@ -56,7 +58,7 @@ function AssignmentHandler({ mode }) {
             {mode === "view" ? (
                 <AssignmentView assignment={initialData} />
             ) : (
-                <>
+                <div className='px-4'>
                     <h2 className="text-h3">
                         {isEdit ? "Edit Assignment" : "New Assignment"}
                     </h2>
@@ -65,9 +67,9 @@ function AssignmentHandler({ mode }) {
                         mode={mode}
                         initialData={initialData}
                         assignments={assignmentList}
-                        setAssignments={setAssignments}
+                        HandlesetAssignments={HandlesetAssignments}
                     />
-                </>
+                </div>
             )}
         </div>
     )
