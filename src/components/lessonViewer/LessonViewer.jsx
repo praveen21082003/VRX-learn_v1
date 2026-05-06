@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import ContentRenderer from '@/components/content/ContentRenderer';
 
 
-function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson }) {
+function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson, onBackToModule = false }) {
 
     const [videoDuration, setVideoDuration] = useState(0);
     const [activeTab, setActiveTab] = useState("overview");
@@ -88,8 +88,18 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
                         onClick={() => onNavigate?.("next")}
                         disabled={!nextLesson}
                     />
-
                 </div>
+                {onBackToModule && (nextLesson === null || prevLesson === null) && (
+                    <Button
+                        buttonName="Back to Module"
+                        frontIconName="lets-icons:back"
+                        frontIconHeight="16"
+                        bgClass=""
+                        textClass=""
+                        className="p-2 rounded px-6 font-semibold"
+                        onClick={onBackToModule}
+                    />
+                )}
             </div>
 
             <div className="mt-6">

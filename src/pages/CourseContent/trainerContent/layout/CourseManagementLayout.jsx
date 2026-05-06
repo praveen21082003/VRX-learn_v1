@@ -129,7 +129,7 @@ function CourseManagementLayout() {
             ...prev,
             assignments: minimalAssignments,
         }));
-        
+
         setAssignments(updated);
     }
 
@@ -161,7 +161,7 @@ function CourseManagementLayout() {
 
 
     return (
-        <CourseContext.Provider value={{ courseId, course, refreshCourseContent, handleUpdateCourseInfoSuccess }}>
+        <CourseContext.Provider value={{ courseId, course, courseContent, refreshCourseContent, handleUpdateCourseInfoSuccess }}>
             <ModuleContext.Provider value={{
                 modules,
                 error,
