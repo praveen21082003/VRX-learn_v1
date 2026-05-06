@@ -197,6 +197,7 @@ function AssignmentView() {
                 parms={params}
                 loading={loading}
                 setActiveAssignmentId={setActiveAssignmentId}
+                refreshSubmissions={refreshSubmissions}
               />
             )}
 
@@ -207,6 +208,7 @@ function AssignmentView() {
                 assignmentId={assignmentId}
                 activeAssignmentId={activeAssignmentId}
                 setActiveAssignmentId={setActiveAssignmentId}
+                refreshSubmissions={refreshSubmissions}
               />
             )}
           </div>

@@ -29,6 +29,8 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
         grading,
         gradeError,
         gradeSubmission,
+        updateFeedback,
+        refetch
     } = useAssignmentSubmissions(null, null);
 
     const mediaId = submissionData?.mediaId;
@@ -96,6 +98,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
 
             const result = await updateFeedback(activeAssignmentId, newFeedback || null);
             if (result.success) {
+                fetchSubmissionData(activeAssignmentId);
                 addToast(result.message, "success");
             } else {
                 addToast(result.message, "error");
@@ -114,6 +117,8 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
 
             const result = await gradeSubmission(activeAssignmentId, payload);
             if (result.success) {
+                fetchSubmissionData(activeAssignmentId); // refresh current submission data
+                refetch();
                 addToast("Graded successfully", "success");
             } else {
                 addToast(result.message, "error");
