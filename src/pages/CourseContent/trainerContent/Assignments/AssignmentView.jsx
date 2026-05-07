@@ -37,6 +37,7 @@ function AssignmentView() {
     submissions,
     loading,
     error,
+    totalItems,
     refreshSubmissions
   } = useSubmissionsData(assignmentId, params);
 
@@ -195,9 +196,10 @@ function AssignmentView() {
                 setActiveTab={setActiveTab}
                 setParms={setParams}
                 parms={params}
+                totalItems={totalItems}
                 loading={loading}
                 setActiveAssignmentId={setActiveAssignmentId}
-                refreshSubmissions={refreshSubmissions}
+                resetFilters={resetFilters}
               />
             )}
 

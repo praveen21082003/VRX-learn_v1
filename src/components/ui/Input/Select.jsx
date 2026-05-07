@@ -9,6 +9,7 @@ export default function FilterSelect({
     onChange,
     options,
     borderClass = "border-default",
+    paddingClass = "px-3 py-2",
     inputWarning,
     disabled = false,
 
@@ -29,7 +30,7 @@ export default function FilterSelect({
             }
 
             <div
-                className={`flex items-center ${borderClass ? "border" : "border-2"} ${inputLabel === "" && "mt-2"} ${borderClass} rounded px-3 py-2 gap-2 min-w-44 ${disabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
+                className={`flex items-center ${borderClass ? "border" : "border-2"} ${inputLabel === "" && "mt-2"} ${borderClass} rounded ${paddingClass} gap-2 min-w-44 ${disabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
                 onClick={toggle}
             >
                 <span className="text-body text-muted whitespace-nowrap truncate">

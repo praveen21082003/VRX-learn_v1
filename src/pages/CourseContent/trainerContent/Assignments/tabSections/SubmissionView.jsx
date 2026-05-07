@@ -119,6 +119,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
             if (result.success) {
                 fetchSubmissionData(activeAssignmentId); // refresh current submission data
                 refetch();
+                refreshSubmissions();
                 addToast("Graded successfully", "success");
             } else {
                 addToast(result.message, "error");

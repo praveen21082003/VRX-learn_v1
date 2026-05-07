@@ -7,7 +7,7 @@ import SubmissionTableMobileCard from './SubmissionTableMobileCard';
 import formatDateTime from '@/utils/formatDateTime'
 import { SUBMISSION_COLUMNS_BASE } from '@/config/tablesColumnConfig';
 
-function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, loading, setParms, parms }) {
+function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, loading, setParms, resetFilters, parms, totalItems }) {
     const page = parms.page;
     const pageSize = parms.limit;
 
@@ -85,7 +85,7 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
                         value={parms.fromDate || ""}
                         onChange={(e) => handleFilterChange("fromDate", e.target.value)}
                         border="border border-default"
-                        paddingClass="py-2 px-2"
+                        paddingClass="py-1 px-2"
                         placeholder="DD/MM/YYYY"
                         type="date"
                     />
@@ -95,7 +95,7 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
                         value={parms.toDate}
                         onChange={(e) => handleFilterChange("toDate", e.target.value)}
                         border="border-default"
-                        paddingClass="py-2 px-2"
+                        paddingClass="py-1 px-2"
                         placeholder="DD/MM/YYYY"
                         type="date"
                     />
@@ -112,6 +112,7 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
                                 { label: "Graded", value: "graded" },
                                 { label: "Done Late", value: "done-late" },
                             ]}
+                            paddingClass="py-1 px-2"
                         />
                     </div>
                     <div className="col-span-1 md:col-span-1">
@@ -125,6 +126,7 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
                                 { label: "Ascending", value: "asc" },
                                 { label: "Descending", value: "desc" },
                             ]}
+                            paddingClass="py-1 px-2"
                         />
                     </div>
                 </div>
@@ -206,8 +208,9 @@ function SubmissionsTab({ setActiveTab, submissions, setActiveAssignmentId, load
                 setPage={handlePageChange}
                 pageSize={pageSize}
                 setPageSize={handlePageSizeChange}
-                total={submissions?.totalItems || 0}
+                total={totalItems || 0}
                 loading={loading}
+                clearFilters={resetFilters}
                 renderMobileCard={(row) => (
                     <SubmissionTableMobileCard
                         row={row}

@@ -5,6 +5,7 @@ export const useSubmissionsData = (assignmentId, params) => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [totalItems, setTotalItems] = useState(0);
 
   const isFetchingRef = useRef(false);
 
@@ -19,9 +20,11 @@ export const useSubmissionsData = (assignmentId, params) => {
       const response = await getAssignmentSubmission(assignmentId, params);
 
       const data = response?.data || [];
+      const totalItems = response?.totalItems || 0;
       const list = Array.isArray(data) ? data : [];
 
       setSubmissions(list);
+      setTotalItems(totalItems);
     } catch (err) {
       console.log(err)
       let message = "Failed to load submissions";
@@ -46,6 +49,8 @@ export const useSubmissionsData = (assignmentId, params) => {
     submissions,
     loading,
     error,
+
+    totalItems,
     refreshSubmissions: fetchSubmissions,
   };
 };
