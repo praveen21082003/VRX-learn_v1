@@ -32,7 +32,7 @@ export default function FilterSelect({
                 className={`flex items-center ${borderClass ? "border" : "border-2"} ${inputLabel === "" && "mt-2"} ${borderClass} rounded px-3 py-2 gap-2 min-w-44 ${disabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
                 onClick={toggle}
             >
-                <span className="text-body text-muted whitespace-nowrap">
+                <span className="text-body text-muted whitespace-nowrap truncate">
                     {label} {selectedOption?.label}
                 </span>
 

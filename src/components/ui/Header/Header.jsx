@@ -72,7 +72,7 @@ function Header({ menu }) {
 
             <div className="flex items-center gap-3 md:gap-10">
 
-                <div className="lg:hidden   ">
+                <div className="lg:hidden">
                     <Button
                         frontIconName="charm:menu-hamburger"
                         frontIconHeight="26"
@@ -83,12 +83,17 @@ function Header({ menu }) {
                     />
                 </div>
 
+                <div
+                    className="cursor-pointer"
+                    onClick={() => navigate("/dashboard")}
+                >
+                    <img
+                        src="/logo-white.svg"
+                        alt="Logo"
+                        className="h-7 md:h-10"
+                    />
+                </div>
 
-                <img
-                    src="/logo-white.svg"
-                    alt="Logo"
-                    className="h-7 md:h-10 cursor-pointer"
-                />
 
 
                 {!menu && (
@@ -101,7 +106,7 @@ function Header({ menu }) {
             <div className="flex items-center gap-3 md:gap-10">
                 {menu && (
                     <div className="hidden md:block">
-                        <HeaderUserMenu role={role} viewRole={viewRole}/>
+                        <HeaderUserMenu role={role} viewRole={viewRole} />
                     </div>
                 )}
                 <HeaderProfile role={role} viewRole={viewRole} user={user} setViewRole={setViewRole} loading={loading} buttons={buttons} />
@@ -112,7 +117,7 @@ function Header({ menu }) {
                 onClose={() => setShowLogout(false)}
             />
 
-        </header>
+        </header >
     );
 }
 

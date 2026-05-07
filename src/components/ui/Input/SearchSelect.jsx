@@ -37,7 +37,7 @@ function SearchSelect({
             />
 
             {open && value && (
-                <div className="absolute mt-1 w-full max-h-40 bg-background border shadow-md overflow-y-auto z-20 rounded-md">
+                <div className="absolute mt-0.5 w-full max-h-40 bg-background border shadow-md overflow-y-auto z-20 rounded-t-md rounded-b-md">
 
                     {/* Loading */}
                     {loading && (

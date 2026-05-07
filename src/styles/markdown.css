@@ -101,3 +101,32 @@
 .markdown-content strong {
   font-weight: 600;
 }
+
+
+/* for code block */
+
+.markdown-content pre {
+  background: #0d1117;
+  color: #f3f4f6;
+  padding: 12px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.markdown-content code {
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.markdown-content p code {
+  background: #e5e7eb;
+  color: #be185d;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.dark .markdown-content p code {
+  background: #1f2937;
+  color: #f472b6;
+}

@@ -243,6 +243,7 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
                                     loading={searching}
                                     getLabel={(item) => item.username}
                                     getSubLabel={(item) => item.email}
+                                    placeholder="Search by username or email"
                                     onSelect={(item) => {
                                         handleChange("trainerId", item.id);
                                         setSearch(item.username);

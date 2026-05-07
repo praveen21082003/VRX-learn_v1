@@ -65,8 +65,8 @@ function EnrollmentForm({ initialData, onClose, onSuccess, mode, isEdit }) {
         const errors = {};
 
         if (!isEdit) {
-            if (!formData.userId) errors.userId = "Please select a user";
-            if (!formData.courseId) errors.courseId = "Please select a course";
+            if (!formData.userId) errors.userId = "Please select a user from dropdown";
+            if (!formData.courseId) errors.courseId = "Please select a course from dropdown";
         }
 
         return errors;
@@ -191,6 +191,7 @@ function EnrollmentForm({ initialData, onClose, onSuccess, mode, isEdit }) {
                         loading={searchingUser}
                         getLabel={(item) => item.username}
                         getSubLabel={(item) => item.email}
+                        placeholder="Search by username or email"
                         onSelect={(item) => {
                             handleChange("userId", item.id);
                             setUserSearch(item.username);
@@ -210,6 +211,7 @@ function EnrollmentForm({ initialData, onClose, onSuccess, mode, isEdit }) {
                         loading={courseLoading}
                         results={courseResults}
                         getLabel={(item) => item.title}
+                        placeholder="Search by course title"
                         onSelect={(item) => {
                             handleChange("courseId", item.id);
                             setCourseSearch(item.title);

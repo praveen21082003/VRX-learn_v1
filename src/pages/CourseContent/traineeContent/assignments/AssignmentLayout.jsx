@@ -47,10 +47,10 @@ function AssignmentLayout() {
     }
 
     return (
-        <div className="flex h-screen overflow-hidden bg-background">
+        <div className="flex h-full overflow-hidden bg-background">
             <aside
                 className={clsx(
-                    "w-full lg:w-96 border-r-2 border-default bg-surface overflow-y-auto",
+                    "w-full lg:w-96 border-r-2 border-default bg-surface overflow-y-auto scrollbar-hide",
                     activeAssignment ? "hidden lg:block" : "block"
                 )}
             >

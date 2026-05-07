@@ -70,7 +70,7 @@ function LessonLayout() {
 
   return (
     <div className="flex h-full overflow-hidden bg-background">
-      <aside className="w-full max-w-96 border-r-2 border-default bg-surface overflow-y-auto hidden lg:block">
+      <aside className="w-full max-w-96 border-r-2 border-default bg-surface overflow-y-auto scrollbar-hide hidden lg:block">
         <div className="p-2 border-b-2 border-default">
           <BackButton
             to={`/course/${courseId}/overview`}

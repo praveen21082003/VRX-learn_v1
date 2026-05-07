@@ -282,6 +282,7 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
         loading={searching}
         getLabel={(item) => item.username}
         getSubLabel={(item) => item.email}
+        placeholder="Search by username or email"
         onSelect={(item) => {
           handleChange("trainerId", item.id);
           setSearch(item.username);
@@ -293,7 +294,7 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
         <label className="text-sm font-semibold">Short Description</label>
         <textarea
           rows={4}
-          className="w-full p-3 rounded-md  text-sm leading-relaxed resize-none overflow-hidden border  focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+          className="w-full border text-body bg-input-bg border-input-border rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-brand"
           placeholder="Briefly describe what this course covers (minimum 50 characters if provided)"
           value={formData.shortDescription || ""}
           onChange={(e) => handleChange("shortDescription", e.target.value)}

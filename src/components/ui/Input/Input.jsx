@@ -80,8 +80,7 @@ function Input({
                         ${!border ? " border border-input-border" : `${border}`}
                         dark:border-default
                         ${bgClass}
-                        focus:ring-1 focus:ring-brand
-                        focus:border-brand
+                        focus:outline-none focus:ring-1 focus:ring-brand
                         disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed
                         [&::-ms-reveal]:hidden
                         [&::-ms-clear]:hidden
