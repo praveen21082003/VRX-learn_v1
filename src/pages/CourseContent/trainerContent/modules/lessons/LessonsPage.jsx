@@ -231,7 +231,7 @@ function LessonsPage() {
                                                 width="25px"
                                             />
                                             <div className='flex items-center gap-2 w-full min-w-0'>
-                                                <span className="py-1 mr-2">{index + 1}.</span>
+                                                {/* <span className="py-1 mr-2">{index + 1}.</span> */}
 
                                                 {renameLessonId === lesson.id ? (
                                                     <Input
