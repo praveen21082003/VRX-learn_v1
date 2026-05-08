@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui"
+import { Button, Icon } from "@/components/ui"
 import HeaderUserMenu from "./HeaderUserMenu";
 import BreadcrumbMenu from "./BreadcrumbMenu";
 import HeaderProfile from "./HeaderProfile";
@@ -7,15 +7,17 @@ import { useAuth } from '@/context/AuthContext'
 import Sidebar from "@/components/ui/Header/Sidebar";
 import { useTheme } from "../../../context/ThemeProvider";
 import { getProfileDropdown } from "@/config/dropdownButtons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
+import { usePermission } from "@/hooks/usePermission";
 
 import LogOut from '@/pages/auth/LogOut'
 
-function Header({ menu }) {
+function Header({ menu, headerContent }) {
 
     const navigate = useNavigate();
     const { breadcrumbs } = useBreadcrumbs();
+    const { can } = usePermission();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
@@ -57,8 +59,7 @@ function Header({ menu }) {
     });
 
     return (
-        <header className="sticky top-0 z-50 flex h-[50px] w-full items-center justify-between bg-brand 
-        px-4 md:px-10 text-[#FAFAF8]">
+        <header className="sticky top-0 z-50 flex h-12.5 w-full items-center justify-between bg-brand px-4 md:px-10 text-[#FAFAF8]">
 
             {sidebarOpen && (
                 <div
@@ -83,32 +84,46 @@ function Header({ menu }) {
                     />
                 </div>
 
-                <div
-                    className="cursor-pointer"
-                    onClick={() => navigate("/dashboard")}
-                >
+                <Link to="/dashboard" className="flex items-center gap-2">
                     <img
                         src="/logo-white.svg"
                         alt="Logo"
                         className="h-7 md:h-10"
                     />
-                </div>
 
+                    <span className="border-[0.8px] rounded-full px-2 py-0.5 text-small">
+                        BETA v1.0
+                    </span>
+                </Link>
 
-
-                {!menu && (
+                {!menu && !headerContent ? (
                     <div className="hidden md:block">
                         <BreadcrumbMenu items={breadcrumbs} />
                     </div>
+
+                ) : (
+                    headerContent
                 )}
+
             </div>
 
             <div className="flex items-center gap-3 md:gap-10">
+                {/* user menu */}
                 {menu && (
                     <div className="hidden md:block">
                         <HeaderUserMenu role={role} viewRole={viewRole} />
                     </div>
                 )}
+
+                {/* report button */}
+                {can("REPORT_ISSUE") && !headerContent && (
+                    <button className="flex gap-2 items-center text-label-sm text-surface-80 hover:text-surface hover:cursor-pointer" onClick={() => navigate("/report")}>
+                        <Icon name="si:flag-alt-4-line" size="18" />
+                        <span>Report a problem</span>
+                    </button>
+                )}
+
+                {/* profile button */}
                 <HeaderProfile role={role} viewRole={viewRole} user={user} setViewRole={setViewRole} loading={loading} buttons={buttons} />
             </div>
 

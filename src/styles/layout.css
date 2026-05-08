@@ -33,3 +33,15 @@
         opacity: 1;
     }
 }
+
+@layer utilities {
+    .input-height {
+        height: var(--input-height);
+    }
+
+    .no-select {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+}

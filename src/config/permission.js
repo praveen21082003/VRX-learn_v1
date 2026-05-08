@@ -19,7 +19,8 @@ export const ROLE_PERMISSION = {
         "UPDATE_QUIZ",
         "UPDATE_LABS",
         "DOWNLOAD_TRAINEE_ROSTER",
-        "UPDATE_AUTHOR"
+        "UPDATE_AUTHOR",
+        "ISSUES_LIST",
     ],
 
     subadmin: [
@@ -37,14 +38,16 @@ export const ROLE_PERMISSION = {
         "CREATE_ASSIGNMENTS",
         "UPDATE_ASSIGNMENT",
         "SHOW_BACKBUTTON",
-        "BREADCRUMBS_DASHBOARD"
+        "BREADCRUMBS_DASHBOARD",
+        "REPORT_ISSUE",
     ],
 
     trainee: [
         "VIEW_COURSE",
         "SUBMIT_ASSIGNMENT",
         "BREADCRUMBS_DASHBOARD",
-        "FILE_UPLOAD_UI"
+        "FILE_UPLOAD_UI",
+        "REPORT_ISSUE",
     ]
 }
 

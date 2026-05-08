@@ -80,6 +80,13 @@
   --lh-caption: 18px;
   --lh-small: 16px;
   --lh-typo: 32px --fw-medium: 500;
+
+
+  --font-typo-label-sm: 12px;
+  --lh-typo-label-sm: 16px;
+  --fw-medium: 500;
+
+  --input-height: 45px;
 }
 
 

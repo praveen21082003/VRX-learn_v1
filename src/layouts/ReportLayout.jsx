@@ -1,15 +1,16 @@
+import React from 'react'
 import Header from "@/components/ui/Header";
 import { Outlet } from "react-router-dom";
 
-export default function AppLayout() {
-
-
+function ReportLayout() {
     return (
         <div className="h-screen bg-background w-screen flex flex-col overflow-hidden">
-            <Header menu={true} />
+            <Header headerContent={<span className='hidden sm:block text-h4'>Report a problem</span>} />
             <main className="flex-1 overflow-y-auto overflow-hidden">
                 <Outlet />
             </main>
         </div>
-    );
+    )
 }
+
+export default ReportLayout

@@ -23,6 +23,7 @@ function Input({
     border,
     widthClass = "w-full",
     onFocus,
+    inputheight = false,
     ...props
 
 
@@ -71,6 +72,7 @@ function Input({
                     className={`
                         w-full
                         rounded border
+                        ${inputheight && inputheight}
                         ${paddingClass ? paddingClass : "p-2.5"} ${icon ? "pl-10" : ""}
                         text-body
                         ${textClass}

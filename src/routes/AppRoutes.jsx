@@ -13,6 +13,7 @@ import AuthLayout from '../layouts/AuthLayout';
 import AppLayout from '../layouts/AppLayout';
 import LearningLayout from '@/layouts/LearningLayout';
 import ContentLayout from '../layouts/ContentLayout';
+import ReportLayout from '../layouts/ReportLayout';
 
 import Login from '../pages/auth/Login';
 import CourseOverview from '@/pages/CourseContent/CourseOverview';
@@ -24,6 +25,8 @@ import EnrollmentsManagement from '../pages/Enrollments/EnrollmentsManagement';
 
 // error page
 import ErrorPage from '../pages/Errors/ErrorPage';
+// report page
+import Report from '../pages/ReportProblem/Report';
 
 function AppRoutes() {
   const { role, loading } = useAuth();
@@ -69,6 +72,10 @@ function AppRoutes() {
       <Route path="/server-error" element={<ErrorPage statusCode={500} />} />
       <Route path="/maintenance" element={<ErrorPage statusCode={503} />} />
       <Route path="/404" element={<ErrorPage statusCode={404} />} />
+
+      <Route element={<ReportLayout />}>
+        <Route path="/report" element={<Report />} />
+      </Route>
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
