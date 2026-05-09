@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, use } from 'react'
 
 import { useEnrollmentsData } from './hooks/useEnrollmentsData'
 import { useDebounce } from '@/hooks/useDebounce';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { TableToolbar, DataTable } from '@/components/Table'
 import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from "@/components/ui"
@@ -18,6 +19,8 @@ import formatDateTime from '@utils/formatDateTime'
 import { downloadCSV } from '@utils/downloadCSV';
 
 function EnrollmentsManagement() {
+
+    useDocumentTitle("Enrollments");
 
     const INITIAL_FILTERS = {
         search: "",

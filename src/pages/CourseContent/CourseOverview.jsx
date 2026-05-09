@@ -6,6 +6,7 @@ import { CourseTumbnail, Icon, CourseOverviewPlaceholder, BackButton } from '@/c
 
 import { useCourseOverview } from './hooks/useCourseOverview';
 import { usePermission } from '../../hooks/usePermission';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { TRAINEE_SECTIONS, TRAINER_SECTIONS } from '../../config/courseOverview';
 
@@ -36,6 +37,10 @@ function CourseOverview() {
 
 
     const { data, loading, error } = useCourseOverview(courseId, effectiveRole);
+
+
+    // set document title to course title or fallback to "Course Overview"
+    useDocumentTitle(data?.title ? `${data.title} - Overview` : "Course Overview");
 
 
     // Breadcrumb setup - we set the course breadcrumb on mount and clear it on unmount

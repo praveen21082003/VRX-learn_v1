@@ -7,6 +7,7 @@ import { useOutletContext } from 'react-router-dom';
 
 import useMedia from '@/components/content/hook/useMedia';
 import { useAssignmentSubmission } from '../../hooks/useAssingmentSubmission';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { useToast } from '@/context/ToastProvider'
 
@@ -31,6 +32,8 @@ function AssignmentContent() {
 
     const { assignment: assignmentData, attachment, submissions } = assignmentDetail || {};
     const { submitAssignment, loading: submitting, uploadProgress, mediaStatus, loadedData } = useAssignmentSubmission();
+
+    useDocumentTitle(activeAssignment ? `${activeAssignment?.title} - Assignment` : "Assignment");
 
     const mediaId = attachment?.mediaId;
     const { url, loading: mediaLoading } = useMedia(mediaId);

@@ -1,4 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { use, useEffect } from 'react'
+
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 import LessonForm from '../../../../../components/forms/LessonForm'
 import { BackButton } from '@/components/ui'
 import { useModuleContext, useCourse } from "../../layout/CourseManagementLayout";
@@ -58,6 +61,13 @@ function LessonActionHandler({ mode }) {
     const initialData = lessonId
         ? lessons?.find(l => l.id === lessonId)
         : null;
+
+
+    useDocumentTitle(
+        mode === "edit" ? `${initialData?.title || ""} - Update Lesson` :
+            mode === "view" ? `${currentLesson?.title || ""} - Lesson Preview` :
+                `${currentModule?.title || ""} - create lesson`
+    );
 
     const handleBackToModule = () => {
         navigate(`/course/${courseId}/content/modules/${moduleId}`);

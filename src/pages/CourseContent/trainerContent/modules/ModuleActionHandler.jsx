@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { use } from 'react'
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 import ModuleForm from '@/components/forms/ModuleForm'
 import { BackButton } from '@/components/ui'
 import { useModuleContext, useCourse } from "../layout/CourseManagementLayout";
@@ -17,6 +19,9 @@ function ModuleActionHandler({ mode }) {
     const moduleData = moduleId
         ? modules.find(m => m.id === moduleId)
         : null;
+
+    useDocumentTitle(isEdit ? `${moduleData?.title} - Update` : `${course?.title} - Create Module`);
+    
     return (
 
         <>

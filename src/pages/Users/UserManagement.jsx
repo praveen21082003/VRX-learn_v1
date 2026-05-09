@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useUsersData } from './hooks/useUsersData'
 
 import { useDebounce } from '@/hooks/useDebounce';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { TableToolbar, DataTable, } from '@/components/Table'
 import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from "@/components/ui"
@@ -21,6 +22,9 @@ import { downloadCSV } from '@utils/downloadCSV';
 
 
 function UserManagement() {
+
+    useDocumentTitle("Users");
+
     const INITIAL_FILTERS = {
         search: "",
         role: null,
