@@ -25,8 +25,9 @@ import EnrollmentsManagement from '../pages/Enrollments/EnrollmentsManagement';
 
 // error page
 import ErrorPage from '../pages/Errors/ErrorPage';
-// report page
-import Report from '../pages/ReportProblem/Report';
+// report pages
+import ReportProblem from '../pages/Report/ReportProblem';
+import Reports from '../pages/Report/Reports';
 
 function AppRoutes() {
   const { role, loading } = useAuth();
@@ -51,6 +52,7 @@ function AppRoutes() {
           <Route path="/courses" element={<CoursesSwitcher />} />
           <Route path="/users" element={<UserManagement />} />
           <Route path="/enrollments" element={<EnrollmentsManagement />} />
+          <Route path="/reports" element={<Reports />} />
         </Route>
 
         <Route path="/course/:courseId" element={<LearningLayout />}>
@@ -74,7 +76,7 @@ function AppRoutes() {
       <Route path="/404" element={<ErrorPage statusCode={404} />} />
 
       <Route element={<ReportLayout />}>
-        <Route path="/report" element={<Report />} />
+        <Route path="/report problem" element={<ReportProblem />} />
       </Route>
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

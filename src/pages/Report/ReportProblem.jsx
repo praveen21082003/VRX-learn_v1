@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { BackButton, Button, Input, Select, UploadSection } from "@/components/ui";
 import { useNavigate } from 'react-router-dom';
 
-function Report() {
+function ReportProblem() {
 
     const [files, setFiles] = useState([]);
 
@@ -48,7 +48,7 @@ function Report() {
                     />
                 </div>
                 <div className="space-y-4">
-                    <label className="text-h5">Short description</label>
+                    <label className="text-h5">Description</label>
                     <textarea
                         rows="6"
                         // value={formData.shortDescription}
@@ -80,4 +80,4 @@ function Report() {
     )
 }
 
-export default Report
+export default ReportProblem

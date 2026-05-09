@@ -50,6 +50,11 @@ export const roleNavigation = {
             name: "Courses",
             icon: "si:book-fill",
             path: "/courses"
+        },
+        {
+            name: "Reports",
+            icon: "mdi:report",
+            path: "/reports"
         }
     ]
 };
