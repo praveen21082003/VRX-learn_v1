@@ -86,14 +86,18 @@ export const getProfileDropdown = ({
 
 
   if (role === "trainer") {
+    const currentRole = viewRole || role;
+
     buttons.push({
       key: "switch",
-      title: viewRole === "trainer"
-        ? "Switch to Trainee"
-        : "Switch to Trainer",
-      icon: viewRole === "trainer"
-        ? "mdi:account-tie"
-        : "mdi:account-school",
+      title:
+        currentRole === "trainer"
+          ? "Switch to Trainee"
+          : "Switch to Trainer",
+      icon:
+        currentRole === "trainer"
+          ? "mdi:account-tie"
+          : "mdi:account-school",
       onClick: onSwitch,
     });
   }
