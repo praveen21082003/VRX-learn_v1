@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-export const useResizable = (initialWidth, minWidth = 280, maxWidth = 500) => {
+export const useResizable = (initialWidth, minWidth = 280, maxWidth = 460) => {
     const [width, setWidth] = useState(initialWidth);
     const [isResizing, setIsResizing] = useState(false); // State for UI/Color
     const isResizingRef = useRef(false); // Ref for performance

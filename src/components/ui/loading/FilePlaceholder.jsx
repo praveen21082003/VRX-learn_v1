@@ -3,7 +3,7 @@ import { Icon } from "@/components/ui";
 export default function FilePlaceholder() {
     return (
         <div className="lg:px-10 h-full w-full">
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-border bg-background flex flex-col justify-center items-center gap-4 animate-pulse">
+            <div className="relative w-full aspect-[1/1.414] rounded-xl overflow-hidden border border-border bg-background flex flex-col justify-center items-center gap-4 animate-pulse">
 
                 {/* Icon */}
                 <div className="p-4 rounded-full bg-muted">

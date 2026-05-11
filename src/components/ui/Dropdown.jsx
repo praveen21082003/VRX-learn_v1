@@ -7,20 +7,26 @@ export default function Dropdown({ buttons, closeDropdown }) {
     const { can } = usePermission();
     const dropdownRef = useRef(null);
     const [openUpwards, setOpenUpwards] = useState(false);
+    const [alignRight, setAlignRight] = useState(false);
 
 
     useEffect(() => {
         if (!dropdownRef.current) return;
 
         const rect = dropdownRef.current.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - rect.top;
-        const dropdownHeight = rect.height;
 
-        if (spaceBelow < dropdownHeight + 20) {
-            setOpenUpwards(true);
-        } else {
-            setOpenUpwards(false);
-        }
+        const spaceBelow = window.innerHeight - rect.top;
+        const spaceRight = window.innerWidth - rect.left;
+
+        const dropdownHeight = rect.height;
+        const dropdownWidth = rect.width;
+
+        // Vertical check
+        setOpenUpwards(spaceBelow < dropdownHeight + 20);
+
+        // Horizontal check
+        setAlignRight(spaceRight < dropdownWidth + 20);
+
     }, []);
 
 
@@ -38,7 +44,10 @@ export default function Dropdown({ buttons, closeDropdown }) {
                 'absolute w-full min-w-36 z-20 bg-background border border-default text-main text-sm  overflow-hidden',
                 openUpwards
                     ? "bottom-full rounded-t mb-2"
-                    : "top-full mt-2 rounded-b"
+                    : "top-full mt-2 rounded-b",
+                alignRight
+                    ? "right-0"
+                    : "left-0"
             )}
         >
             {buttons.map((button) => {

@@ -127,62 +127,73 @@ function LessonsPage() {
             <div className='border-b lg:border-0 border-default pt-2 px-2'>
                 <BackButton to={`/course/${courseId}/content/modules`} label="Back to Modules" />
             </div>
-            <div className="space-y-4 p-4">
+            <div className="no-select space-y-4 p-4">
                 <div className='flex justify-between'>
-                    <h2 className="text-h4 md:text-h3 truncate">{selectedModule?.title}</h2>
+                    <h2 className="text-h4 truncate">{isMobile ? "Lessons" : selectedModule?.title}</h2>
                     <div className='flex gap-px'>
-                        <span className='flex gap-3'>
-                            {isReorderMode ? (
-                                <Button
-                                    buttonName='Done'
-                                    frontIconWidth="24px"
-                                    frontIconHeght="24px"
-                                    frontIconName='material-symbols:done-rounded'
-                                    className="p-1 px-4 rounded"
-                                    onClick={() => setIsReorderMode(false)}
-                                />
-                            ) : (
-                                <div className='relative flex flex-row gap-px'>
-                                    <Button
-                                        buttonName={isMobile ? "Edit" : "Edit Details"}
-                                        frontIconName='mingcute:pencil-line'
-                                        frontIconWidth="24px"
-                                        frontIconHeght="24px"
-                                        className="p-1 px-2 rounded-r-none rounded font-semibold text-md"
-                                        bgClass=""
-                                        textClass=""
-                                        onClick={() => navigate(`/course/${courseId}/content/modules/${moduleId}/edit`)}
-                                    />
-                                    <Button
-                                        frontIconName="subway:down-2"
-                                        frontIconWidth="16px"
-                                        frontIconHeght="16px"
-                                        className="p-2 px-2 rounded-l-none rounded"
-                                        onClick={() => setOpenDropDown(prev => !prev)}
-                                    />
-                                    {openDropDown && (
-                                        <Dropdown
-                                            buttons={editButtons(() => setIsReorderMode(true))}
-                                            closeDropdown={() => setOpenDropDown(false)}
-                                        />
-                                    )}
-                                </div>
-                            )}
+                        <span className='shrink-0 flex gap-1'>
+
                             <NavLink to={`/course/${courseId}/content/modules/${moduleId}/lesson/create`}>
                                 <Button
                                     buttonName="Add New Lesson"
                                     frontIconName='ic:baseline-plus'
                                     frontIconWidth="24px"
                                     frontIconHeght="24px"
-                                    className="p-1 rounded font-semibold text-md"
+                                    className="shrink-0 p-1 px-2 rounded-r-none rounded font-semibold text-md"
                                     bgClass=""
                                     textClass=""
                                     isMobile={isMobile}
                                 />
                             </NavLink>
+
+                            {isReorderMode ? (
+                                <Button
+                                    buttonName='Done'
+                                    frontIconWidth="24px"
+                                    frontIconHeght="24px"
+                                    frontIconName='material-symbols:done-rounded'
+                                    className="shrink-0 p-1 px-4 rounded"
+                                    onClick={() => setIsReorderMode(false)}
+                                    isMobile={isMobile}
+                                />
+                            ) : (
+                                <div className='relative flex flex-row gap-px'>
+                                    <Button
+                                        buttonName="Edit Details"
+                                        frontIconName={isMobile ? "codicon:kebab-vertical" : "mingcute:pencil-line"}
+                                        frontIconWidth="24px"
+                                        frontIconHeght="24px"
+                                        className="shrink-0 p-1 px-2 rounded-r-none rounded font-semibold text-md"
+                                        bgClass=""
+                                        textClass=""
+                                        onClick={() => isMobile ? setOpenDropDown(prev => !prev) : navigate(`/course/${courseId}/content/modules/${moduleId}/edit`)}
+                                        isMobile={isMobile}
+                                    />
+                                    {!isMobile &&
+                                        <Button
+                                            frontIconName="subway:down-2"
+                                            frontIconWidth="16px"
+                                            frontIconHeght="16px"
+                                            className="p-2 px-2 rounded-l-none rounded"
+                                            onClick={() => setOpenDropDown(prev => !prev)}
+                                        />
+                                    }
+
+                                    {openDropDown && (
+                                        <Dropdown
+                                            buttons={editButtons(() => setIsReorderMode(true))}
+                                            closeDropdown={() => setOpenDropDown(false)}
+                                        />
+                                    )}
+
+                                </div>
+                            )}
                         </span>
+
                     </div>
                 </div>
+                <h2 className="text-body font-bold truncate">{isMobile && selectedModule?.title}</h2>
+
 
                 <MarkdownContent content={selectedModule?.description} />
 
@@ -213,7 +224,7 @@ function LessonsPage() {
                                     >
                                         <div
                                             className={clsx(
-                                                'flex gap-2 items-center p-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary ',
+                                                'flex gap-1 sm:gap-2 items-center px-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary ',
                                                 isUpdating ? "cursor-progress" : "cursor-pointer",
                                                 (isOpenDropdown === lesson.id || renameLessonId === lesson.id) && 'bg-primary/16'
                                             )}
@@ -263,7 +274,7 @@ function LessonsPage() {
                                                 )}
 
                                                 <div
-                                                    className='relative flex justify-center mr-5'
+                                                    className='relative flex justify-center'
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         e.stopPropagation();

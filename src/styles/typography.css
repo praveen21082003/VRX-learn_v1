@@ -43,6 +43,12 @@
         font-weight: 600;
     }
 
+    .text-preview {
+        font-size: var(--font-title-preview);
+        line-height: var(--lh-typo);
+        font-weight: 600;
+    }
+
     .text-ll {
         font-size: var(--font-ll);
         line-height: var(--lh-ll);

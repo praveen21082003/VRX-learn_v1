@@ -41,7 +41,7 @@ function VideoPlayer({ url, id, setVideoDuration }) {
     };
 
     return (
-        <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden group">
+        <div className="relative w-full aspect-video bg-black md:rounded-lg overflow-hidden group">
 
             {/* ✅ loading overlay */}
             {videoLoading && !videoError && (

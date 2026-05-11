@@ -48,28 +48,67 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
 
   const lastTap = React.useRef(0);
 
+
+  // Touch Handler - single tap to toggle controls/play, double tap for seeking
   const handleTouch = (e) => {
     resetControlsTimer();
+
     const now = Date.now();
     const DOUBLE_TAP_DELAY = 300;
+
     const video = videoRef.current;
     if (!video) return;
 
-    if (now - lastTap.current < DOUBLE_TAP_DELAY) {
-      // Get horizontal position of the tap
-      const touchX = e.touches[0].clientX;
-      const screenWidth = window.innerWidth;
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
 
-      if (touchX > screenWidth / 2) {
-        // Right side double tap
-        video.currentTime += 5;
-        triggerSkipUI('forward');
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Center zone dimensions
+    const centerWidth = screenWidth * 0.4;
+    const centerHeight = screenHeight * 0.4;
+
+    const centerXStart = (screenWidth - centerWidth) / 2;
+    const centerXEnd = centerXStart + centerWidth;
+
+    const centerYStart = (screenHeight - centerHeight) / 2;
+    const centerYEnd = centerYStart + centerHeight;
+
+    const isCenterTap =
+      touchX >= centerXStart &&
+      touchX <= centerXEnd &&
+      touchY >= centerYStart &&
+      touchY <= centerYEnd;
+
+    // DOUBLE TAP SEEK
+    if (now - lastTap.current < DOUBLE_TAP_DELAY) {
+
+      if (!isCenterTap) {
+        if (touchX > screenWidth / 2) {
+          video.currentTime += 5;
+          triggerSkipUI("forward");
+        } else {
+          video.currentTime -= 5;
+          triggerSkipUI("back");
+        }
+      }
+
+    } else {
+
+      // SINGLE TAP
+      if (isCenterTap) {
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
       } else {
-        // Left side double tap
-        video.currentTime -= 5;
-        triggerSkipUI('back');
+        // only show controls
+        setShowControls(true);
       }
     }
+
     lastTap.current = now;
   };
 
@@ -266,7 +305,7 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
             />
           </div>
         </div>
-      )}  
+      )}
 
 
       {/* skip ui */}

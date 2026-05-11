@@ -147,7 +147,7 @@ function ModulesPage() {
       <div className="block lg:hidden border-b border-default p-2 px-4">
         <BackButton to={`/course/${courseId}/content`} label="Back" />
       </div>
-      <div className="space-y-4 p-4" onClick={() => setRenameModuleId(null)}>
+      <div className="no-select space-y-4 p-4" onClick={() => setRenameModuleId(null)}>
         <div className='flex justify-between'>
           <h2 className="text-h3">Curriculum</h2>
           <div className='flex gap-3'>
@@ -215,14 +215,14 @@ function ModulesPage() {
                         }
                       }}
                       className={clsx(
-                        'flex justify-between items-center p-2 lg:px-5 py-3 rounded text-h45 hover:bg-primary/16 dark:hover:bg-primary cursor-pointer',
+                        'flex justify-between items-center p-2 lg:px-5 py-3 rounded font-semibold text-h45 hover:bg-primary/16 dark:hover:bg-primary cursor-pointer',
                         isRename ? "cursor-progress" : "cursor-pointer",
                         (isOpenDropdown === module.id || renameModuleId === module.id) && 'bg-primary/16'
                       )}
                     >
                       <li className="flex items-center gap-2 w-full min-w-0">
-                        {/* <span className="hidden md:block shrink-0 text-muted-foreground">
-                          Module {index + 1} -
+                        {/* <span className=" shrink-0 text-muted-foreground">
+                          {index + 1} -
                         </span> */}
 
                         {renameModuleId === module.id ? (
@@ -267,7 +267,7 @@ function ModulesPage() {
                       </li>
 
                       <div
-                        className='relative h-auto flex justify-center mr-5'
+                        className='relative h-auto flex justify-center'
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();

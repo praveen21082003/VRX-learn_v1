@@ -35,18 +35,19 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
 
 
     return (
-        <main className="flex-1 text-main overflow-y-auto py-1 px-2 md:py-1 md:px-6 pb-24">
-            <h1 className="text-h3 flex gap-3">
-                {activeLesson.moduleIndex + 1}.{activeLesson.lessonIndex + 1}
-                <span>{lesson?.title}</span>
+        <main className="flex-1 text-main overflow-y-auto md:py-1 md:px-6 pb-24">
+            <h1 className="text-preview px-2 flex gap-3">
+                {activeLesson.moduleIndex + 1}.{activeLesson.lessonIndex + 1} {lesson?.title}
             </h1>
-            <div className="flex items-center text-caption -mt-1.5 text-muted-foreground">
+            <div className="flex px-2 items-center text-caption -mt-1.5 text-muted-foreground">
 
                 <span>
-                    {lesson?.mimeType?.startsWith("video") ? "video" : "application"}
+                    {lesson?.mimeType?.startsWith("video") ? "video" : "file"}
                 </span>
 
-                <Icon name="ph:dot-bold" />
+                {lesson?.mimeType?.startsWith("video") &&
+                    <Icon name="ph:dot-bold" />
+                }
 
                 {lesson?.mimeType?.startsWith("video") && (
                     <>
@@ -102,7 +103,7 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
                 )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 px-2">
                 <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
                 <div className="py-5">

@@ -5,7 +5,7 @@ import { useKeyboardShortcuts } from '../../../hooks/useKeyboardShortcuts';
 
 // ─── Outside component — stable, no remount ───────────────────────────────────
 const Divider = () => (
-    <div className="w-px h-5 bg-[#BDBDC7] mx-2" />
+    <div className="w-px h-5 bg-[#BDBDC7] sm:mx-2" />
 );
 
 const ResponsiveActions = memo(({
@@ -42,7 +42,7 @@ const ResponsiveActions = memo(({
     return (
         <>
             {/* Page navigation */}
-            <div className="flex items-center gap-2 rounded-md">
+            <div className="flex items-center gap-1 rounded-md">
                 <Button
                     frontIconName="mingcute:left-fill"
                     frontIconHeight="18" frontIconWidth="18"
@@ -51,10 +51,10 @@ const ResponsiveActions = memo(({
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 />
 
-                <div className="flex items-center gap-1 text-xs">
+                <div className="flex items-center gap-1 text-caption">
                     <input
                         type="number"
-                        className="w-10 bg-[#191B1C] text-white px-1 py-[2px] text-center rounded outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="w-10 bg-[#191B1C] text-white px-1 py-0.5 text-center rounded outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         value={pageInput}
                         onChange={(e) => setPageInput(e.target.value)}
                         onBlur={handlePageBlur}
@@ -75,7 +75,7 @@ const ResponsiveActions = memo(({
             <Divider />
 
             {/* Zoom controls */}
-            <div className="flex items-center gap-2 py-1 rounded-md">
+            <div className="flex items-center py-1 gap-0.5 rounded-md">
                 <Button
                     frontIconName="tabler:zoom-out"
                     frontIconHeight="18" frontIconWidth="18"
@@ -83,7 +83,7 @@ const ResponsiveActions = memo(({
                     className="p-1 hover:bg-white/10 rounded-full"
                     onClick={() => setScale((prev) => Math.max(prev - 0.2, 0.6))}
                 />
-                <div className="text-xs w-12 text-center bg-[#191B1C] py-1 rounded">
+                <div className="text-caption w-12 text-center bg-[#191B1C] py-1 rounded">
                     {Math.round(scale * 100)}%
                 </div>
                 <Button
@@ -263,7 +263,7 @@ function DocumentControls({ title, fileUrl }) {
                 onMouseEnter={() => { isHoveringControlsRef.current = true; }}
                 onMouseLeave={() => { isHoveringControlsRef.current = false; }}
                 className={`absolute bottom-15 lg:bottom-6 left-1/2 -translate-x-1/2 
-                    bg-black/60 backdrop-blur-md text-white flex items-center gap-4 
+                    bg-black/60 backdrop-blur-md text-white flex items-center gap-3 
                     px-4 py-1.5 rounded-md shadow-2xl z-30 
                     transition-opacity duration-300 border border-white/10
                     ${showControls ? "opacity-100" : "opacity-0 pointer-events-none"}
@@ -276,7 +276,7 @@ function DocumentControls({ title, fileUrl }) {
                     className="p-1 hover:bg-white/10 rounded-full"
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 />
-                <span className="text-xs font-medium">
+                <span className="shrink-0 text-caption font-medium">
                     Page {currentPage} / {totalPages}
                 </span>
                 <Button

@@ -50,36 +50,44 @@
 
 
 
-  --font-h0: 48px;
-  --font-h1: 36px;
-  --font-h2: 28px;
-  --font-h3: 22px;
-  --font-h4: 18px;
-  --font-h45: 16px;
-  --font-h5: 14px;
+  /* ── Headings — desktop stays 48/36/28... mobile scales down ── */
+  --font-h0: clamp(32px, 5vw, 48px);
+  --font-h1: clamp(26px, 4vw, 36px);
+  --font-h2: clamp(22px, 3vw, 28px);
+  --font-h3: clamp(18px, 2.5vw, 22px);
+  --font-h4: clamp(16px, 2vw, 18px);
+  --font-h45: clamp(14px, 1.8vw, 16px);
+  --font-h5: clamp(13px, 1.5vw, 14px);
 
-  --lh-h0: 58px;
-  --lh-h1: 46px;
-  --lh-h2: 38px;
-  --lh-h3: 32px;
-  --lh-h4: 28px;
-  --lh-h45: 24px;
-  --lh-h5: 24px;
-  /* --lh-typo:32px */
+  --font-title-preview: clamp(8px, 2.5vw, 22px);
 
-  --font-ll: 16px;
-  --font-large: 15px;
-  --font-normal: 14px;
-  --font-emphasis: 12px;
-  --font-caption: 12px;
-  --font-small: 11px;
-  --font-typo: 22px --lh-ll: 26px;
-  --lh-large: 24px;
-  --lh-normal: 22px;
-  --lh-emphasis: 22px;
-  --lh-caption: 18px;
-  --lh-small: 16px;
-  --lh-typo: 32px --fw-medium: 500;
+  /* ── Line heights — scale with font ── */
+  --lh-h0: clamp(42px, 6vw, 58px);
+  --lh-h1: clamp(36px, 5vw, 46px);
+  --lh-h2: clamp(30px, 4vw, 38px);
+  --lh-h3: clamp(26px, 3vw, 32px);
+  --lh-h4: clamp(24px, 2.5vw, 28px);
+  --lh-h45: clamp(20px, 2vw, 24px);
+  --lh-h5: clamp(20px, 1.8vw, 24px);
+
+  /* ── Body text — keep fixed, small enough already ── */
+  --font-ll: clamp(15px, 1vw, 16px);
+  --font-large: clamp(14px, 1vw, 15px);
+  --font-normal: clamp(10px, 1vw, 14px);
+  --font-emphasis: clamp(11px, 0.9vw, 12px);
+  --font-caption: clamp(10px, 0.9vw, 12px);
+  --font-small: clamp(10px, 0.8vw, 11px);
+  --font-typo: clamp(20px, 1.5vw, 22px);
+
+  --lh-ll: clamp(24px, 1.5vw, 26px);
+  --lh-large: clamp(22px, 1.4vw, 24px);
+  --lh-normal: clamp(20px, 1.3vw, 22px);
+  --lh-emphasis: clamp(20px, 1.3vw, 22px);
+  --lh-caption: clamp(16px, 1.1vw, 18px);
+  --lh-small: clamp(14px, 1vw, 16px);
+  --lh-typo: clamp(28px, 2vw, 32px);
+
+  --fw-medium: 500;
 }
 
 
