@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef, createContext, useContext } from "react";
+import { usePermission } from "@/hooks/usePermission";
+
 // custom hooks and api
 import { useResizable } from '@/hooks/useResizable';
 import useCourseContent from "../hooks/useCourseContent";
@@ -47,6 +49,8 @@ function CourseManagementLayout() {
 
     // navinagte hook from react route
     const navigate = useNavigate();
+
+    const { can } = usePermission();
 
     // hooks
     const { role, viewRole } = useAuth();
@@ -161,7 +165,7 @@ function CourseManagementLayout() {
 
 
     return (
-        <CourseContext.Provider value={{ courseId, course, courseContent, refreshCourseContent, handleUpdateCourseInfoSuccess }}>
+        <CourseContext.Provider value={{ courseId, course, courseContent, refreshCourseContent, handleUpdateCourseInfoSuccess, can }}>
             <ModuleContext.Provider value={{
                 modules,
                 error,

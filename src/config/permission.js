@@ -19,7 +19,8 @@ export const ROLE_PERMISSION = {
         "UPDATE_QUIZ",
         "UPDATE_LABS",
         "DOWNLOAD_TRAINEE_ROSTER",
-        "UPDATE_AUTHOR"
+        "UPDATE_AUTHOR",
+        "VIEW_COURSE_INFO",
     ],
 
     subadmin: [

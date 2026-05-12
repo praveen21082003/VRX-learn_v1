@@ -1,97 +1,132 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+import { useDocsContext } from './DocumentLayout';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+pdfjs.GlobalWorkerOptions.workerSrc =
+    `https://unpkg.com/pdfjs-dist@5.4.296/build/pdf.worker.min.mjs`;
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+function PDFViewer2() {
+    const {
+        scrollRef,
+        numPages, setNumPages,
+        pageNumber, setPageNumber,
+        scale,
+        pdfBlobUrl, setPdfBlobUrl,
+        pageInput, setPageInput,
+        pageWidth, setPageWidth,
+        pageRefs,
+        isTypingRef,
+        containerRef,
+        fileUrl,
+        handleNext,
+        handlePrev,
+        scrollToPage,
+        error,
+    } = useDocsContext();
 
-export default function PDFViewer({
-  url,
-  key,
-  currentPage,
-  setTotalPages,
-  setCurrentPage,
-}) {
-  const canvasRef = useRef(null);
-  const renderTaskRef = useRef(null);
-  const [pdfDoc, setPdfDoc] = useState(null);
+    // ── Set S3 URL directly ───────────────────────────────────────────────────
+    useEffect(() => {
+        if (!fileUrl) return;
+        setPdfBlobUrl(fileUrl);
+    }, [fileUrl]);
 
-  // 🔹 Load PDF
-  useEffect(() => {
-    const loadPDF = async () => {
-      try {
+    // ── Track container width ─────────────────────────────────────────────────
+    useLayoutEffect(() => {
+        const el = containerRef?.current;
+        if (!el) return;
+        const updateWidth = () => setPageWidth(el.clientWidth - 20);
+        updateWidth();
+        window.addEventListener("resize", updateWidth);
+        return () => window.removeEventListener("resize", updateWidth);
+    }, []);
 
-        if (!url) return;
+    // ── Keep left edge visible on zoom (only when overflowing) ───────────────
+    useLayoutEffect(() => {
+        if (scrollRef.current) scrollRef.current.scrollLeft = 0;
+    }, [scale, pageWidth]);
 
-        const loadingTask = pdfjsLib.getDocument(url);
-        const pdf = await loadingTask.promise;
+    // ── Scroll → sync current page number ────────────────────────────────────
+    useEffect(() => {
+        const scrollEl = scrollRef.current;
+        if (!scrollEl) return;
 
-        setTotalPages(pdf.numPages);
-        setPdfDoc(pdf);
+        const handler = () => {
+            if (isTypingRef.current) return;
+            const midpoint = scrollEl.scrollTop + scrollEl.clientHeight / 2;
 
-        setCurrentPage(1); 
+            for (let i = 0; i < numPages; i++) {
+                const el = pageRefs.current[i];
+                if (!el) continue;
+                const top = el.offsetTop;
+                const bottom = top + el.clientHeight;
+                if (midpoint >= top && midpoint <= bottom) {
+                    setPageNumber(i + 1);
+                    setPageInput(String(i + 1));
+                    break;
+                }
+            }
+        };
 
-      } catch (err) {
-        console.error("PDF load error:", err);
-      }
-    };
+        scrollEl.addEventListener("scroll", handler);
+        return () => scrollEl.removeEventListener("scroll", handler);
+    }, [numPages]);
 
-    loadPDF();
+    // ── Keyboard shortcuts ────────────────────────────────────────────────────
+    useKeyboardShortcuts(
+        {
+            ArrowRight: handleNext,           // next page
+            ArrowDown: handleNext,           // next page
+            ArrowLeft: handlePrev,           // prev page
+            ArrowUp: handlePrev,           // prev page
+            PageDown: handleNext,           // next page
+            PageUp: handlePrev,           // prev page
+            Home: () => scrollToPage(1),          // first page
+            End: () => scrollToPage(numPages),   // last page
+        },
+        [pageNumber, numPages]
+    );
 
-  }, [url]);
-
-  // 🔹 Render Page
-  useEffect(() => {
-    if (!pdfDoc) return;
-    if (!canvasRef.current) return;
-
-    const renderPage = async () => {
-      try {
-        // Cancel previous render
-        if (renderTaskRef.current) {
-          renderTaskRef.current.cancel();
-        }
-
-        const safePage =
-          currentPage < 1
-            ? 1
-            : currentPage > pdfDoc.numPages
-              ? pdfDoc.numPages
-              : currentPage;
-
-        const page = await pdfDoc.getPage(safePage);
-
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-
-        const viewport = page.getViewport({ scale: 1 });
-
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        const renderTask = page.render({
-          canvasContext: ctx,
-          viewport,
-        });
-
-        renderTaskRef.current = renderTask;
-
-        await renderTask.promise;
-
-      } catch (error) {
-        if (error?.name !== "RenderingCancelledException") {
-          console.error("PDF render error:", error);
-        }
-      }
-    };
-
-    renderPage();
-
-  }, [pdfDoc, currentPage]);
-
-  return (
-    <div key={key} className="flex justify-center " onContextMenu={(e) => e.preventDefault()}>
-      <canvas ref={canvasRef} />
-    </div>
-    
-  );
+    // ── Render ────────────────────────────────────────────────────────────────
+    return (
+        // outer wrapper: vertical scroll, horizontal scroll only when needed
+        <div
+            ref={scrollRef}
+            className="w-full h-full overflow-y-auto overflow-x-auto py-3"
+        >
+            {/* inner wrapper: centers content; expands horizontally when zoomed */}
+            <div className="flex flex-col items-center min-w-fit">
+                {pdfBlobUrl ? (
+                    <Document
+                        file={pdfBlobUrl}
+                        onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                    >
+                        {Array.from({ length: numPages }, (_, idx) => (
+                            <div
+                                key={idx}
+                                ref={(el) => (pageRefs.current[idx] = el)}
+                                className="mb-4 shadow-lg"
+                            >
+                                <Page
+                                    pageNumber={idx + 1}
+                                    width={pageWidth * scale}
+                                    renderAnnotationLayer={false}
+                                    renderTextLayer={false}
+                                />
+                            </div>
+                        ))}
+                    </Document>
+                ) : (
+                    <div className="text-center text-red-500 space-y-1">
+                        <p className="font-semibold">{error?.detail}</p>
+                        <p className="text-xs sm:text-sm text-gray-600">
+                            Try opening a different PDF or contact support if the issue continues.
+                        </p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 }
+
+export default PDFViewer2;

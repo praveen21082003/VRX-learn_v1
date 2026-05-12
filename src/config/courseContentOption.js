@@ -1,6 +1,7 @@
 // courseContentOption.js — make path a function
-export const COURSE_EDIT_SECTIONS = (courseId) => [
-    {
+
+export const COURSE_EDIT_SECTIONS = (courseId, can) => [
+    can("VIEW_COURSE_INFO") && {
         key: "info",
         label: "Course Information",
         path: `/course/${courseId}/content/info`,
@@ -15,4 +16,4 @@ export const COURSE_EDIT_SECTIONS = (courseId) => [
         label: "Assignments",
         path: `/course/${courseId}/content/assignments`,
     },
-]
+].filter(Boolean);

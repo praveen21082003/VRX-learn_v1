@@ -129,7 +129,7 @@ function LessonsPage() {
             </div>
             <div className="no-select space-y-4 p-4">
                 <div className='flex justify-between'>
-                    <h2 className="text-h4 truncate">{isMobile ? "Lessons" : selectedModule?.title}</h2>
+                    <h2 className={`${isMobile ? 'text-h3' : 'text-h4'} truncate`}>{isMobile ? "Lessons" : selectedModule?.title}</h2>
                     <div className='flex gap-px'>
                         <span className='shrink-0 flex gap-1'>
 
@@ -192,7 +192,7 @@ function LessonsPage() {
 
                     </div>
                 </div>
-                <h2 className="text-body font-bold truncate">{isMobile && selectedModule?.title}</h2>
+                <h2 className="text-h5 font-bold truncate">{isMobile && selectedModule?.title}</h2>
 
 
                 <MarkdownContent content={selectedModule?.description} />

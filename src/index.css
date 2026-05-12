@@ -59,7 +59,7 @@
   --font-h45: clamp(14px, 1.8vw, 16px);
   --font-h5: clamp(13px, 1.5vw, 14px);
 
-  --font-title-preview: clamp(8px, 2.5vw, 22px);
+  --font-title-preview: clamp(15px, 2.5vw, 22px);
 
   /* ── Line heights — scale with font ── */
   --lh-h0: clamp(42px, 6vw, 58px);

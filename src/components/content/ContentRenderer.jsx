@@ -6,6 +6,7 @@ import { MediaPlaceholder, FilePlaceholder } from '@/components/ui/loading'
 import { Tabs } from "@/components/tabs";
 import { VideoPlayer } from "./video";
 import DocumentControls from "./document/DocumentControls";
+import DocumentLayout from "./document/DocumentLayout";
 import useMedia from './hook/useMedia';
 
 function ContentRenderer({ lesson, setVideoDuration }) {
@@ -43,9 +44,10 @@ function ContentRenderer({ lesson, setVideoDuration }) {
                   setVideoDuration={setVideoDuration}
                 />
               ) : isPDF ? (
-                <DocumentControls
+                <DocumentLayout
                   title={lesson.title}
                   fileUrl={url}
+                  error={error}
                   key={lesson.id}
                 />
               ) : (
