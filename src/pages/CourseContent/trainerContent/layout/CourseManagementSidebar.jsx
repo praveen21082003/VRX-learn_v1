@@ -6,6 +6,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useClickOutside } from '@/hooks/useClickOutside'
 
+// context
+import { useCourse } from './CourseManagementLayout';
+
 
 // config
 import { COURSE_EDIT_SECTIONS } from "@/config/courseContentOption";
@@ -13,7 +16,9 @@ import { CREATE_BUTTON_OPTIONS } from "@/config/dropdownButtons"
 
 import { BackButton, Button, Icon, Dropdown } from '@/components/ui';
 
-function CourseManagementSidebar({ courseContent }) {
+function CourseManagementSidebar() {
+
+  const { courseContent, can } = useCourse();
 
   const navigate = useNavigate();
   const { courseId, assignmentId, moduleId, lessonId } = useParams();
@@ -22,7 +27,10 @@ function CourseManagementSidebar({ courseContent }) {
   // console.log(modules, assignments)
   // console.log(courseId);
 
-  const sections = COURSE_EDIT_SECTIONS(courseId);
+
+  const sections = COURSE_EDIT_SECTIONS(courseId, can);
+
+
 
 
   // 

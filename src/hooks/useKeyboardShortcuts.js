@@ -10,11 +10,11 @@ export const useKeyboardShortcuts = (shortcutMap, dependencies = []) => {
 
       if (action) {
         e.preventDefault();
-        action();
+        action(e);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, dependencies); 
+  }, dependencies);
 };

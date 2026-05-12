@@ -49,8 +49,11 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
   const lastTap = React.useRef(0);
 
 
+  const wasTouched = React.useRef(false);
   // Touch Handler - single tap to toggle controls/play, double tap for seeking
   const handleTouch = (e) => {
+    wasTouched.current = true;
+
     resetControlsTimer();
 
     const now = Date.now();
@@ -59,20 +62,28 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
     const video = videoRef.current;
     if (!video) return;
 
-    const touchX = e.touches[0].clientX;
-    const touchY = e.touches[0].clientY;
+    // ── Use the container's bounds, not window size ───────────────────────────
+    // This makes the zone calculation work correctly both in and out of fullscreen
+    const container = video.parentElement;
+    const rect = container?.getBoundingClientRect() ?? {
+      left: 0, top: 0,
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
 
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
+    const touchX = e.touches[0].clientX - rect.left;   // relative to container
+    const touchY = e.touches[0].clientY - rect.top;
 
-    // Center zone dimensions
-    const centerWidth = screenWidth * 0.4;
-    const centerHeight = screenHeight * 0.4;
+    const { width: containerWidth, height: containerHeight } = rect;
 
-    const centerXStart = (screenWidth - centerWidth) / 2;
+    // Center zone: 40% wide × 40% tall, centered
+    const centerWidth = containerWidth * 0.4;
+    const centerHeight = containerHeight * 0.4;
+
+    const centerXStart = (containerWidth - centerWidth) / 2;
     const centerXEnd = centerXStart + centerWidth;
 
-    const centerYStart = (screenHeight - centerHeight) / 2;
+    const centerYStart = (containerHeight - centerHeight) / 2;
     const centerYEnd = centerYStart + centerHeight;
 
     const isCenterTap =
@@ -81,11 +92,10 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
       touchY >= centerYStart &&
       touchY <= centerYEnd;
 
-    // DOUBLE TAP SEEK
+    // DOUBLE TAP SEEK (sides only)
     if (now - lastTap.current < DOUBLE_TAP_DELAY) {
-
       if (!isCenterTap) {
-        if (touchX > screenWidth / 2) {
+        if (touchX > containerWidth / 2) {
           video.currentTime += 5;
           triggerSkipUI("forward");
         } else {
@@ -93,23 +103,32 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
           triggerSkipUI("back");
         }
       }
-
     } else {
-
       // SINGLE TAP
       if (isCenterTap) {
+        // center — play / pause
         if (video.paused) {
           video.play();
         } else {
           video.pause();
         }
       } else {
-        // only show controls
+        // sides — show controls only
         setShowControls(true);
       }
     }
 
     lastTap.current = now;
+  };
+
+
+  const handleBackdropClick = () => {
+    if (wasTouched.current) {
+      wasTouched.current = false;       // consume the flag, ignore this click
+      return;
+    }
+    // desktop only — mouse click on backdrop toggles play
+    togglePlay();
   };
 
   // --- Utilities ---
@@ -287,7 +306,7 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
 
       <div
         onTouchStart={handleTouch}
-        onClick={togglePlay}
+        onClick={handleBackdropClick}
         className="absolute inset-0 z-0"
       />
 

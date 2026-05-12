@@ -4,11 +4,11 @@ import { useCourse, useModuleContext, useAssignmentContext } from '../CourseMana
 import { Icon, BackButton } from '@/components/ui';
 import { COURSE_EDIT_SECTIONS } from '@/config/courseContentOption';
 
-function MobileContentMenu() {
+function MobileContentMenu({can}) {
     const { courseId } = useParams();
     const { course } = useCourse();
     const navigate = useNavigate();
-    const sections = COURSE_EDIT_SECTIONS(courseId);
+    const sections = COURSE_EDIT_SECTIONS(courseId, can);
 
     return (
         <>
