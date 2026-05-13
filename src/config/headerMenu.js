@@ -53,7 +53,7 @@ export const roleNavigation = {
         },
         {
             name: "Reports",
-            icon: "mdi:report",
+            icon: "tabler:message-report-filled",
             path: "/reports"
         }
     ]

@@ -50,10 +50,21 @@ export const TRAINEE_ROSTER_BASE = [
 
 // submissions table
 export const SUBMISSION_COLUMNS_BASE = [
-    { key: "student", label: "Student Name", width: "25%", align: "left" },
-    { key: "attempt", label: "Attempt", width: "10%" },
-    { key: "submittedAt", label: "Submission Date", width: "20%" },
-    { key: "status", label: "Status", width: "15%" },
-    { key: "score", label: "Grade", width: "10%" },
-    { key: "actions", label: "Actions", width: "10%" },
+  { key: "student", label: "Student Name", width: "25%", align: "left" },
+  { key: "attempt", label: "Attempt", width: "10%" },
+  { key: "submittedAt", label: "Submission Date", width: "20%" },
+  { key: "status", label: "Status", width: "15%" },
+  { key: "score", label: "Grade", width: "10%" },
+  { key: "actions", label: "Actions", width: "10%" },
+];
+
+
+// reports table
+export const REPORT_COLUMNS_BASE = [
+  { key: "user", label: "User", width: "22%", align: "left" },
+  { key: "role", label: "Role", width: "12%", align: "center" },
+  { key: "subject", label: "Subject", width: "26%", align: "left" },
+  { key: "status", label: "Status", width: "12%", align: "center" },
+  { key: "submitted_date", label: "Submitted Date", width: "18%", align: "center" },
+  { key: "view", label: "View", width: "10%" },
 ];

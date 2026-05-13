@@ -28,6 +28,7 @@ import ErrorPage from '../pages/Errors/ErrorPage';
 // report pages
 import ReportProblem from '../pages/Report/ReportProblem';
 import Reports from '../pages/Report/Reports';
+import ReportDeatils from '../pages/Report/ReportDeatils';
 
 function AppRoutes() {
   const { role, loading } = useAuth();
@@ -52,7 +53,10 @@ function AppRoutes() {
           <Route path="/courses" element={<CoursesSwitcher />} />
           <Route path="/users" element={<UserManagement />} />
           <Route path="/enrollments" element={<EnrollmentsManagement />} />
-          <Route path="/reports" element={<Reports />} />
+          <Route path="/reports">
+            <Route index element={<Reports />} />
+            <Route path=":reportId" element={<ReportDeatils />} />
+          </Route>
         </Route>
 
         <Route path="/course/:courseId" element={<LearningLayout />}>

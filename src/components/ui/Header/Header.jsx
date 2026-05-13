@@ -116,7 +116,7 @@ function Header({ menu, headerContent }) {
                 )}
 
                 {/* report button */}
-                {can("REPORT_ISSUE") && !headerContent && (
+                {!headerContent && (
                     <button className="flex gap-2 items-center text-label-sm text-surface-80 hover:text-surface hover:cursor-pointer" onClick={() => navigate("/report problem")}>
                         <Icon name="si:flag-alt-4-line" size="18" />
                         <span>Report a problem</span>
