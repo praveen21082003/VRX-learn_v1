@@ -5,9 +5,13 @@ import { ROLE_PERMISSION } from '@/config/permission';
 
 
 export default function ProtectedRoute() {
-    const { user, role, loading } = useAuth();
+    const { user, role, loading, isAuthenticated } = useAuth();
 
     if (loading) return <AppLoading />;
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
 
     // not logged in
     if (!user) return <Navigate to="/login" replace />;

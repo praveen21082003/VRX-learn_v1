@@ -8,32 +8,47 @@ const axiosInstance = axios.create({
     },
 });
 
-// Flag to prevent multiple redirects/refresh calls
 let isRedirecting = false;
 
 axiosInstance.interceptors.response.use(
     (response) => response.data,
-    async (error) => {
-        const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !isRedirecting) {
-            // Avoid redirecting if we are already on the login page
-            if (window.location.pathname === "/login") {
-                return Promise.reject(error);
-            }
+    async (error) => {
+
+        const status = error.response?.status;
+
+        // Public routes that should NEVER redirect
+        const publicRoutes = [
+            "/login",
+            "/forgot-password",
+            "/reset-password"
+        ];
+
+        const isPublicRoute = publicRoutes.includes(
+            window.location.pathname
+        );
+
+        if (
+            status === 401 &&
+            !isRedirecting &&
+            !isPublicRoute
+        ) {
 
             isRedirecting = true;
-            console.warn("Session expired. Redirecting...");
 
-            // Logic to clear local storage/state
-            // localStorage.removeItem('user_session');
+            console.warn("Session expired. Redirecting...");
 
             window.location.href = "/login";
         }
 
-        // Standardize error objects for your UI to consume
-        const errorMessage = error.response?.data?.message || "An unexpected error occurred";
-        return Promise.reject({ ...error, message: errorMessage });
+        const errorMessage =
+            error.response?.data?.message ||
+            "An unexpected error occurred";
+
+        return Promise.reject({
+            ...error,
+            message: errorMessage,
+        });
     }
 );
 

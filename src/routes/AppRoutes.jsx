@@ -14,7 +14,6 @@ import AppLayout from '../layouts/AppLayout';
 import LearningLayout from '@/layouts/LearningLayout';
 import ContentLayout from '../layouts/ContentLayout';
 
-import Login from '../pages/auth/Login';
 import CourseOverview from '@/pages/CourseContent/CourseOverview';
 import MyCourses from '../pages/Learning/MyLearning';
 import { CoursesSwitcher } from './CoursesSwitcher';
@@ -24,6 +23,11 @@ import EnrollmentsManagement from '../pages/Enrollments/EnrollmentsManagement';
 
 // error page
 import ErrorPage from '../pages/Errors/ErrorPage';
+
+// auth pages
+import Login from '../pages/auth/Login';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import ResetPassword from '../pages/auth/ResetPassword';
 
 function AppRoutes() {
   const { role, loading } = useAuth();
@@ -36,6 +40,8 @@ function AppRoutes() {
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
       </Route>
 
 
