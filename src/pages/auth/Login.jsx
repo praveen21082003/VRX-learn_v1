@@ -1,16 +1,23 @@
 import React, { useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom"; 
-import { Icon, Input, Button } from "@/components/ui";
+import { useNavigate, useOutletContext } from "react-router-dom";
+
 import { useAuth } from "@/context/AuthContext";
-import { login, getMe } from "@/services/User.service"; 
+import { useAuthenticate } from "./useAuthenticate";
+
+import { Icon, Input, Button, InputWarnMessage } from "@/components/ui";
+import { authMe } from "@/services/Authenticate.service";
+
 
 function Login() {
     const navigate = useNavigate();
-    const { setUser } = useAuth(); 
-    const { setWarnMsg } = useOutletContext();
+    const { refreshUser } = useAuth();
+    const {
+        handleLogin,
+        loggingIn,
+    } = useAuthenticate();
 
-    const [loading, setLoading] = useState(false);
     const [warning, setWarning] = useState({ email: "", password: "" });
+    const [message, setMessage] = useState("");
     const [credentials, setCredentials] = useState({ email: "", password: "" });
 
     // Handle input changes and clear local validation errors
@@ -29,45 +36,40 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setWarnMsg("");
 
-      
         if (!credentials.email || !credentials.password) {
             setWarning({
                 email: !credentials.email ? "Please provide email" : "",
-                password: !credentials.password ? "Password can't be empty" : ""
+                password: !credentials.password ? "Password can't be empty" : "",
             });
             return;
         }
 
-        try {
-            setLoading(true);
+        const response = await handleLogin({
+            email: credentials.email,
+            password: credentials.password,
+        });
 
-            const data = await login(credentials.email, credentials.password);
+        console.log(response);
 
-            if (data.message === "Logged in successfully") {
-               
-                const userData = await getMe();
-                setUser(userData);
-                navigate("/dashboard", { replace: true });
-            }
-        } catch (err) {
-            console.log(err);
-            const status = err.response?.status;
-            if (status === 401) {
-                setWarnMsg("Invalid email or password.");
-            } else if (status === 500) {
-                setWarnMsg("Server error. Please try again later.");
-            } else {
-                setWarnMsg("Something went wrong. Check your connection.");
-            }
-        } finally {
-            setLoading(false);
+        if (!response.success) {
+            setMessage(response.message);
+            return;
         }
+
+        if (response.success) {
+            await refreshUser();
+            navigate("/dashboard", { replace: true });
+        }
+
     };
 
     return (
         <>
+            {message && (
+                <InputWarnMessage message={message} />
+            )}
+
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
                 <Input
                     name="email"
@@ -109,8 +111,8 @@ function Login() {
                     type="submit"
                     bgClass="bg-brand"
                     className="p-2 rounded-lg"
-                    buttonName={loading ? "Logging in..." : "Login"}
-                    disabled={loading}
+                    buttonName={loggingIn ? "Logging in..." : "Login"}
+                    disabled={loggingIn}
                 />
             </form>
 

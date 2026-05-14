@@ -1,29 +1,9 @@
-import React, { useState } from 'react';
-
 import { useAuth } from '@/context/AuthContext';
 import { Modal, Button } from '@/components/ui';
-import { useNavigate } from 'react-router-dom';
-import { userLogout } from '@/services/User.service';
 
 function LogOut({ isOpen, onClose }) {
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+    const { handleLogout, loading } = useAuth();
 
-    const { logout } = useAuth();
-
-    async function handleLogout() {
-        setLoading(true);
-        try {
-            const response = await userLogout();
-            console.log(response)
-        } catch (err) {
-            console.error("Backend logout failed, but we will clear local state anyway:", err);
-        } finally {
-            setLoading(false);
-            onClose?.();
-            logout();
-        }
-    }
 
     return (
         <Modal
