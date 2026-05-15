@@ -60,3 +60,9 @@ export const exportTraineesRoster = (courseId, params = {}) => {
         responseType: "blob",
     })
 }
+
+export const getIssues = (params = {}) => {
+    return axiosInstance.get(`/api/v1/list/admin/issues`, {
+        params,
+    })
+}

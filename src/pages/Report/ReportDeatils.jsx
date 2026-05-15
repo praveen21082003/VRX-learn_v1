@@ -1,101 +1,136 @@
-import React from 'react'
-import { BackButton, StatusPill, Select, Icon, AttachmentCard } from '@/components/ui'
+import React, { useEffect, useState } from 'react'
+
+// hook
+import { useReportIssues } from './Hooks/useReportIssuse'
+import { useToast } from "@/context/ToastProvider";
+
+// utils
+import formatDateTime from '@utils/formatDateTime'
+import useMedia from '@/components/content/hook/useMedia'
+
+import { BackButton, Button, StatusPill, Select, Icon, AttachmentCard } from '@/components/ui'
 import { useParams } from 'react-router-dom'
 
-import { REPORT_STATUS_OPTIONS } from '@/config/adminFiltersSelectOptions'
+import { REPORT_STATUS_OPTIONS_IN_DETAILS_PAGE } from '@/config/adminFiltersSelectOptions'
 
 
 
-function ReportDeatils() {
+function ReportDetails() {
 
     const { reportId } = useParams();
+    const { addToast } = useToast();
 
-    const details = [
-        {
-            id: 1,
-            name: "Arul S",
-            email: "arullsampathcyr@gmail.com",
-            role: "trainer",
-            subject: "Submit button unresponsive in Week 2 Project",
-            description:
-                "When I attempt to submit the Week 2 project assignment, the submit button stops responding after hover. The loading spinner appears briefly but nothing happens afterward. I tested this on both Chrome and Safari with the same issue.",
-            status: "Pending",
-            submitted_date: "2026-05-13",
-            attachment: {
-                name: "submit-button-error.png",
-                type: "image/png",
-                url: "https://picsum.photos/1200/800?random=1",
-            }
-        },
-
-        {
-            id: 2,
-            name: "Priya K",
-            email: "priya@gmail.com",
-            role: "trainee",
-            subject: "PDF viewer zoom not working on mobile",
-            description:
-                "Zoom gestures are not functioning correctly inside the PDF viewer on Android devices. Pinch-to-zoom sometimes freezes the viewer and scrolling becomes difficult after zooming in.",
-            status: "In Progress",
-            submitted_date: "2026-05-12",
-        },
-
-        {
-            id: 3,
-            name: "Rahul M",
-            email: "rahulMuddi@gmail.com",
-            role: "trainer",
-            subject: "Assignment upload fails for large files",
-            description:
-                "Uploading assignment files larger than 50MB causes the upload progress bar to remain stuck at 100%. The page does not show any success or failure message afterward.",
-            status: "Resolved",
-            submitted_date: "2026-05-11",
-            attachment: {
-                name: "pdf-zoom-issue.jpeg",
-                type: "image/jpeg",
-                url: "https://picsum.photos/1200/800?random=2",
-            }
-        },
-
-        {
-            id: 4,
-            name: "Sneha R",
-            email: "1111praveenyeugula@gmail.com",
-            role: "trainee",
-            subject: "Course video stuck on loading screen",
-            description:
-                "The Week 4 course video keeps showing a loading spinner and never starts playback. Refreshing the page temporarily fixes it, but the issue comes back after navigating between modules.",
-            status: "Pending",
-            submitted_date: "2026-05-10",
-        },
-
-        {
-            id: 5,
-            name: "Karthik V",
-            email: "karthik0856@gmail.com",
-            role: "trainer",
-            subject: "Incorrect attendance shown in reports",
-            description:
-                "Attendance reports for multiple trainees are displaying incorrect completion percentages. Some users who attended all sessions are marked below 50% attendance.",
-            status: "Closed",
-            submitted_date: "2026-05-09",
-            attachment: {
-                name: "video-loading-error.png",
-                type: "image/png",
-                url: "https://picsum.photos/1200/800?random=3",
-            }
-        },
-    ]
+    const {
+        getIssue,
+        updateIssue,
+        loading,
+        updating,
+        fetchError,
+        issue,
+    } = useReportIssues();
 
 
-    const detail = reportId
-        ? details.find(r => r.id === Number(reportId))
-        : null;
+    const {
+        role,
+        username,
+        email,
+        submittedAt
+    } = issue?.submittedBy || {};
 
-    if (!detail) {
+    const mediaId = issue?.media?.id;
+
+    const { url, loading: mediaLoading } = useMedia(mediaId);
+
+    const [status, setStatus] = useState("");
+
+
+
+    useEffect(() => {
+        if (reportId) {
+            getIssue(reportId);
+        }
+    }, [reportId, getIssue]);
+
+    useEffect(() => {
+        if (issue?.status) {
+            setStatus(issue.status);
+        }
+    }, [issue]);
+
+    const issuesCategoryMap = {
+        "account-access": "Account Access",
+        "assignment": "Assignment",
+        "bug": "Technical Bug",
+        "course-content": "Course Content & Materials",
+        "other": "Other",
+    };
+
+
+    // handle status change
+
+    const handleUpdateStatus = async () => {
+
+        if (!reportId) return;
+
+
+        const response = await updateIssue(
+            reportId,
+            status,
+        );
+
+        if (response.success) {
+
+            addToast(
+                response.message || "Status updated successfully",
+                "success"
+            );
+
+            // optional local update
+            setIssue(prev => ({
+                ...prev,
+                status,
+            }));
+
+        } else {
+
+            addToast(
+                response.message || "Failed to update status",
+                "error"
+            );
+        }
+    };
+
+
+    if (loading) {
         return (
-            <div className="p-6">
-                Report not found
+            <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
+
+                <Icon
+                    name="line-md:loading-twotone-loop"
+                    height="30"
+                    width="30"
+                />
+
+                <div className="space-y-1 text-center">
+
+                    <h3 className="text-h45 font-semibold text-main">
+                        Loading Report Details...
+                    </h3>
+
+                    <p className="text-caption text-muted">
+                        Fetching report information and attachments for review.
+                    </p>
+
+                </div>
+
+            </div>
+        );
+    }
+
+    if (fetchError) {
+        return (
+            <div className="p-6 text-red-500">
+                {fetchError}
             </div>
         );
     }
@@ -115,21 +150,21 @@ function ReportDeatils() {
                     <div className="flex flex-wrap items-baseline gap-2">
 
                         <h1 className="text-h3 font-semibold">
-                            Report by {detail.name}
+                            Report by {username}
                         </h1>
 
                         <span className="text-emphasis text-muted">
-                            ({detail.email})
+                            ({email})
                         </span>
 
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
 
-                        <StatusPill status={detail.role} />
+                        <StatusPill status={role} />
 
                         <span className="text-emphasis text-muted">
-                            Submitted on: {detail.submitted_date}
+                            Submitted on: {formatDateTime(submittedAt)}
                         </span>
 
                     </div>
@@ -141,8 +176,9 @@ function ReportDeatils() {
 
                     <Select
                         label="Status:"
-                        value={detail.status}
-                        options={REPORT_STATUS_OPTIONS}
+                        value={status}
+                        options={REPORT_STATUS_OPTIONS_IN_DETAILS_PAGE}
+                        onChange={(val) => setStatus(val)}
                     />
 
                 </div>
@@ -160,7 +196,7 @@ function ReportDeatils() {
                     </p>
 
                     <p className="text-body text-main">
-                        {detail.subject}
+                        {issue?.subject}
                     </p>
 
                 </div>
@@ -173,7 +209,7 @@ function ReportDeatils() {
                     </p>
 
                     <p className="text-body text-main">
-                        {detail.category}
+                        {issuesCategoryMap[issue?.category]}
                     </p>
 
                 </div>
@@ -188,45 +224,51 @@ function ReportDeatils() {
                 </p>
 
                 <p className="text-body text-main leading-7">
-                    {detail.description}
+                    {issue?.description}
                 </p>
 
             </div>
 
             {/* Attachment */}
-            <div className="space-y-2">
+            {issue?.media && (
+                <div className="space-y-2">
 
-                <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1">
 
-                    <p className="text-h5 font-medium">
-                        Attachment
-                    </p>
+                        <p className="text-h5 font-medium">
+                            Attachment
+                        </p>
 
-                    <span className="text-small text-muted">
-                        (optional)
-                    </span>
+                    </div>
 
-                </div>
 
-                {detail.attachment ? (
                     <AttachmentCard
-                        fileName={detail.attachment.name}
-                        url={detail.attachment.url}
+                        fileName={issue?.media.filename}
+                        url={url}
+                        loading={mediaLoading}
                         fileType="img"
                     // loading={mediaLoading}
                     />
-                ) : (
+                </div>
+            )}
+            {status !== issue?.status &&
+                <div className='flex justify-center'>
 
-                    <div className="border border-dashed border-border w-60 rounded-md p-4 text-body text-muted">
-                        No attachment provided
-                    </div>
+                    <Button
+                        buttonName={updating ? "Updating..." : "Update Status"}
+                        className="px-4 py-2 rounded-lg"
+                        disabled={
+                            updating ||
+                            status === issue?.status
+                        }
+                        onClick={handleUpdateStatus}
+                    />
+                </div>
+            }
 
-                )}
-
-            </div>
 
         </div >
     )
 }
 
-export default ReportDeatils
+export default ReportDetails

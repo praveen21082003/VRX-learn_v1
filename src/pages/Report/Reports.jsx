@@ -1,4 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+
+// hooks
+import { useReportsData } from './Hooks/useReportsData'
+
+// utils
+import formatDateTime from '@utils/formatDateTime'
 
 import { Select, Avatar, StatusPill, Button, Modal, DeleteConfirmContent } from "@/components/ui"
 import { TableToolbar, DataTable } from '@/components/Table'
@@ -16,6 +22,14 @@ function Reports() {
   };
 
   const navigate = useNavigate();
+  const {
+    reports,
+    setReports,
+    loading,
+    error,
+    total,
+    refreshReports
+  } = useReportsData();
 
   // states
   const [page, setPage] = useState(1);
@@ -24,68 +38,13 @@ function Reports() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [selectedRows, setSelectedRows] = useState([]);
 
-
-
-  // data ===================================
-  const reports = {
-    "data": [
-      {
-        id: 1,
-        name: "Arul S",
-        email: "arullsampathcyr@gmail.com",
-        role: "trainer",
-        subject: "Submit button unresponsive in Week 2 Project",
-        status: "pending",
-        submitted_date: "2026-05-13",
-      },
-
-      {
-        id: 2,
-        name: "Priya K",
-        email: "priya@gmail.com",
-        role: "trainee",
-        subject: "PDF viewer zoom not working on mobile",
-        status: "resolved",
-        submitted_date: "2026-05-12",
-      },
-
-      {
-        id: 3,
-        name: "Rahul M",
-        email: "rahulMuddi@gmail.com",
-        role: "trainer",
-        subject: "Assignment upload fails for large files",
-        status: "resolved",
-        submitted_date: "2026-05-11",
-      },
-
-      {
-        id: 4,
-        name: "Sneha R",
-        email: "1111praveenyeugula@gmail.com",
-        role: "trainee",
-        subject: "Course video stuck on loading screen",
-        status: "pending",
-        submitted_date: "2026-05-10",
-      },
-
-      {
-        id: 5,
-        name: "Karthik V",
-        email: "karthik0856@gmail.com",
-        role: "trainer",
-        subject: "Incorrect attendance shown in reports",
-        status: "pending",
-        submitted_date: "2026-05-09",
-      },
-
-    ],
-    "page": 1,
-    "limit": 10,
-    "totalItems": 5,
-    "totalPages": 1
+  const issuesCategoryMap = {
+    "account-access": "Account Access",
+    "assignment": "Assignment",
+    "bug": "Technical Bug",
+    "course-content": "Course Content & Materials",
+    "other": "Other",
   };
-
 
   // ------------Table Columns------------
   const columns = REPORT_COLUMNS_BASE.map((col) => {
@@ -97,9 +56,9 @@ function Reports() {
           ...col,
           render: (row) => (
             <div className="flex items-center text-main gap-2 hover:text-primary hover:font-bold hover:cursor-pointer" onClick={() => navigate(`/reports/${row.id}`)}>
-              <Avatar name={row.name} />
+              <Avatar name={row.username} />
               <div>
-                <p className='text-body'>{row.name}</p>
+                <p className='text-body'>{row.username}</p>
                 <p className="text-caption">{row.email}</p>
               </div>
             </div>
@@ -113,11 +72,37 @@ function Reports() {
             <StatusPill status={row[col.key]} />
           ),
         };
+
+      case "category":
+        return {
+          ...col,
+          render: (row) => (
+            <p>{issuesCategoryMap[row.category]}</p>
+          )
+        }
+
+      case "subject":
+        return {
+          ...col,
+          render: (row) => (
+            <p title={row.subject} className='flex h-10 overflow-hidden items-center leading-5 line-clamp-2'>
+              {row.subject}
+            </p>
+          )
+        }
       case "status":
         return {
           ...col,
           render: (row) => (
             <StatusPill status={row[col.key]} />
+          )
+        }
+
+      case "submittedAt":
+        return {
+          ...col,
+          render: (row) => (
+            <span className="text-caption text-muted">{formatDateTime(row.submittedAt)}</span>
           )
         }
 
@@ -150,7 +135,25 @@ function Reports() {
   ];
   // --------------Table colums end-----------------
 
+  useEffect(() => {
 
+    const { category, role, status } = filters;
+
+    const params = {
+      page: page,
+      limit: pageSize,
+      category: category || undefined,
+      role: role || undefined,
+      status: status || undefined,
+    }
+
+    Object.keys(params).forEach(key =>
+      (params[key] === undefined || params[key] === null) && delete params[key]
+    );
+
+    refreshReports(params);
+
+  }, [page, pageSize, filters.role, filters.category, filters.status, refreshReports]);
 
 
 
@@ -175,6 +178,12 @@ function Reports() {
       [key]: value
     }));
     // setPage(1);
+  };
+
+  // Clear Filters
+  const clearFilters = () => {
+    setFilters(INITIAL_FILTERS);
+    setPage(1);
   };
 
 
@@ -216,12 +225,14 @@ function Reports() {
         <DataTable
           selectedRows={selectedRows}
           columns={finalColumns}
-          data={reports.data}
+          data={reports}
           page={page}
           setPage={setPage}
           pageSize={pageSize}
           setPageSize={setPageSize}
-          total={reports.totalItems}
+          total={total}
+          loading={loading}
+          clearFilters={clearFilters}
         />
       </div>
     </div>

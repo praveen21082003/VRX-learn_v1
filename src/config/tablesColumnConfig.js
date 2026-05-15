@@ -62,9 +62,10 @@ export const SUBMISSION_COLUMNS_BASE = [
 // reports table
 export const REPORT_COLUMNS_BASE = [
   { key: "user", label: "User", width: "22%", align: "left" },
-  { key: "role", label: "Role", width: "12%", align: "center" },
-  { key: "subject", label: "Subject", width: "26%", align: "left" },
-  { key: "status", label: "Status", width: "12%", align: "center" },
-  { key: "submitted_date", label: "Submitted Date", width: "18%", align: "center" },
-  { key: "view", label: "View", width: "10%" },
+  { key: "role", label: "Role", width: "10%", align: "center" },
+  { key: "category", label: "Category", width: "20%", align: "left" },
+  { key: "subject", label: "Subject", width: "22%", align: "left" },
+  { key: "status", label: "Status", width: "8%", align: "center" },
+  { key: "submittedAt", label: "Submitted Date", width: "12%", align: "center" },
+  { key: "view", label: "View", width: "6%" },
 ];

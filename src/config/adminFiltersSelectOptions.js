@@ -89,6 +89,11 @@ export const REPORT_ROLE_OPTIONS = [
     { label: "Admin", value: "admin" }
 ]
 
+export const REPORT_STATUS_OPTIONS_IN_DETAILS_PAGE = [
+    { label: "Pending", value: "pending" },
+    { label: "Resolved", value: "resolved" },
+]
+
 
 
 
