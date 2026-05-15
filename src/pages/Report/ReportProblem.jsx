@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
-import { BackButton, Button, Input, Select, UploadSection } from "@/components/ui";
 import { useNavigate } from 'react-router-dom';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
+import { BackButton, Button, Input, Select, UploadSection } from "@/components/ui";
 
 function ReportProblem() {
 
     const [files, setFiles] = useState([]);
 
     const navigate = useNavigate();
+
+    useDocumentTitle("❗ Report a Problem");
 
     const handleBack = () => {
         if (window.history.length > 1) {

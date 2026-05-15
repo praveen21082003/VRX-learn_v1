@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
+
+import useMedia from './hook/useMedia';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { Button, Icon } from "@/components/ui";
 
@@ -6,9 +9,11 @@ import { MediaPlaceholder, FilePlaceholder } from '@/components/ui/loading'
 import { Tabs } from "@/components/tabs";
 import { VideoPlayer } from "./video";
 import DocumentControls from "./document/DocumentControls";
-import useMedia from './hook/useMedia';
 
 function ContentRenderer({ lesson, setVideoDuration }) {
+
+  useDocumentTitle(`${lesson?.title} - Lesson` || "Lesson Content");
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 

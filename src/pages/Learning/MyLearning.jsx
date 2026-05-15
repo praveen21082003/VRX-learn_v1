@@ -1,6 +1,8 @@
 import React from 'react'
 import { useRef } from "react";
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 import MyCoursesSection from '@/components/dashboard/MyCoursesSection';
 import AllCoursesSection from '@/components/dashboard/AllCoursesSection';
 import AnalyticsPreview from '@/components/dashboard/AnalyticsPreview';
@@ -10,6 +12,8 @@ import useScrollIndicator from "@/hooks/useScrollIndicator";
 import { useDashboardCourses } from '../Dashboards/hooks/useDashoardCourses';
 
 function MyCourses() {
+
+  useDocumentTitle("My Learning");
 
   const { enrolledCourses, topCourses, loading, error } = useDashboardCourses(6);
 

@@ -54,7 +54,7 @@ const ResponsiveActions = memo(({
                 <div className="flex items-center gap-1 text-xs">
                     <input
                         type="number"
-                        className="w-10 bg-[#191B1C] text-white px-1 py-[2px] text-center rounded outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="w-10 bg-[#191B1C] text-white px-1 py-0.5 text-center rounded outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         value={pageInput}
                         onChange={(e) => setPageInput(e.target.value)}
                         onBlur={handlePageBlur}

@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { use, useEffect } from 'react'
 import { useModuleContext, useCourse, useAssignmentContext } from "../layout/CourseManagementLayout";
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { useParams } from 'react-router-dom'
 
@@ -15,6 +16,14 @@ function AssignmentHandler({ mode }) {
     const { assignment, assignmentList, fetchAssignmentDetails, detailsError, detailsLoading, HandlesetAssignments } = useAssignmentContext()
 
     const isEdit = mode === "edit";
+
+    const initialData = isEdit ? assignment : null;
+
+
+    useDocumentTitle(
+        mode === "view" ? `${assignment?.assignment?.title} - Assignment` : 
+        mode === "edit" ? `${initialData?.assignment?.title} - Update` : `${course?.title} - Create Assignment`
+    )
 
     useEffect(() => {
         if (isEdit && assignmentId) {
@@ -41,7 +50,6 @@ function AssignmentHandler({ mode }) {
         );
     }
 
-    const initialData = isEdit ? assignment : null;
 
 
     return (

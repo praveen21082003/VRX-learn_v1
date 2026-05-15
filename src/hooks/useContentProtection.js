@@ -1,42 +1,63 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const useContentProtection = (enabled = true) => {
+    const originalTitle = useRef(document.title);
+
     useEffect(() => {
         if (!enabled) return;
 
-        // 1. Block Right-Click (Context Menu)
-        const handleContextMenu = (e) => {
-            e.preventDefault();
-        };
+        // HELPER: Get the root element
+        const getRoot = () => document.getElementById('root');
 
-        const handleKeyDown = (e) => {
-            // Block Ctrl+S (Save), Ctrl+P (Print), Ctrl+U (View Source)
-            // Block Ctrl+Shift+I / F12 (Inspect Element)
-            if (
-                (e.ctrlKey && (e.key === 's' || e.key === 'p' || e.key === 'u')) ||
-                (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'j' || e.key === 'c')) ||
-                e.key === 'F12' || e.ctrlKey
-            ) {
-                e.preventDefault();
-                return false;
+        // Handle Visibility
+        const handleVisibilityChange = () => {
+            const root = getRoot();
+            
+            if (document.visibilityState === 'hidden') {
+                // Before we change the title to "Paused", 
+                // save whatever the CURRENT real title is.
+                if (document.title !== "▶ Learning Paused | VRX Learn") {
+                    originalTitle.current = document.title;
+                }
+                document.title = "▶ Learning Paused | VRX Learn";
+                root?.classList.add('content-blur');
+            } else {
+                // Restore the real title
+                document.title = originalTitle.current;
+                root?.classList.remove('content-blur');
             }
         };
 
-        // 3. Deter Print Screen (Blur content when window loses focus)
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === 'hidden') {
-                document.title = "Protected Content";
+        // LISTENERS
+        const handleContextMenu = (e) => e.preventDefault();
+        const handleKeyDown = (e) => {
+            const key = e.key.toLowerCase();
+            const isCtrl = e.ctrlKey || e.metaKey;
+            if (
+                (isCtrl && (key === 's' || key === 'p' || key === 'u')) ||
+                (e.key === 'F12') ||
+                (isCtrl && e.shiftKey && (key === 'i' || key === 'j' || key === 'c'))
+            ) {
+                e.preventDefault();
             }
         };
 
         window.addEventListener('contextmenu', handleContextMenu);
         window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('visibilitychange', handleVisibilityChange);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('blur', handleVisibilityChange); // Extra layer of protection
+        window.addEventListener('focus', handleVisibilityChange);
 
         return () => {
             window.removeEventListener('contextmenu', handleContextMenu);
             window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('visibilitychange', handleVisibilityChange);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('blur', handleVisibilityChange);
+            window.removeEventListener('focus', handleVisibilityChange);
+            
+            const root = getRoot();
+            root?.classList.remove('content-blur');
+            document.title = originalTitle.current;
         };
     }, [enabled]);
 };

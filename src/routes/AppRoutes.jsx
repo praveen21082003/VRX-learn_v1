@@ -80,7 +80,7 @@ function AppRoutes() {
       <Route path="/404" element={<ErrorPage statusCode={404} />} />
 
       <Route element={<ReportLayout />}>
-        <Route path="/report problem" element={<ReportProblem />} />
+        <Route path="/report-problem" element={<ReportProblem />} />
       </Route>
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

@@ -4,6 +4,8 @@ import clsx from 'clsx';
 
 import { useCourse, useAssignmentContext } from "../layout/CourseManagementLayout";
 import useDeleteAssignment from './hooks/useDeleteAssignment';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 
 import { Button, BackButton, Icon, Input, Dropdown, Modal, CourseContentEmptyState, DeleteConfirmContent } from '@/components/ui'
 import { ContentLoading } from "@/components/ui/loading"
@@ -19,7 +21,7 @@ function AssignmentsPage() {
   const { deleteAssignment, deleting } = useDeleteAssignment();
 
   // context
-  const { courseId } = useCourse();
+  const { courseId, course } = useCourse();
   const {
     assignments,
     HandlesetAssignments,
@@ -107,6 +109,9 @@ function AssignmentsPage() {
     setDeleteAssignmentId(null);
     addToast("Assignment Deleted", "success");
   };
+
+
+  useDocumentTitle(`Assignments - ${course?.title || ''}`);
 
 
   return (
