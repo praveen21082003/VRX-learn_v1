@@ -4,8 +4,6 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { BackButton, Button, Input, Select, UploadSection } from "@/components/ui";
 
-
-import { BackButton } from "@/components/ui";
 import ReportsForm from '@/components/forms/ReportsForm';
 
 function ReportProblem() {
