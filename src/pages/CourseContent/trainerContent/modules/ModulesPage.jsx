@@ -6,6 +6,8 @@ import { useModuleContext, useCourse } from "../layout/CourseManagementLayout";
 import { useReorder } from '@/components/dnd/useReorder';
 import useModules from './hooks/useModules';
 // import useDeleteModule from '../hooks/useDeleteModule';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 
 import { Icon, Button, BackButton, Input, Dropdown, Modal, CourseContentEmptyState, DeleteConfirmContent } from '@/components/ui'
 import { ContentLoading } from "@/components/ui/loading"
@@ -15,6 +17,8 @@ import { useToast } from '@/context/ToastProvider';
 
 
 function ModulesPage() {
+
+
   const isMobile = window.innerWidth < 768;
 
   const navigate = useNavigate();
@@ -132,6 +136,8 @@ function ModulesPage() {
     }
   };
 
+
+  useDocumentTitle(`Modules - ${course?.title || ''}`);
 
   if (error) {
     return (

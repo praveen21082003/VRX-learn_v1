@@ -88,17 +88,20 @@ function TableToolBar({
                 ) : (
                     <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
                         {/* Search Input Container */}
-                        <div className="w-full lg:w-96">
-                            <Input
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                icon="ic:twotone-search"
-                                border="border-default"
-                                paddingClass="py-2"
-                                widthClass="w-full"
-                                placeholder={searchPlaceholder}
-                            />
-                        </div>
+                        {search !== undefined && (
+                            < div className="w-full lg:w-96">
+                                <Input
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    icon="ic:twotone-search"
+                                    border="border-default"
+                                    paddingClass="py-2"
+                                    widthClass="w-full"
+                                    placeholder={searchPlaceholder}
+                                />
+                            </div>
+                        )}
+
 
                         {/* Filters Container: Added flex-wrap for mobile safety */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6 w-full gap-3">
@@ -107,7 +110,7 @@ function TableToolBar({
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     )
 }
 

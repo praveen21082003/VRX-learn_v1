@@ -91,7 +91,7 @@ function AdminCourseManagement() {
                 return {
                     ...col,
                     render: (row) => (
-                        <p title={row.shortDescription} className={`h-10 overflow-hidden leading-5 line-clamp-2 ${!row.shortDescription ? "text-muted italic" : ""}`}>
+                        <p title={row.shortDescription} className={`h-10 flex items-center overflow-hidden leading-5 line-clamp-2 ${!row.shortDescription ? "text-muted italic" : ""}`}>
                             {row.shortDescription || "No description provided"}
                         </p>
                     ),
@@ -355,7 +355,7 @@ function AdminCourseManagement() {
             </div>
 
 
-            <div className="flex-1 overflow-hidden min-h-0">
+            <div className="md:px-4 md:pb-4 h-full px-2 pb-4 min-h-0">
                 {/* Course Table */}
                 <DataTable
                     loading={loading}

@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 import { BackButton, Button } from '@/components/ui'
 import { useCourse } from "../layout/CourseManagementLayout";
 import CourseInfoForm from '../../../../components/forms/CourseInfoForm'
@@ -7,6 +10,8 @@ function CourseInformationPage() {
   const [isRefresh, setIsRefresh] = useState(false);
 
   const { course, courseId, refreshCourseContent, handleUpdateCourseInfoSuccess } = useCourse();
+
+  useDocumentTitle(`Course Information - ${course?.title || ''}`);
 
   return (
     <>

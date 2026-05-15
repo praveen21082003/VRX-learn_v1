@@ -12,6 +12,7 @@ import { exportTraineesRoster } from '@services/ListView.service'
 
 import formatDateTime from '@utils/formatDateTime'
 import { downloadCSV } from '@utils/downloadCSV';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { TRAINEE_ROSTER_BASE } from '@/config/tablesColumnConfig'
 
 import { TableToolbar, DataTable } from '@/components/Table'
@@ -35,6 +36,7 @@ function TraineeRoster() {
 
     const { can } = usePermission();
 
+    useDocumentTitle("Trainee Roster");
 
 
     // states

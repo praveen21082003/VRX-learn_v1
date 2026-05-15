@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, NavLink, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { Button, BackButton, Icon, Dropdown, MarkdownContent, Input, Modal, DeleteConfirmContent, CourseContentEmptyState } from '@/components/ui'
 import { ContentLoading } from "@/components/ui/loading"
@@ -119,6 +120,8 @@ function LessonsPage() {
         setDeleteLessonId(null);
         addToast("Lesson deleted successfully.", "success");
     };
+
+    useDocumentTitle(selectedModule ? `Lessons - ${selectedModule.title}` : "Lessons");
 
     if (error) return <div className="p-10 text-red-500">{error}</div>;
 

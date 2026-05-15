@@ -12,6 +12,7 @@ export default function FilterSelect({
     paddingClass = "px-3 py-2",
     inputWarning,
     disabled = false,
+    inputheight,
 
 }) {
     // const [open, setOpen] = useState(false);
@@ -30,13 +31,18 @@ export default function FilterSelect({
             }
 
             <div
-                className={`flex items-center ${borderClass ? "border" : "border-2"} ${inputLabel === "" && "mt-2"} ${borderClass} rounded ${paddingClass} gap-2 min-w-44 ${disabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
+                className={`no-select flex items-center ${inputheight && inputheight} ${borderClass ? "border" : "border-2"} ${inputLabel === "" && "mt-2"} ${borderClass} rounded ${paddingClass} gap-2 min-w-44 ${disabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
                 onClick={toggle}
             >
-                <span className="text-body text-muted whitespace-nowrap truncate">
-                    {label} {selectedOption?.label}
-                </span>
+                <span className="flex items-center min-w-0 text-body text-muted">
+                    <span className="font-medium shrink-0">
+                        {label}
+                    </span>
 
+                    <span className="ml-1 truncate">
+                        {selectedOption?.label}
+                    </span>
+                </span>
                 <Icon
                     name="ep:arrow-down-bold"
                     height="12"
@@ -47,7 +53,7 @@ export default function FilterSelect({
 
 
             {!disabled && open && (
-                <div className="absolute mt-1 w-full bg-background border border-default shadow-md z-20">
+                <div className="absolute no-select mt-1 w-full bg-background border border-default shadow-md z-20">
                     {options.map((opt) => {
                         const isActive = value === opt.value;
                         return (<div

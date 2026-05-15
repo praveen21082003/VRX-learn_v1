@@ -1,6 +1,12 @@
 import { Icon } from "@/components/ui";
 
-function AttachmentCard({ fileName, url, loading }) {
+function AttachmentCard({ fileName, fileType = "pdf", url, loading }) {
+
+    const Icons = {
+        pdf: "ri:file-pdf-2-line",
+        img: "wpf:imagefile",
+        video: "material-symbols:video-file-outline"
+    }
 
     if (loading) {
         return (
@@ -20,7 +26,7 @@ function AttachmentCard({ fileName, url, loading }) {
         <div className="group flex items-center gap-3 p-2 pr-4 bg-surface border border-default rounded-xl hover:shadow-md transition-all duration-200 min-w-52 max-w-2xs">
             <div className="shrink-0 w-10 h-10 flex items-center justify-center bg-primary/10 text-primary dark:text-text-main-dark rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
                 <Icon
-                    name="ri:file-pdf-2-line"
+                    name={Icons[fileType]}
                     height="26" width="26"
                 />
             </div>

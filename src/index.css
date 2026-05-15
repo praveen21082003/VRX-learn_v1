@@ -180,6 +180,16 @@ select:-webkit-autofill {
 
 
 
+/* Apply this class to your main wrapper via the hook */
+.content-blur {
+  filter: blur(15px);
+  transition: filter 0.3s ease;
+  -webkit-user-select: none;
+  user-select: none; /* Prevents text selection while blurred */
+}
+
+
+
 
 /* IMPORTS */
 

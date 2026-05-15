@@ -12,7 +12,8 @@ export default function StatusPill({ status = '' }) {
     active: "bg-[#D1E7DD] text-[#0F5132]",
     inactive: "bg-[#F8D7DA] text-[#840227]",
     pending: "bg-[#FEEBC8] text-[#744210]",
-    completed:"bg-[#DBEAFE] text-[#1E40AF]"
+    completed: "bg-[#DBEAFE] text-[#1E40AF]",
+    resolved: "bg-[#D1E7DD] text-[#0F5132]"
   };
 
   return (

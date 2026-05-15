@@ -1,6 +1,6 @@
 @layer utilities {
 
-    /* backgrounds */    
+    /* backgrounds */
 
     .bg-brand {
         background-color: var(--color-brand);
@@ -66,7 +66,8 @@
     .bg-menu-header {
         background-color: var(--color-header-menu);
     }
-    .dark .bg-menu-header{
+
+    .dark .bg-menu-header {
         background-color: var(--color-surface-primary-dark);
     }
 
@@ -79,6 +80,7 @@
     .text-primary {
         color: var(--color-primary);
     }
+
     .dark .text-primary {
         color: var(--color-white);
     }
@@ -105,6 +107,14 @@
 
     .dark .text-muted {
         color: var(--color-text-muted-dark);
+    }
+
+    .text-surface-80 {
+        color: rgb(from var(--color-surface) r g b / 0.8);
+    }
+
+    .hover\:text-surface:hover {
+        color: var(--color-surface);
     }
 
 

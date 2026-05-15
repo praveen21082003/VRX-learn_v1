@@ -64,6 +64,36 @@ export const TRAINEE_ROSTER_SORT_OPTIONS = [
     { label: "Name (Z - A)", value: "name_desc" },
 ]
 
+// category options for the reports page
+export const REPORT_CATEGORY_OPTIONS = [
+    { label: "All", value: null },
+    { label: "Course Contents & Materials", value: "course_contents&materials" },
+    { label: "Assignments", value: "assignments" },
+    { label: "Account & Access", value: "account&access" },
+    { label: "Technical Bug", value: "technical_bug" },
+    { label: "Others", value: "others" },
+]
+
+// status options for the reports page
+export const REPORT_STATUS_OPTIONS = [
+    { label: "All", value: null },
+    { label: "Pending", value: "pending" },
+    { label: "Resolved", value: "resolved" },
+]
+
+// role options for the reports page
+export const REPORT_ROLE_OPTIONS = [
+    { label: "All", value: null },
+    { label: "Trainee", value: "trainee" },
+    { label: "Trainer", value: "trainer" },
+    { label: "Admin", value: "admin" }
+]
+
+export const REPORT_STATUS_OPTIONS_IN_DETAILS_PAGE = [
+    { label: "Pending", value: "pending" },
+    { label: "Resolved", value: "resolved" },
+]
+
 
 
 
