@@ -3,7 +3,6 @@ import { useAuth } from "@/context/AuthContext"
 import { Navigate, Outlet } from "react-router-dom";
 import { ROLE_PERMISSION } from '@/config/permission';
 
-
 export default function ProtectedRoute() {
     const { user, role, loading } = useAuth();
 
@@ -19,4 +18,3 @@ export default function ProtectedRoute() {
 
     return <Outlet />;
 }
-

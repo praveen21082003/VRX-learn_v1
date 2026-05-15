@@ -8,32 +8,66 @@ const axiosInstance = axios.create({
     },
 });
 
-// Flag to prevent multiple redirects/refresh calls
 let isRedirecting = false;
 
 axiosInstance.interceptors.response.use(
-    (response) => response.data,
-    async (error) => {
-        const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !isRedirecting) {
-            // Avoid redirecting if we are already on the login page
-            if (window.location.pathname === "/login") {
-                return Promise.reject(error);
-            }
+    (response) => response.data,
+
+    async (error) => {
+
+        const status = error.response?.status;
+
+        const pathname = window.location.pathname;
+
+        const publicRoutes = [
+            "/login",
+            "/forgot-password",
+        ];
+
+        const isPublicPage =
+            publicRoutes.includes(pathname);
+
+        // current request URL
+        const requestUrl =
+            error.config?.url || "";
+
+        // auth endpoints should never redirect
+        const isAuthEndpoint =
+            requestUrl.includes("/api/v1/auth/login") ||
+            requestUrl.includes("/api/v1/auth/forgot-password") ||
+            requestUrl.includes("/api/v1/auth/reset-password") ||
+            requestUrl.includes("/api/v1/auth/me");
+
+        if (
+            status === 401 &&
+            !isRedirecting &&
+            !isPublicPage &&
+            !isAuthEndpoint
+        ) {
 
             isRedirecting = true;
-            console.warn("Session expired. Redirecting...");
 
-            // Logic to clear local storage/state
-            // localStorage.removeItem('user_session');
+
+            console.warn(
+                "Session expired. Redirecting to login..."
+            );
 
             window.location.href = "/login";
+
+            setTimeout(() => {
+                isRedirecting = false;
+            }, 5000);
         }
 
-        // Standardize error objects for your UI to consume
-        const errorMessage = error.response?.data?.message || "An unexpected error occurred";
-        return Promise.reject({ ...error, message: errorMessage });
+        const errorMessage =
+            error.response?.data?.message ||
+            "An unexpected error occurred";
+
+        return Promise.reject({
+            ...error,
+            message: errorMessage,
+        });
     }
 );
 

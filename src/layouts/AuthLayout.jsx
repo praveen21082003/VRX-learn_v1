@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useTheme } from "@/context/ThemeProvider";
 import { Icon, InputWarnMessage } from '@/components/ui';
@@ -7,7 +7,6 @@ import LearningIllustration from '@/assets/images/Learning-Illustration.png'
 
 function AuthLayout() {
     const { darkMode, toggleTheme } = useTheme();
-    const [warnMsg, setWarnMsg] = useState("");
     const location = useLocation();
 
     const getTitle = () => {
@@ -59,9 +58,8 @@ function AuthLayout() {
                             className="h-14 w-14 object-contain"
                         />
                         <h1 className="text-h4 text-main">{getTitle()}</h1>
-                        {warnMsg && <InputWarnMessage message={warnMsg} />}
                     </div>
-                    <Outlet context={{ setWarnMsg }} />
+                    <Outlet />
                 </div>
             </div>
         </div>
