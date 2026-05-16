@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 // hooks
 import { useReportsData } from './Hooks/useReportsData'
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // utils
 import formatDateTime from '@utils/formatDateTime'
@@ -15,6 +16,9 @@ import { REPORT_CATEGORY_OPTIONS, REPORT_STATUS_OPTIONS, REPORT_ROLE_OPTIONS } f
 import { useNavigate } from 'react-router-dom'
 
 function Reports() {
+
+  useDocumentTitle("Reports");
+
   const INITIAL_FILTERS = {
     category: null,
     role: null,

@@ -84,7 +84,7 @@ function Header({ menu, headerContent }) {
                     />
                 </div>
 
-                <Link to="/dashboard" className="flex items-center gap-2">
+                <Link to="/dashboard" className="shrink-0 flex items-center gap-2">
                     <img
                         src="/logo-white.svg"
                         alt="Logo"
@@ -119,7 +119,7 @@ function Header({ menu, headerContent }) {
                 {!headerContent && (
                     <button className="flex gap-2 items-center text-label-sm text-surface-80 hover:text-surface hover:cursor-pointer" onClick={() => navigate("/report-problem")}>
                         <Icon name="si:flag-alt-4-line" size="18" />
-                        <span>Report a problem</span>
+                        <span className="hidden lg:block">Report a problem</span>
                     </button>
                 )}
 

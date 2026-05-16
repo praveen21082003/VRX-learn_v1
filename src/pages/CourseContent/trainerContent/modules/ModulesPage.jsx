@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 import { useModuleContext, useCourse } from "../layout/CourseManagementLayout";
 import { useReorder } from '@/components/dnd/useReorder';
-import useModules from './hooks/useModules';
 // import useDeleteModule from '../hooks/useDeleteModule';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
@@ -25,12 +24,22 @@ function ModulesPage() {
   const { addToast } = useToast();
 
   // context
-  const { modules, setModules, error } = useModuleContext();
+  const {
+    modules,
+    setModules,
+    error,
+    updateModule,
+    isDeleting,
+    deleteModule,
+    handleDeleteModule,
+    deleteModuleId,
+    setDeleteModuleId,
+    moduleDeleting, // this module delting loder
+  } = useModuleContext();
   const { courseId, course, loading } = useCourse();
 
 
   // hooks
-  const { updateModule, isDeleting, deleteModule } = useModules();
   const { reorderModules, isUpdatingModules } = useReorder();
 
   // state
@@ -40,7 +49,6 @@ function ModulesPage() {
   const [renameModuleId, setRenameModuleId] = useState(null);
   const [renameValue, setRenameValue] = useState("");
   const [isRename, setIsRename] = useState(false);
-  const [deleteModuleId, setDeleteModuleId] = useState(null);
 
   // refs
   const inputRef = useRef(null);
@@ -115,29 +123,11 @@ function ModulesPage() {
   };
 
 
-  // handle delete module
-  const handleDeleteModule = async (moduleId) => {
-    try {
-      const result = await deleteModule(moduleId);
-
-      if (!result.success) {
-        addToast(result.message, "error");
-        return;
-      }
-
-      const updated = orderedModules.filter(m => m.id !== moduleId);
-      setOrderedModules(updated);
-      setModules(updated);
-
-      setDeleteModuleId(null);
-      addToast("Module deleted successfully.", "success");
-    } catch (error) {
-      addToast("Failed to delete module. Please try again.", "error");
-    }
-  };
 
 
   useDocumentTitle(`Modules - ${course?.title || ''}`);
+
+
 
   if (error) {
     return (
@@ -243,7 +233,7 @@ function ModulesPage() {
                               autoFocus
                               className="text-sm"
                               bgClass="bg-primary-border"
-                              onChange={(e) => setRenameValue(e.target.value)}
+                              onChange={(e) => setRenameValue(e.target.value.toUpperCase())}
                               onBlur={() => setRenameModuleId(null)}
                               onKeyDown={(e) => {
                                 if (e.key === "Enter") {
@@ -257,6 +247,7 @@ function ModulesPage() {
                                   }
                                   if (!trimmed) return;
                                   renameModuleHandler(module.id);
+                                  setRenameModuleId(null);
                                 }
                                 if (e.key === "Escape") {
                                   setRenameModuleId(null);
@@ -304,8 +295,13 @@ function ModulesPage() {
                       >
                         <DeleteConfirmContent
                           onClose={() => setDeleteModuleId(null)}
-                          onConfirm={() => handleDeleteModule(module.id)}
-                          loading={isDeleting}
+                          onConfirm={() =>
+                            handleDeleteModule(module.id, (deletedId) => {
+                              const updated = orderedModules.filter(m => m.id !== deletedId);
+                              setOrderedModules(updated);
+                            })
+                          }
+                          loading={moduleDeleting}
                           confirmText={module.title}
                           entityName="module"
                           message={`You are about to permanently delete the ${module.title} module. All associated materials...`}

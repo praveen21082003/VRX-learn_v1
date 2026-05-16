@@ -64,7 +64,8 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
           )
         ) : (
           <div className="p-4 text-center text-muted italic text-sm">
-            Mobile view not implemented.
+            This page is currently optimized for larger screens.
+            Please use a laptop or desktop for the best experience.
           </div>
         )}
       </div>

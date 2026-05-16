@@ -82,12 +82,15 @@ function ResetPassword() {
 
     return (
         <>
-            {warning.token && (
-                <InputWarnMessage message={warning.token} />
-            )}
-            {warnMsg && (
-                <InputWarnMessage message={warnMsg}/>
-            )}
+            <div className="min-h-4">
+                {warning.token && (
+                    <InputWarnMessage message={warning.token} />
+                )}
+                {warnMsg && (
+                    <InputWarnMessage message={warnMsg} />
+                )}
+            </div>
+
             <form onSubmit={handleSubmit} className='space-y-3 w-full'>
 
                 {/* general API error */}

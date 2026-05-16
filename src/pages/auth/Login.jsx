@@ -66,9 +66,11 @@ function Login() {
 
     return (
         <>
-            {message && (
-                <InputWarnMessage message={message} />
-            )}
+            <div className="min-h-2">
+                {message && (
+                    <InputWarnMessage message={message} />
+                )}
+            </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
                 <Input

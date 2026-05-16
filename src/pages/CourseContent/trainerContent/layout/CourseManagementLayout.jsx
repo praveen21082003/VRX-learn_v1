@@ -7,6 +7,8 @@ import useCourseContent from "../hooks/useCourseContent";
 import useLessons from "../modules/hooks/useLessons";
 import useAssignmentList from '../Assignments/hooks/useAssignmentList'
 import useLessonAction from '@/components/forms/hooks/useLessonActions'
+import useModules from '../modules/hooks/useModules';
+import { useToast } from '@/context/ToastProvider';
 
 
 import { Outlet, useNavigate, useLocation, useParams, useOutletContext } from "react-router-dom";
@@ -52,6 +54,11 @@ function CourseManagementLayout() {
 
     const { can } = usePermission();
 
+    const { addToast } = useToast();
+
+    const { moduleId } = useParams();
+
+
     // hooks
     const { role, viewRole } = useAuth();
     const { width, isResizing, startResizing } = useResizable(
@@ -59,10 +66,11 @@ function CourseManagementLayout() {
     );
     const { courseId } = useParams();
     const { courseContent, setCourseContent, loading, error, refreshCourseContent } = useCourseContent(courseId);
-    const { lessons, setLessons, fetchLessons, loading: lessonLoading } = useLessons();
+    const { lessons, setLessons, fetchLessons, loading: lessonLoading, invalidateCache } = useLessons();
 
     const effectiveRole = viewRole ?? role;
     const { course, modules = [], assignments = [] } = courseContent || {};
+
 
 
     // hook - for fetch, update, delete (add update/delete to hook later)
@@ -86,6 +94,11 @@ function CourseManagementLayout() {
     // update and delete actions
     const { updateLessonAction, deleteLessonAction, isUpdating, isDeleting } = useLessonAction();
     const { updateAssignment, updating } = useAssignmentActions()
+    const { updateModule, isDeleting: moduleDeleting, deleteModule } = useModules();
+
+    // status
+    const [deleteModuleId, setDeleteModuleId] = useState(null);
+
 
     // 
     if (effectiveRole === "trainee") {
@@ -147,6 +160,33 @@ function CourseManagementLayout() {
     }
 
 
+    // handle delete module
+    // layout - handleDeleteModule accepts a callback
+    const handleDeleteModule = async (moduleId, onSuccess) => {
+        try {
+            const result = await deleteModule(moduleId);
+
+            if (!result.success) {
+                addToast(result.message, "error");
+                return;
+            }
+
+            // update context modules
+            const updated = modules.filter(m => m.id !== moduleId);
+            setModules(updated);
+
+            setDeleteModuleId(null);
+            addToast("Module deleted successfully.", "success");
+
+            // let the caller update their local state
+            onSuccess?.(moduleId);
+
+        } catch (error) {
+            addToast("Failed to delete module. Please try again.", "error");
+        }
+    };
+
+
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center h-screen w-full bg-background text-main gap-4">
@@ -177,7 +217,15 @@ function CourseManagementLayout() {
                 updateLessonAction,
                 deleteLessonAction,
                 isUpdating,
-                isDeleting
+                isDeleting,
+
+                updateModule,
+                moduleDeleting,
+                deleteModule,
+                handleDeleteModule,
+                deleteModuleId,
+                setDeleteModuleId,
+                invalidateCache,
             }}>
                 <AssignmentContext.Provider value={{ HandlesetAssignments, assignmentList, fetchAssignments, assignmentListLoading, assingnmentListError, assignment, fetchAssignmentDetails, detailsLoading, detailsError, updateAssignment, updating }}>
 

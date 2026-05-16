@@ -34,7 +34,7 @@ function AuthLayout() {
                 </div>
 
 
-                <div className="relative w-full md:w-[400px] flex flex-col items-center justify-center py-8 px-8">
+                <div className="relative w-full md:w-[400px] flex flex-col items-center justify-center gap-2 py-8 px-8">
 
                     {/* Theme Switcher - Fixed in the layout */}
                     <div className="absolute top-4 right-4">
@@ -51,7 +51,7 @@ function AuthLayout() {
                     </div>
 
 
-                    <div className="flex flex-col items-center gap-2 mb-6">
+                    <div className="flex flex-col items-center gap-2">
                         <img
                             src={`${darkMode ? "/logo-white.svg" : "/VRX-logo.svg"}`}
                             alt="VRX Logo"

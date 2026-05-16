@@ -5,7 +5,7 @@ import { Button, Avatar, StatusPill, Icon, Input } from "@/components/ui";
 import { useClickOutside } from '@/hooks/useClickOutside'
 
 import useAssignmentSubmissions from "../hooks/useAssignmentSubmissions";
-import DocumentControls from "@/components/content/document/DocumentControls";
+import DocumentLayout from "@/components/content/document/DocumentLayout";
 import useMedia from '@/components/content/hook/useMedia';
 import { useToast } from "@/context/ToastProvider";
 
@@ -269,7 +269,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
 
                 {/* document viewer */}
                 <section className="flex-1 min-w-0">
-                    <DocumentControls
+                    <DocumentLayout
                         title={submissionData?.filename}
                         fileUrl={url}
                         key={submissionData?.id}

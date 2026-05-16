@@ -11,7 +11,7 @@ function ReportProblem() {
 
     const navigate = useNavigate();
 
-    useDocumentTitle("❗ Report a Problem");
+    useDocumentTitle("Report a Problem");
 
     const handleBack = () => {
         if (window.history.length > 1) {

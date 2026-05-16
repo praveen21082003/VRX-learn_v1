@@ -25,8 +25,17 @@ function ReorderList({ items, reorder, isUpdating, onReorderUI }) {
     }, [items]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(TouchSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,  // desktop — drag starts after 8px move
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250,        // hold for 250ms before drag starts
+                tolerance: 5,      // allow 5px finger movement during hold
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })

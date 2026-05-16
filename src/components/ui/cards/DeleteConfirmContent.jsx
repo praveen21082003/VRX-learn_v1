@@ -11,7 +11,6 @@ export default function DeleteConfirmContent({
 }) {
     const [input, setInput] = useState("");
 
-    console.log(confirmText)
 
     useEffect(() => {
         setInput("");

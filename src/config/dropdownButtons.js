@@ -13,9 +13,9 @@ export const CREATE_BUTTON_OPTIONS = ({
 
 
 // LessonEditor buttons
-export const editButtons = (handleReorder) => [
+export const editButtons = (handleReorder, handleDelete) => [
   { key: "reorder", title: "Reorder", icon: "ix:reorder", onClick: () => handleReorder() },
-  { key: "delete", title: "Delete", icon: "ic:baseline-delete", onClick: () => alert("delete clicked") },
+  { key: "delete", title: "Delete", icon: "ic:baseline-delete", onClick: () => handleDelete() },
 ];
 
 export const buttons = (courseId, moduleId, handleRename, lessonId, navigate, setDeleteLessonId) => [

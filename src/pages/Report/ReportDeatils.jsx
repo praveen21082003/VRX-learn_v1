@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 // hook
 import { useReportIssues } from './Hooks/useReportIssuse'
 import { useToast } from "@/context/ToastProvider";
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // utils
 import formatDateTime from '@utils/formatDateTime'
@@ -28,6 +29,12 @@ function ReportDetails() {
         fetchError,
         issue,
     } = useReportIssues();
+
+    useDocumentTitle(
+        issue?.subject
+            ? `Report - ${issue.subject}`
+            : "Report Details"
+    );
 
 
     const {
@@ -246,8 +253,7 @@ function ReportDetails() {
                         fileName={issue?.media.filename}
                         url={url}
                         loading={mediaLoading}
-                        fileType="img"
-                    // loading={mediaLoading}
+                        mimeType={issue?.media.mimeType}
                     />
                 </div>
             )}

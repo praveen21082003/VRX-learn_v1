@@ -8,7 +8,7 @@ import { useToast } from '@/context/ToastProvider';
 
 import { Input, TextEditor, Button, UploadSection } from '@/components/ui'
 
-function LessonForm({ mode, initialData, modules, courseId }) {
+function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
 
 
   const titleRef = useRef(null);
@@ -131,6 +131,7 @@ function LessonForm({ mode, initialData, modules, courseId }) {
 
       // success
       addToast(result.message, "success");
+      invalidateCache?.(moduleId);  
       navigate(`/course/${courseId}/content/modules/${moduleId}`);
     }
 
@@ -170,6 +171,7 @@ function LessonForm({ mode, initialData, modules, courseId }) {
 
       // success
       addToast(result.message, "success");
+      invalidateCache?.(moduleId);  
       navigate(`/course/${courseId}/content/modules/${moduleId}`);
     }
   };
@@ -226,7 +228,7 @@ function LessonForm({ mode, initialData, modules, courseId }) {
             loadedData={loadedData}
             inputWarning={warning.file}
             allowedTypes={['pdf', 'mp4']}
-            maxFileSize={30}
+            maxFileSize={2000}
           />
         </div>
       ) : (

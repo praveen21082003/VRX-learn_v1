@@ -14,7 +14,7 @@ function LessonActionHandler({ mode }) {
     const navigate = useNavigate();
 
     const { moduleId, lessonId, courseId } = useParams();
-    const { modules, fetchLessons, setModules, lessons } = useModuleContext();
+    const { modules, fetchLessons, setModules, lessons, invalidateCache } = useModuleContext();
     const { course, loading } = useCourse();
 
 
@@ -98,6 +98,7 @@ function LessonActionHandler({ mode }) {
                     initialData={initialData}
                     modules={modules}
                     courseId={courseId}
+                    invalidateCache={invalidateCache}
                 />
             )}
         </div>

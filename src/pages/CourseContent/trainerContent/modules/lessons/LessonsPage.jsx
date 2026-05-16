@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, NavLink, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 import { Button, BackButton, Icon, Dropdown, MarkdownContent, Input, Modal, DeleteConfirmContent, CourseContentEmptyState } from '@/components/ui'
@@ -21,10 +22,26 @@ function LessonsPage() {
 
     // context
     const { courseId } = useCourse();
-    const { modules, lessons, setLessons, lessonLoading, error, fetchLessons, updateLessonAction, isUpdating, deleteLessonAction, isDeleting } = useModuleContext();
+    const {
+        modules,
+        lessons,
+        setLessons,
+        lessonLoading,
+        error,
+        fetchLessons,
+        updateLessonAction,
+        isUpdating,
+        deleteLessonAction,
+        isDeleting,
+        updateModule,
+        moduleDeleting,
+        deleteModule,
+        handleDeleteModule,
+        invalidateCache, //this for cache memory for lessons
+    } = useModuleContext();
 
     // hook
-    const { reorderLessons, isUpdating: reOrdering } = useReorder();
+    const { reorderLessons, isUpdatingLessons: reOrdering } = useReorder();
 
     // state
     const [isReorderMode, setIsReorderMode] = useState(false);
@@ -34,6 +51,8 @@ function LessonsPage() {
     const [renameLessonId, setRenameLessonId] = useState(null);
     const [renameValue, setRenameValue] = useState("");
     const [deleteLessonId, setDeleteLessonId] = useState(null);
+    const [deleteModuleOpen, setDeleteModuleOpen] = useState(false);
+
 
     // refs
     const inputRef = useRef();
@@ -103,6 +122,7 @@ function LessonsPage() {
         );
         setOrderedLessons(updated);
         setLessons(updated);
+        invalidateCache(moduleId);
         addToast("Lesson Renamed", "success");
         setRenameLessonId(null);
     };
@@ -117,9 +137,14 @@ function LessonsPage() {
         const updated = orderedLessons.filter(l => l.id !== lessonId);
         setOrderedLessons(updated);
         setLessons(updated);
+        invalidateCache(moduleId);
         setDeleteLessonId(null);
         addToast("Lesson deleted successfully.", "success");
     };
+
+    const handleReorder = () => {
+        setIsReorderMode(true)
+    }
 
     useDocumentTitle(selectedModule ? `Lessons - ${selectedModule.title}` : "Lessons");
 
@@ -142,7 +167,7 @@ function LessonsPage() {
                                     frontIconName='ic:baseline-plus'
                                     frontIconWidth="24px"
                                     frontIconHeght="24px"
-                                    className="shrink-0 p-1 px-2 rounded-r-none rounded font-semibold text-md"
+                                    className="shrink-0 p-1 px-2 rounded font-semibold text-md"
                                     bgClass=""
                                     textClass=""
                                     isMobile={isMobile}
@@ -184,7 +209,7 @@ function LessonsPage() {
 
                                     {openDropDown && (
                                         <Dropdown
-                                            buttons={editButtons(() => setIsReorderMode(true))}
+                                            buttons={editButtons(handleReorder, () => setDeleteModuleOpen(true))}
                                             closeDropdown={() => setOpenDropDown(false)}
                                         />
                                     )}
@@ -333,6 +358,26 @@ function LessonsPage() {
                     )}
                 </ul>
             </div>
+            {deleteModuleOpen && (
+                <Modal
+                    isOpen={true}
+                    onClose={() => setDeleteModuleOpen(false)}
+                    title="Are you absolutely sure?"
+                >
+                    <DeleteConfirmContent
+                        onClose={() => setDeleteModuleOpen(false)}
+                        onConfirm={() =>
+                            handleDeleteModule(moduleId, () => {
+                                navigate(`/course/${courseId}/content/modules`);
+                            })
+                        }
+                        loading={moduleDeleting}
+                        confirmText={selectedModule?.title}
+                        entityName="module"
+                        message={`You are about to permanently delete the ${selectedModule?.title} module. All associated lessons will be permanently erased.`}
+                    />
+                </Modal>
+            )}
         </>
 
     );

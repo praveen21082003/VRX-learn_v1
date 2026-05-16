@@ -16,6 +16,10 @@ function ReportsForm() {
         createReport,
         creating,
         error,
+        setError,
+        uploadProgress,
+        loadedData,
+        mediaStatus,
     } = useCreateReport();
 
     // states
@@ -220,10 +224,15 @@ function ReportsForm() {
                 files={files}
                 setFiles={(newFiles) => {
                     setFiles(newFiles);
-                    // setWarning(prev => ({ ...prev, file: null }));
+                    setWarning(prev => ({ ...prev, file: null }));
                 }}
-                allowedTypes={['jpeg', 'jpg', 'png']}
+                uploadProgress={uploadProgress}
+                isUploading={creating}
+                isUploaded={uploadProgress === 100}
+                mediaStatus={mediaStatus}
+                allowedTypes={['jpeg', 'jpg', 'png', 'pdf']}
                 maxFileSize={2}
+                inputWarning={warning.file}
             />
 
             <div className='flex justify-center'>

@@ -138,8 +138,12 @@ export default function UploadSection({
         ?.map((type) => {
             if (type === "pdf") return "application/pdf";
             if (type === "mp4") return "video/mp4";
+            if (type === "jpeg") return "image/jpeg";
+            if (type === "jpg") return "image/jpeg";
+            if (type === "png") return "image/png";
             return "";
         })
+        .filter(Boolean)
         .join(",");
 
     return (
@@ -185,7 +189,18 @@ export default function UploadSection({
                                     type="file"
                                     className="hidden"
                                     accept={acceptString}
-                                    onChange={(e) => setFiles([...e.target.files])}
+                                    onChange={(e) => {
+                                        const selectedFile = e.target.files[0];
+                                        if (!selectedFile) return;
+
+                                        if (maxFileSize && selectedFile.size > maxFileSize * 1024 * 1024) {
+                                            alert(`File size must be less than ${maxFileSize}MB`);
+                                            e.target.value = ""; // reset input
+                                            return;
+                                        }
+
+                                        setFiles([selectedFile]);
+                                    }}
                                 />
                             </label>
                         ) : (

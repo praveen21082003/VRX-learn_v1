@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import { useAuthenticate } from "./useAuthenticate";
+import { useToast } from '@/context/ToastProvider';
 
 import { Icon, Input, Button, InputWarnMessage } from "@/components/ui";
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function ForgotPassword() {
 
     const navigate = useNavigate();
+    const { addToast } = useToast();
 
     const {
         handleForgotPassword,
@@ -54,7 +56,8 @@ function ForgotPassword() {
 
     // handle function
     const handleChange = async (e) => {
-        setEmail(e.target.value)
+        setEmail(e.target.value);
+        setWarning("");
     }
 
     const handleSubmit = async (e) => {
@@ -66,6 +69,11 @@ function ForgotPassword() {
 
         if (response.success) {
             setSuccessMsg(response.message);
+            setEmail("");
+            addToast(
+                "Reset link sent! Please check your inbox.",
+                "success"
+            );
         }
         if (!response.success) {
             setWarning(response.message);
@@ -79,10 +87,13 @@ function ForgotPassword() {
         <div>
 
             {successMsg ? (
-                <p className="text-sm text-center text-[#0F5132] font-medium mb-4 mt-2">
-                    We've sent a password reset link to your email address.
-                    Please check your inbox and follow the instructions to reset your password.
-                </p>
+                <div className="flex flex-col items-center gap-2 text-center bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-4 mt-2">
+                    <Icon name="mdi:checkbox-marked-circle" height="28" width="28" className="text-green-600 dark:text-green-400" />
+                    <p className="text-xs text-green-700 dark:text-green-400 font-medium leading-5 max-w-xs">
+                        Password reset link sent successfully.
+                        Please check your inbox.
+                    </p>
+                </div>
             ) : (
                 <p className="text-sm  text-center mb-4 mt-2 ">
                     No Worries , Enter your Email Address and we'll send you a link to reset

@@ -1,12 +1,21 @@
 import { Icon } from "@/components/ui";
 
-function AttachmentCard({ fileName, fileType = "pdf", url, loading }) {
+function AttachmentCard({ fileName, mimeType, url, loading }) {
+
+    const mimeToType = {
+        "application/pdf": "pdf",
+        "image/jpeg": "img",
+        "image/png": "img",
+        "video/mp4": "video",
+    };
 
     const Icons = {
         pdf: "ri:file-pdf-2-line",
         img: "wpf:imagefile",
         video: "material-symbols:video-file-outline"
-    }
+    };
+
+    const fileType = mimeToType[mimeType] || "pdf";
 
     if (loading) {
         return (
