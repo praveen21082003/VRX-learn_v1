@@ -80,6 +80,10 @@ function AppRoutes() {
           {TrainerRoutes()}
         </Route>
 
+        <Route element={<ReportLayout />}>
+          <Route path="/report-problem" element={<ReportProblem />} />
+        </Route>
+
       </Route>
 
       {/* Error pages — public */}
@@ -88,9 +92,7 @@ function AppRoutes() {
       <Route path="/maintenance" element={<ErrorPage statusCode={503} />} />
       <Route path="/404" element={<ErrorPage statusCode={404} />} />
 
-      <Route element={<ReportLayout />}>
-        <Route path="/report-problem" element={<ReportProblem />} />
-      </Route>
+
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<ErrorPage statusCode={404} />} />

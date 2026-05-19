@@ -9,7 +9,7 @@ export default function Events({ events }) {
     const noEvent = () => {
         return (
             <div className="flex flex-col gap-2 justify-center rounded-2xl py-4 items-center w-full bg-background">
-                <Icon name="ph:calendar-x-duotone" height="40" width="40" />
+                <Icon name="ph:calendar-x-duotone" className="text-main" height="40" width="40" />
                 <p className="text-body text-muted">No Upcoming Deadlines</p>
             </div>
         )
