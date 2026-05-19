@@ -67,12 +67,12 @@ export const TRAINEE_ROSTER_SORT_OPTIONS = [
 // category options for the reports page
 export const REPORT_CATEGORY_OPTIONS = [
     { label: "All", value: null },
-    { label: "Course Contents & Materials", value: "course_contents&materials" },
-    { label: "Assignments", value: "assignments" },
-    { label: "Account & Access", value: "account&access" },
-    { label: "Technical Bug", value: "technical_bug" },
-    { label: "Others", value: "others" },
-]
+    { label: "Course Contents & Materials", value: "course-content" },
+    { label: "Assignments", value: "assignment" },
+    { label: "Account & Access", value: "account-access" },
+    { label: "Technical Bug", value: "bug" },
+    { label: "Others", value: "other" },
+];
 
 // status options for the reports page
 export const REPORT_STATUS_OPTIONS = [

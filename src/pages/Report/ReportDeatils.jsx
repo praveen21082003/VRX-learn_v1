@@ -144,7 +144,7 @@ function ReportDetails() {
 
 
     return (
-        <div className="px-6 py-5 space-y-6">
+        <div className="px-6 py-5 space-y-6 text-main">
 
             {/* Back */}
             <BackButton label="Back" />

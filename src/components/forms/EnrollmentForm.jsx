@@ -248,10 +248,11 @@ function EnrollmentForm({ initialData, onClose, onSuccess, mode, isEdit }) {
                 <Button
                     type="button"
                     buttonName="Cancel"
-                    className="px-4 py-2 rounded-lg w-full border border-default"
-                    bgClass="bg-transparent"
-                    textClass="text-main"
+                    className="px-4 py-2 rounded-lg w-full"
+                    variant="outline"
                     onClick={onClose}
+                    bgClass=""
+                    textClass=""
                 />
                 <Button
                     type="submit"

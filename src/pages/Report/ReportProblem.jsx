@@ -27,7 +27,7 @@ function ReportProblem() {
             <BackButton label='Back' onClick={handleBack} />
 
             <div className='space-y-2'>
-                <h3 className='text-h3'>Report a problem</h3>
+                <h3 className='text-h3 text-main'>Report a problem</h3>
                 <p className='text-body text-muted'>Please provide details about the issue you encountered. Your feedback helps us improve the learning experience.</p>
             </div>
             <ReportsForm />

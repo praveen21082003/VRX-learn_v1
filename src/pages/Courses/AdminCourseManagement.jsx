@@ -91,7 +91,7 @@ function AdminCourseManagement() {
                 return {
                     ...col,
                     render: (row) => (
-                        <p title={row.shortDescription} className={`h-10 flex items-center overflow-hidden leading-5 line-clamp-2 ${!row.shortDescription ? "text-muted italic" : ""}`}>
+                        <p title={row.shortDescription} className={`h-10 flex overflow-hidden leading-5 line-clamp-2 ${!row.shortDescription ? "text-muted italic" : ""}`}>
                             {row.shortDescription || "No description provided"}
                         </p>
                     ),
@@ -323,9 +323,9 @@ function AdminCourseManagement() {
 
 
     return (
-        <div className="p-4 w-full md:h-auto h-full flex flex-col bg-transparent text-main">
+        <div className="w-full md:h-auto h-full flex flex-col bg-transparent text-main">
 
-            <div className="shrink-0">
+            <div className="p-4 shrink-0">
                 <TableToolbar
                     headerLabel="Course Management"
                     selectedRows={selectedRows}
