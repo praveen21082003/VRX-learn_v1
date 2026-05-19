@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Icon, Button } from '@/components/ui';
 import { logo } from '@/assets';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { calculateTime} from '@/utils/calculateTime';
+import { time } from 'motion';
 
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.5, 2];
 
@@ -131,13 +133,8 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
     togglePlay();
   };
 
-  // --- Utilities ---
-  const formatTime = (time) => {
-    if (isNaN(time)) return "0:00";
-    const mins = Math.floor(time / 60);
-    const secs = Math.floor(time % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+  // --- Utilities --
+
 
   // --- Core Handlers ---
   const updateVolume = useCallback((newVolume) => {
@@ -233,14 +230,22 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
     const video = videoRef.current;
     if (!video) return;
 
+    // Load duration instantly if metadata already exists
+  if (video.readyState >= 1 && !isNaN(video.duration)) {
+    setDuration(video.duration);
+    setVideoDuration(video.duration);
+  }
+
     const handleWaiting = () => setIsBuffering(true);
     const handlePlaying = () => setIsBuffering(false);
 
     const handleSync = () => {
       setIsPlaying(!video.paused);
       setCurrentTime(video.currentTime);
-      setDuration(video.duration || 0);
-      setVideoDuration(video.duration)
+        if (!isNaN(video.duration) && video.duration > 0) {
+    setDuration(video.duration);
+    setVideoDuration(video.duration);
+  }
       setVolume(video.volume);
       setIsMuted(video.muted);
     };
@@ -427,9 +432,9 @@ const VideoControls = ({ videoRef, setVideoDuration }) => {
 
             {/* Time Display */}
             <div className="px-2 py-2 text-xs md:text-sm font-medium bg-black/50 hover:bg-white/10 rounded-full text-white tabular-nums flex items-center gap-1 select-none">
-              <span>{formatTime(currentTime)}</span>
+              <span>{calculateTime(currentTime)}</span>
               <span className="opacity-60 "> / </span>
-              <span>{formatTime(duration)}</span>
+              <span>{calculateTime(duration)}</span>
             </div>
           </div>
 

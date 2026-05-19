@@ -66,7 +66,7 @@ export function ToastProvider({ children }) {
 
                                 <span>
                                     <h5 className="text-h5" style={{ textTransform: 'capitalize' }}>{toast.type}</h5>
-                                    <p className="text-xs text-muted">{toast.message}</p>
+                                    <p className="text-xs text-[#4D4D4D]">{toast.message}</p>
                                 </span>
                             </div>
 

@@ -24,7 +24,7 @@ export default function DeleteConfirmContent({
     return (
         <div className="space-y-4">
 
-            <div className="border border-red-300 bg-red-50 text-red-600 p-2 rounded text-large">
+            <div className="border border-[#D32F2F] bg-red-50 dark:bg-transparent  text-red-600 p-2 rounded text-large">
                 <Icon name="jam:triangle-danger-f" height="26" width="26" /> This action cannot be undone.
             </div>
 

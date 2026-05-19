@@ -3,6 +3,7 @@ import { BackButton, Button, Icon } from '@/components/ui';
 import { Overview, QuestionAnswers, Tabs } from '@/components/tabs';
 import { useParams } from 'react-router-dom';
 import ContentRenderer from '@/components/content/ContentRenderer';
+import { calculateTime } from '../../utils/calculateTime';
 
 
 function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson, onBackToModule = false }) {
@@ -25,13 +26,6 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
     ];
 
 
-    const formatToMinutes = (seconds) => {
-        if (!seconds || isNaN(seconds)) return "0mins";
-
-        const mins = Math.round(seconds / 60);
-
-        return `${mins}mins`;
-    };
 
 
     return (
@@ -51,7 +45,7 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
 
                 {lesson?.mimeType?.startsWith("video") && (
                     <>
-                        <span>{formatToMinutes(videoDuration) || "0:00"}</span>
+                        <span>{calculateTime(videoDuration) || "0:00"}</span>
                     </>
                 )}
             </div>

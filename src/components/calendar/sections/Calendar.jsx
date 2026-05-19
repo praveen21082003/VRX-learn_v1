@@ -64,7 +64,7 @@ export default function Calendar({ events }) {
                     onChange={handleMonthChange}
                 >
                     {Array.from({ length: 12 }).map((_, i) => (
-                        <option key={i} value={i}>
+                        <option className="bg-transparent dark:bg-[#0F172A]" key={i} value={i}>
                             {format(new Date(2025, i), "MMMM")}
                         </option>
                     ))}
@@ -77,12 +77,12 @@ export default function Calendar({ events }) {
                 >
                     {eventYears.length > 0 ? (
                         eventYears.map((year) => (
-                            <option key={year} value={year}>
+                            <option className="bg-transparent dark:bg-[#0F172A]" key={year} value={year}>
                                 {year}
                             </option>
                         ))
                     ) : (
-                        <option value={currentMonth.getFullYear()}>
+                        <option className="bg-transparent dark:bg-[#0F172A]" value={currentMonth.getFullYear()}>
                             {currentMonth.getFullYear()}
                         </option>
                     )}
