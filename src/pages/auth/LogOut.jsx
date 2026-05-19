@@ -20,11 +20,13 @@ function LogOut({ isOpen, onClose }) {
                 <div className="flex gap-3 mt-2">
 
                     <Button
+                        type="button"
                         buttonName="Cancel"
-                        bgClass="bg-main border border-default"
-                        textClass="text-main"
-                        className="w-full py-2 rounded-lg"
+                        className="px-4 py-2 rounded-lg w-full"
+                        variant="outline"
                         onClick={onClose}
+                        bgClass=""
+                        textClass=""
                     />
 
                     <Button

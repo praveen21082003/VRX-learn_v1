@@ -8,7 +8,7 @@ export { default as TextEditor } from './Input/TextEditor'
 
 // buttons
 export { default as BackButton } from './Buttons/BackButton'
-export { default as Button } from './Button'
+export { default as Button } from './Buttons/Button'
 export { default as Header } from './Header'
 export { default as Dropdown } from './Dropdown'
 export { default as Modal } from './Modal'

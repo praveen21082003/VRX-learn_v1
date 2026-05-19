@@ -97,27 +97,32 @@ function CourseManagementSidebar() {
                       "group flex h-13 w-full items-center text-h45 border-primary dark:border-background",
                       isActive
                         ? "bg-primary/16 dark:bg-primary text-primary dark:text-background border-l-8 px-1"
-                        : "hover:bg-primary/16 dark:hover:bg-surface-primary-dark text-muted px-1"
+                        : "hover:bg-primary/16 dark:hover:bg-primary text-muted px-1"
                     )}
                   >
-                    <Icon
-                      name="iconamoon:arrow-right-2"
-                      height="26px"
-                      width="26px"
-                      className={clsx(
-                        "transition-transform duration-500",
-                        isActive
-                          ? "text-primary dark:text-background"
-                          : "text-white dark:text-background-dark group-hover:text-primary group-hover:dark:text-background",
-                        hasChildren && isSectionOpen && "rotate-90"
-                      )}
-                    />
+                    {hasChildren && (
+                      <Icon
+                        name="iconamoon:arrow-right-2"
+                        height="26px"
+                        width="26px"
+                        className={clsx(
+                          "transition-transform duration-500 opacity-0 group-hover:opacity-100",
+                          isActive && "opacity-100",
+                          isSectionOpen && "rotate-90"
+                        )}
+                      />
+                    )}
+                    {!hasChildren && <span className="w-[26px] shrink-0" />}
                     <div className="flex justify-between w-full">
                       {section.label}
                     </div>
 
-                    {hasChildren && (
+                    {section.key !== "info" && (
                       <span
+                        className={clsx(
+                          "opacity-0 group-hover:opacity-100 transition-opacity",
+                          isActive && "opacity-100"
+                        )}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -128,14 +133,7 @@ function CourseManagementSidebar() {
                           name="ic:baseline-plus"
                           height="26px"
                           width="26px"
-                          className={clsx(
-                            "transition-colors",
-                            isActive
-                              ? "text-primary dark:text-background"
-                              : "text-white dark:text-background-dark group-hover:text-primary group-hover:dark:text-background"
-                          )}
                         />
-
                       </span>
                     )}
 

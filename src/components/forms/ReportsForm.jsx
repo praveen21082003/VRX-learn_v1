@@ -25,7 +25,7 @@ function ReportsForm() {
     // states
     const [formData, setFormData] = useState({
         subject: "",
-        category: "account-access",
+        category: null,
         description: ""
     });
 
@@ -49,6 +49,7 @@ function ReportsForm() {
             errors.subject = "Subject cannot exceed 100 characters";
         }
 
+
         // Category validation
         const allowedCategories = [
             "account-access",
@@ -59,8 +60,9 @@ function ReportsForm() {
         ];
 
         if (!allowedCategories.includes(formData.category)) {
-            errors.category = "Invalid category selected";
+            errors.category = "Select any Category."
         }
+
 
         // Description validation
         if (formData.description?.trim().length > 2000) {
@@ -163,7 +165,7 @@ function ReportsForm() {
 
 
     return (
-        <form onSubmit={handleSubmit} className='space-y-2'>
+        <form onSubmit={handleSubmit} className='space-y-2 text-main'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 <Input
                     label="Subject"
@@ -173,35 +175,31 @@ function ReportsForm() {
                     onChange={(e) => handleChange("subject", e.target.value)}
                     inputWarning={warning.subject}
                 />
-                <Select
-                    inputLabel="Category"
-                    label="Select a category:"
-                    options={[
-                        { label: "Course Contents & Materials", value: "course-content" },
-                        { label: "Assignments", value: "assignment" },
-                        { label: "Account & Access", value: "account-access" },
-                        { label: "Technical Bug", value: "bug" },
-                        { label: "Other", value: "other" },
-                    ]}
-                    paddingClass="p-4"
-                    borderClass="border-input-border"
-                    inputheight="h-11"
-                    value={formData.category}
-                    onChange={(val) => handleChange("category", val)}
-                />
+                <div className='space-y-2'>
+                    <Select
+                        inputLabel="Category"
+                        // label=""
+                        options={[
+                            { label: "--Select--", value: null },
+                            { label: "Course Contents & Materials", value: "course-content" },
+                            { label: "Assignments", value: "assignment" },
+                            { label: "Account & Access", value: "account-access" },
+                            { label: "Technical Bug", value: "bug" },
+                            { label: "Other", value: "other" },
+                        ]}
+                        paddingClass="p-4"
+                        borderClass="border-input-border"
+                        inputheight="h-11"
+                        value={formData.category}
+                        onChange={(val) => handleChange("category", val)}
+                    />
+                    {warning.category && <InputWarnMessage message={warning.category} />}
+                </div>
+
             </div>
             <div className="space-y-2">
                 <div className="flex items-center justify-between">
                     <label className="text-h5">Description</label>
-
-                    <span
-                        className={`text-small ${formData.description.length >= 2000
-                            ? "text-red-500"
-                            : "text-muted-foreground"
-                            }`}
-                    >
-                        {formData.description.length}/2000
-                    </span>
                 </div>
 
                 <textarea
@@ -213,10 +211,24 @@ function ReportsForm() {
                     }
                     className="w-full border text-body bg-input-bg border-input-border rounded p-3 focus:outline-none focus:ring-1 focus:ring-brand"
                 />
+                <div className='flex justify-between'>
+                    <div>
+                        {warning.description && (
+                            <InputWarnMessage message={warning.description} />
+                        )}
+                    </div>
+                    <span
+                        className={`text-small ${formData.description.length >= 2000
+                            ? "text-red-500"
+                            : "text-muted-foreground"
+                            }`}
+                    >
+                        {formData.description.length}/2000
+                    </span>
 
-                {warning.description && (
-                    <InputWarnMessage message={warning.description} />
-                )}
+
+                </div>
+
             </div>
 
             <UploadSection

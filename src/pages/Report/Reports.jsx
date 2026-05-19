@@ -89,7 +89,7 @@ function Reports() {
         return {
           ...col,
           render: (row) => (
-            <p title={row.subject} className='flex h-10 overflow-hidden items-center leading-5 line-clamp-2'>
+            <p title={row.subject} className='flex h-10 overflow-hidden leading-5 line-clamp-2'>
               {row.subject}
             </p>
           )

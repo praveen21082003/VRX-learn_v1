@@ -71,9 +71,9 @@ function Header({ menu, headerContent }) {
 
 
 
-            <div className="flex items-center gap-3 md:gap-10">
+            <div className="flex items-center gap-3 md:gap-6 flex-1 min-w-0">
 
-                <div className="lg:hidden">
+                <div className="xl:hidden">
                     <Button
                         frontIconName="charm:menu-hamburger"
                         frontIconHeight="26"
@@ -97,7 +97,7 @@ function Header({ menu, headerContent }) {
                 </Link>
 
                 {!menu && !headerContent ? (
-                    <div className="hidden md:block">
+                    <div className="hidden md:block min-w-0 flex-1">
                         <BreadcrumbMenu items={breadcrumbs} />
                     </div>
 
@@ -107,10 +107,11 @@ function Header({ menu, headerContent }) {
 
             </div>
 
-            <div className="flex items-center gap-3 md:gap-10">
+            <div className="flex items-center shrink-0 gap-3 md:gap-6">
+
                 {/* user menu */}
                 {menu && (
-                    <div className="hidden md:block">
+                    <div className="hidden xl:block">
                         <HeaderUserMenu role={role} viewRole={viewRole} />
                     </div>
                 )}
@@ -119,7 +120,7 @@ function Header({ menu, headerContent }) {
                 {!headerContent && (
                     <button className="flex gap-2 items-center text-label-sm text-surface-80 hover:text-surface hover:cursor-pointer" onClick={() => navigate("/report-problem")}>
                         <Icon name="si:flag-alt-4-line" size="18" />
-                        <span className="hidden lg:block">Report a problem</span>
+                        <span className="hidden sm:block">Report a problem</span>
                     </button>
                 )}
 

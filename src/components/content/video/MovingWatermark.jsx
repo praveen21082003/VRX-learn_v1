@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const MovingWatermark = ({ text = "PROTECTED" }) => {
+const MovingWatermark = ({ text = "PROTECTED", userId }) => {
   const watermarkRef = useRef(null);
   const containerRef = useRef(null);
   const requestRef = useRef(null);
@@ -68,12 +68,13 @@ const MovingWatermark = ({ text = "PROTECTED" }) => {
         className="absolute flex gap-2 whitespace-nowrap text-white text-[10px] font-mono bg-black/30 px-2 py-1 rounded will-change-transform"
       >
         <img
-          src="/logo.svg"
+          src="/VRX-logo.svg"
           alt="Logo"
           className="h-5"
         />
-        <div className='items-center'>
-          <span>{text}</span>
+        <div className='flex max-w-30 items-center'>
+          <span className='truncate'>{text}</span>
+          {userId && <span>({userId})</span>}
         </div>
 
       </div>

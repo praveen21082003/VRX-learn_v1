@@ -111,7 +111,7 @@ function Login() {
 
                 <Button
                     type="submit"
-                    bgClass="bg-brand"
+                    bgClass="bg-primary"
                     className="p-2 rounded-lg"
                     buttonName={loggingIn ? "Logging in..." : "Login"}
                     disabled={loggingIn}

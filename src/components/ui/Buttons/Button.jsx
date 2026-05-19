@@ -44,7 +44,7 @@ function Button({
                 bgClass,
                 textClass,
 
-                isWhiteBg && !bgClass && buttonName && !isMobile && "border border-primary dark:border-background",
+                isWhiteBg && !bgClass && buttonName && !isMobile && "border border-primary dark:border-white",
 
                 disabled
                     ? "opacity-50 cursor-not-allowed"

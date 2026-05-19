@@ -89,7 +89,7 @@ function VideoPlayer({ url, id, setVideoDuration }) {
             {!videoLoading && !videoError && (
                 <>
                     <Suspense fallback={null}>
-                        <MovingWatermark text={user.username} />
+                        <MovingWatermark text={user.username} userId={user.userId} />
                     </Suspense>
                     <div className="absolute inset-0">
                         <VideoControls videoRef={videoRef} setVideoDuration={setVideoDuration} />
