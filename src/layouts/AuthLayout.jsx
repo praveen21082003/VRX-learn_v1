@@ -2,25 +2,33 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useTheme } from "@/context/ThemeProvider";
 import { Icon, InputWarnMessage } from '@/components/ui';
+import clsx from 'clsx';
 
 import LearningIllustration from '@/assets/images/Learning-Illustration.png'
 
 function AuthLayout() {
     const { darkMode, toggleTheme } = useTheme();
     const location = useLocation();
+    const verifyemail = location.pathname.includes('verify-email');
 
     const getTitle = () => {
         if (location.pathname.includes('forgot-password')) return "Forgot Password?";
         if (location.pathname.includes('reset-password')) return "Reset Password?";
+        if (location.pathname.includes('sign-up')) return "Sign Up";
+        if (location.pathname.includes('verify-email')) return "Verifying Your Email...";
+
         return "Welcome Back!";
     };
 
     return (
         <div className="flex min-h-screen w-full justify-center items-center text-main bg-background px-4">
-            <div className="relative flex w-full max-w-4xl h-auto md:h-[33rem] rounded-xl overflow-hidden bg-surface md:shadow-lg">
+            <div className="relative flex w-full max-w-5xl h-auto md:h-[40rem] rounded-xl overflow-hidden bg-surface md:shadow-lg">
 
-
-                <div className="hidden md:block relative w-lg bg-brand overflow-hidden">
+                <div className={clsx("relative bg-brand overflow-hidden ",
+                    verifyemail
+                        ? "hidden" 
+                        : "hidden md:block w-[55%]"
+                    )}>
                     <img
                         src={LearningIllustration}
                         alt="Background Decor"
@@ -34,7 +42,11 @@ function AuthLayout() {
                 </div>
 
 
-                <div className="relative w-full md:w-[400px] flex flex-col items-center justify-center gap-2 py-8 px-8">
+                <div className={clsx("relative w-full flex flex-col items-center justify-center gap-2 py-8 px-8 ",
+                    verifyemail
+                        ? "md:w-full"
+                        : "md:w-[45%]" 
+                    )}>
 
                     {/* Theme Switcher - Fixed in the layout */}
                     <div className="absolute top-4 right-4">
@@ -57,7 +69,7 @@ function AuthLayout() {
                             alt="VRX Logo"
                             className="h-14 w-14 object-contain"
                         />
-                        <h1 className="text-h4 text-main">{getTitle()}</h1>
+                        <h1 className="text-h3 text-main">{getTitle()}</h1>
                     </div>
                     <Outlet />
                 </div>

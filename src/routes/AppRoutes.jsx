@@ -35,6 +35,8 @@ import ReportDeatils from '../pages/Report/ReportDeatils';
 import Login from '../pages/auth/Login';
 import ForgotPassword from '../pages/auth/ForgotPassword';
 import ResetPassword from '../pages/auth/ResetPassword';
+import SignUp from '../pages/auth/SignUp';
+import VerifyEmail from '../pages/auth/VerifyEmail';
 
 function AppRoutes() {
   const { loading } = useAuth();
@@ -50,6 +52,8 @@ function AppRoutes() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
         </Route>
       </Route>
 
