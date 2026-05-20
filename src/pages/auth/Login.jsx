@@ -104,7 +104,7 @@ function Login() {
 
                     <p
                         onClick={() => navigate("/forgot-password")}
-                        className="text-caption text-muted mt-2 cursor-pointer hover:text-brand transition-colors"
+                        className="text-caption text-muted mt-2 cursor-pointer hover:text-[#0088ff] hover:font-semibold transition-colors"
                     >
                         Forgot Password?
                     </p>

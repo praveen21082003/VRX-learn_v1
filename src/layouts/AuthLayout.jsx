@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import useScrollIndicator from "@/hooks/useScrollIndicator";
 import { useTheme } from "@/context/ThemeProvider";
 import { Icon, InputWarnMessage } from '@/components/ui';
 import clsx from 'clsx';
@@ -7,6 +8,7 @@ import clsx from 'clsx';
 import LearningIllustration from '@/assets/images/Learning-Illustration.png'
 
 function AuthLayout() {
+    const scrollRef = useRef(null);
     const { darkMode, toggleTheme } = useTheme();
     const location = useLocation();
     const verifyemail = location.pathname.includes('verify-email');
@@ -19,11 +21,13 @@ function AuthLayout() {
         return "Welcome Back!";
     };
 
+    useScrollIndicator(scrollRef);
+
     return (
         <div className="flex min-h-screen w-full justify-center items-center text-main bg-background px-4">
             <div className="relative flex w-full max-w-5xl h-auto md:h-[40rem] rounded-xl overflow-hidden bg-surface md:shadow-lg">
 
-                <div className={clsx("relative bg-brand overflow-hidden ",
+                <div className={clsx("relative bg-brand overflow-hidden",
                     verifyemail
                         ? "hidden"
                         : "hidden md:block w-[55%]"
@@ -42,7 +46,7 @@ function AuthLayout() {
 
 
 
-                <div className={clsx("relative w-full flex flex-col items-center justify-center gap-2 py-8 px-8 ",
+                <div ref={scrollRef} className={clsx("relative w-full flex flex-col items-center justify-center gap-2 py-10 px-8 lg:overflow-y-auto custom-scroll",
                     verifyemail
                         ? "md:w-full"
                         : "md:w-[45%]"
@@ -65,7 +69,7 @@ function AuthLayout() {
                             </div>
 
 
-                            <div className="flex flex-col items-center gap-2">
+                            <div className="flex flex-col items-center gap-2 mt-10">
                                 <img
                                     src={`${darkMode ? "/logo-white.svg" : "/VRX-logo.svg"}`}
                                     alt="VRX Logo"

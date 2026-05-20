@@ -22,9 +22,8 @@ function TableBody({ columns, loading, data, selectedRows, pageSize, emptyRows =
               {columns.map((col, index) => (
                 <td
                   key={col.key || index}
-                  style={{ width: col.width }}
-                  className={`p-2 text-body ${col.align === "left" ? "text-left" : "text-center"
-                    } ${col.className || ""}`}
+                  style={{ width: col.width, maxWidth: col.width || 0 }}
+                  className={`p-2 text-body overflow-hidden text-ellipsis whitespace-nowrap ${col.align === "left" ? "text-left" : "text-center"} ${col.className || ""}`}
                 >
                   {col.render ? col.render(row) : row[col.key]}
                 </td>
