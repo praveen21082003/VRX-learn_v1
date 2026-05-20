@@ -36,7 +36,7 @@ function Input({
 
 
     return (
-        <div className={`flex flex-col gap-2 ${widthClass}`}>
+        <div className={`flex flex-col gap-1 ${widthClass}`}>
             {/* Label */}
             {label && (
                 <label className="text-h5 text-main dark:text-white">

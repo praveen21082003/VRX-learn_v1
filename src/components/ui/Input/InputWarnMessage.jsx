@@ -11,7 +11,7 @@ function InputWarnMessage(
 
     return (
         <div className='flex gap-1.5 font-medium text-[#D32F2F]'>
-            <Icon name={icon} width="16px" height="16px" />
+            <Icon name={icon} width="14px" height="14px" />
             <p className='text-xs'>{message}</p>
         </div>
     )
