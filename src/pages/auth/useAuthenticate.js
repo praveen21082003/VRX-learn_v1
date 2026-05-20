@@ -4,6 +4,8 @@ import {
     forgotPassword,
     login,
     resetPassword,
+    signup,
+    verifyEmail,
 } from "@/services/Authenticate.service";
 
 import { extractErrorMessage } from "@/utils/errorUtils";
@@ -17,6 +19,10 @@ export const useAuthenticate = () => {
 
     const [resettingPassword, setResettingPassword] =
         useState(false);
+
+    const [signingUp, setSigningUp] = useState(false);
+
+    const [verifying, setVerfiying] = useState(false);
 
     // =========================
     // LOGIN
@@ -41,25 +47,28 @@ export const useAuthenticate = () => {
         } catch (err) {
 
             const status = err.response?.status;
-            console.log(err)
-            console.log(status);
+            const errorType = err.response?.data?.type;
 
-            const message =
-                {
-                    401: "Incorrect email or password.",
-                    422: "Please enter a valid email and password.",
-                    500: "Server error while logging in.",
-                }[status]
-                ||
-                err.response?.data?.message
-                ||
-                "Unable to login.";
+            let message = "Unable to login.";
+
+            if (status === 401) {
+                if (errorType === "EmailNotVerifiedError") {
+                    message = "Please verify your email before logging in. Check your inbox for the verification link.";
+                } else {
+                    message = "Incorrect email or password.";
+                }
+            } else if (status === 422) {
+                message = "Please enter a valid email and password.";
+            } else if (status >= 500) {
+                message = "Server error while logging in.";
+            }
 
             return {
                 success: false,
                 data: null,
                 message,
                 status,
+                errorType ,
             };
 
         } finally {
@@ -192,15 +201,131 @@ export const useAuthenticate = () => {
 
     }, []);
 
+
+    // =========================
+    // SIGNUP
+    // =========================
+
+    const handleSignup = useCallback(async (payload) => {
+        try {
+            setSigningUp(true);
+
+            const response = await signup(payload);
+
+            return {
+                success: true,
+                data: response?.data || response,
+                message:
+                    response?.message ||
+                    "sigup successfully.",
+            };
+
+        } catch (error) {
+            console.log(error);
+            const status = error.response?.status;
+
+            const message = extractErrorMessage(error, {
+                404: "No account found with this email address.",
+                422: "Please enter a valid email address.",
+                500: "Unable to send reset link right now.",
+            });
+
+            return {
+                success: false,
+                data: null,
+                message,
+                status,
+            };
+        } finally {
+            setSigningUp(false);
+        }
+
+    }, []);
+
+
+    // =========================
+    // verify email
+    // =========================
+    const handleVerifyEmail = useCallback(async ({ token }) => {
+        try {
+            setVerfiying(true);
+
+            const response = await verifyEmail(token);
+
+            return {
+                success: true,
+                data: response?.data || response,
+                message:
+                    response?.message ||
+                    "sigup successfully.",
+            };
+        } catch (err) {
+            console.log(err)
+            const status = err.response?.status;
+
+            const errorType =
+                err.response?.data?.type;
+
+            let message =
+                "Unable to reset password right now.";
+
+            if (status === 400) {
+
+                switch (errorType) {
+
+                    case "InvalidPasswordResetTokenError":
+
+                        message =
+                            "We could not verify your email with this link. Please click the button below to request a new one.";
+
+                        break;
+
+                    case "EmailAlreadyVerifiedError":
+
+                        message =
+                            "Your email has already been verified.";
+
+                        break;
+
+                    default:
+
+                        message =
+                            err.response?.data?.message ||
+                            "Unable to verify your email.";
+                }
+            }
+
+            else if (status >= 500) {
+
+                message =
+                    "Server error while resetting password.";
+            }
+
+            return {
+                success: false,
+                data: null,
+                message,
+                status,
+            };
+        } finally {
+            setVerfiying(false);
+        }
+    }, []);
+
+
     return {
 
         // actions
         handleLogin,
         handleForgotPassword,
         handleResetPassword,
+        handleSignup,
+        handleVerifyEmail,
 
         // loading states
         loggingIn,
+        signingUp,
+        verifying,
         sendingResetLink,
         resettingPassword,
     };

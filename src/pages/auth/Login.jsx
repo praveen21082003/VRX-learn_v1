@@ -66,14 +66,14 @@ function Login() {
     };
 
     return (
-        <>
+        <div className="flex flex-col justify-center items-center w-full mt-4">
             <div className="min-h-2">
                 {message && (
                     <InputWarnMessage message={message} />
                 )}
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mt-4">
                 <Input
                     name="email"
                     label="Email"
@@ -121,7 +121,7 @@ function Login() {
                  <p
                         className="text-caption text-muted  hover:text-brand transition-colors"
                     >
-                        Don't have an account? <span onClick={() => navigate("/sign-up")} className="text-[#0088ff] font-bold  cursor-pointer">Sign up</span>
+                        Don't have an account? <span onClick={() => navigate("/signup")} className="text-[#0088ff] font-bold  cursor-pointer">Sign up</span>
                     </p>
             </form>
 
@@ -138,7 +138,7 @@ function Login() {
                     </a>
                 ))}
             </div>
-        </>
+        </div>
     );
 }
 

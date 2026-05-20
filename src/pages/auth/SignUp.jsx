@@ -1,30 +1,38 @@
 import React, { useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/context/AuthContext";
 import { useAuthenticate } from "./useAuthenticate";
 
-import { Icon, Input, Button, InputWarnMessage } from "@/components/ui";
-import { authMe } from "@/services/Authenticate.service";
-
+import { Icon, Input, Button, StatusBanner } from "@/components/ui";
 
 function SignUp() {
     const navigate = useNavigate();
     const { refreshUser } = useAuth();
-    const {
-        handleLogin,
-        loggingIn,
-    } = useAuthenticate();
+    const { handleSignup, signingUp } = useAuthenticate();
 
-    const [warning, setWarning] = useState({ email: "", password: "" });
-    const [message, setMessage] = useState("");
-    const [credentials, setCredentials] = useState({ email: "", password: "" });
+    const [warning, setWarning] = useState({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
 
-    // Handle input changes and clear local validation errors
+    const [bannerMsg, setBannerMsg] = useState(""); // for StatusBanner (non-field errors)
+    const [bannerType, setBannerType] = useState("error");
+
+    const [credentials, setCredentials] = useState({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCredentials((prev) => ({ ...prev, [name]: value }));
         if (warning[name]) setWarning((prev) => ({ ...prev, [name]: "" }));
+        if (bannerMsg) setBannerMsg("");
     };
 
     const icons = [
@@ -36,43 +44,49 @@ function SignUp() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setBannerMsg("");
 
-        if (!credentials.email || !credentials.password || !credentials.username) {
-            setWarning({
-                email: !credentials.email ? "Please provide email" : "",
-                password: !credentials.password ? "Password can't be empty" : "",
-                username: !credentials.username ? "Please provide username" : "",
-            });
+        // frontend validation
+        const newWarnings = {};
+        if (!credentials.username) newWarnings.username = "Please provide username";
+        if (!credentials.email) newWarnings.email = "Please provide email";
+        if (!credentials.password) newWarnings.password = "Password can't be empty";
+        if (!credentials.confirmPassword) newWarnings.confirmPassword = "Please confirm your password";
+        if (credentials.password && credentials.confirmPassword && credentials.password !== credentials.confirmPassword) {
+            newWarnings.confirmPassword = "Passwords do not match";
+        }
+
+        if (Object.values(newWarnings).some(Boolean)) {
+            setWarning(newWarnings);
             return;
         }
 
-        const response = await handleLogin({
-            email: credentials.email,
-            password: credentials.password,
-        });
-
-        console.log(response);
+        const response = await handleSignup(credentials);
 
         if (!response.success) {
-            setMessage(response.message);
+            if (response.status === 409) {
+                // email already exists — set as field warning
+                setWarning(prev => ({ ...prev, email: "An account with this email already exists." }));
+            } else {
+                // all other errors — show in banner
+                setBannerMsg(response.message);
+                setBannerType("error");
+            }
             return;
         }
 
-        if (response.success) {
-            await refreshUser();
-            navigate("/dashboard", { replace: true });
-        }
-
+        // success
+        setBannerMsg("Please check your email for the verification link to complete registration.");
+        setBannerType("success");
+        setCredentials({ username: "", email: "", password: "", confirmPassword: "" });
     };
 
     return (
         <>
-            <div className="min-h-2">
-                {message && (
-                    <InputWarnMessage message={message} />
-                )}
-            </div>
-                
+            {bannerMsg && (
+                <StatusBanner type={bannerType} message={bannerMsg} />
+            )}
+
             <form onSubmit={handleSubmit} className="flex flex-col gap-1.5 w-full">
                 <Input
                     name="username"
@@ -85,7 +99,6 @@ function SignUp() {
                     bgClass="bg-surface"
                     value={credentials.username}
                 />
-                
                 <Input
                     name="email"
                     label="Email"
@@ -111,40 +124,36 @@ function SignUp() {
                     value={credentials.password}
                     autoComplete="new-password"
                 />
-
-                <div className="flex flex-col gap-1">
-                    <Input
-                        name="confirmPassword"
-                        type="password"
-                        label="Confirm Password"
-                        placeholder="Enter your password again"
-                        paddingClass="p-2"
-                        icon="material-symbols:lock"
-                        bgClass="bg-surface"
-                        inputWarning={warning.password}
-                        onChange={handleChange}
-                        value={credentials.password}
-                        autoComplete="new-password"
-                    />
-                    
-                </div>
+                <Input
+                    name="confirmPassword"
+                    type="password"
+                    label="Confirm Password"
+                    placeholder="Enter your password again"
+                    paddingClass="p-2"
+                    icon="material-symbols:lock"
+                    bgClass="bg-surface"
+                    inputWarning={warning.confirmPassword}
+                    onChange={handleChange}
+                    value={credentials.confirmPassword}
+                    autoComplete="new-password"
+                />
 
                 <Button
                     type="submit"
                     bgClass="bg-primary"
                     className="p-2 mt-3 rounded-lg"
-                    buttonName={loggingIn ? "Signing up..." : "Sign Up"}
-                    disabled={loggingIn}
+                    buttonName={signingUp ? "Signing up..." : "Sign Up"}
+                    disabled={signingUp}
                 />
 
-                 <p
-                        className="text-caption text-muted mt-1.5 hover:text-brand transition-colors"
-                    >
-                        Already have an account? <span onClick={() => navigate("/login")} className="text-[#0088ff] font-bold  cursor-pointer">Login</span>
-                    </p>
+                <p className="text-caption text-muted mt-1.5 hover:text-brand transition-colors">
+                    Already have an account?{" "}
+                    <span onClick={() => navigate("/login")} className="text-[#0088ff] font-bold cursor-pointer">
+                        Login
+                    </span>
+                </p>
             </form>
 
-            {/* Social Links Section */}
             <div className="flex gap-3 py-2">
                 {icons.map((i) => (
                     <a key={i.key} href={i.navlink} target="_blank" rel="noopener noreferrer">

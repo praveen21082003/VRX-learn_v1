@@ -37,8 +37,9 @@ export { default as UploadSection } from './FileUpload'
 // progress bar
 export { default as ProgressBar } from './ProgressBar'
 
-// status pill
+// status components
 export { default as StatusPill } from './StatusPill'
+export { default as StatusBanner } from './StatusBanner'
 
 // Avatar
 export { default as Avatar } from './Avatar'
