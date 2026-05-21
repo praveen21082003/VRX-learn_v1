@@ -64,6 +64,12 @@ function UserManagement() {
         switch (col.key) {
             case "profile":
                 return { ...col, render: (row) => <Avatar name={row.name} /> };
+            case "email":
+                return {
+                    ...col,
+                    className: "whitespace-nowrap",
+                    render: (row) => <span className="truncate block">{row.email}</span>
+                };
 
             case "role":
             case "status":

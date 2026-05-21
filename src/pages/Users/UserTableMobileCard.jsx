@@ -27,7 +27,7 @@ function UserTableMobileCard({ row, columns }) {
                     <div className="text-body text-main truncate">
                         {row.email}
                     </div>
-                    <div className="text-caption text-muted mt-2">
+                    <div className="text-caption text-muted">
                         Created At: {getCol("createdAt")?.render?.(row)}
                     </div>
                 </div>

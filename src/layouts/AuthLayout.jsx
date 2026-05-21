@@ -5,10 +5,10 @@ import { useTheme } from "@/context/ThemeProvider";
 import { Icon, InputWarnMessage } from "@/components/ui";
 import clsx from "clsx";
 
-import Sign_in from "@/assets/images/Sign_in.png";
-import Sign_Up from "@/assets/images/Sign_Up.png";
-import Reset_Password from "@/assets/images/Reset_Password.png";
-import Forgot_Password from "@/assets/images/Forgot_Password.png";
+import SignIn from "@/assets/images/SignIn.png";
+import SignUp from "@/assets/images/SignUp.png";
+import ResetPassword from "@/assets/images/ResetPassword.png";
+import ForgotPassword from "@/assets/images/ForgotPassword.png";
 
 function AuthLayout() {
     const scrollRef = useRef(null);
@@ -20,18 +20,18 @@ function AuthLayout() {
 
     const getImage = () => {
         if (location.pathname.includes("forgot-password")) {
-            return Forgot_Password;
+            return ForgotPassword;
         }
 
         if (location.pathname.includes("login")) {
-            return Sign_in;
+            return SignIn;
         }
 
         if (location.pathname.includes("signup")) {
-            return Sign_Up;
+            return SignUp;
         }
 
-        return Reset_Password;
+        return ResetPassword;
     };
 
 

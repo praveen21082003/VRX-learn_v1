@@ -2,13 +2,13 @@
 
 // User Table
 export const USER_COLUMNS_BASE = [
-  { key: "profile", label: "Profile", width: "8%", align: "left" },
-  { key: "name", label: "Name", width: "15%", align: "left" },
+  { key: "profile", label: "Profile", width: "6%", align: "left" },
+  { key: "name", label: "Name", width: "17%", align: "left" },
   { key: "email", label: "Email", align: "left", width: "25%" },
-  { key: "role", label: "Role", width: "12%" },
-  { key: "lastLogin", label: "Last Login", width: "15%" },
+  { key: "role", label: "Role", width: "8%" },
+  { key: "lastLogin", label: "Last Login", width: "20%" },
   { key: "createdAt", label: "Created At", width: "20%" },
-  { key: "status", label: "Status", width: "12%" },
+  { key: "status", label: "Status", width: "7%" },
   { key: "actions", label: "Actions", width: "12%", align: "center" },
 ];
 
@@ -16,12 +16,12 @@ export const USER_COLUMNS_BASE = [
 // Enrollment Table
 export const ENROLLMENT_COLUMNS_BASE = [
   { key: "profile", label: "Profile", width: "8%", align: "center" },
-  { key: "name", label: "Name", width: "15%", align: "left" },
+  { key: "name", label: "Name", width: "20%", align: "left" },
   { key: "email", label: "Email", width: "25%", align: "left" },
   { key: "role", label: "Role", width: "8%", align: "center" },
-  { key: "courseName", label: "Course Name", width: "30%", align: "left" },
-  { key: "enrolled_at", label: "Enrollment At", width: "18%", align: "left" },
-  { key: "date", label: "Expiry Date", width: "18%", align: "left" },
+  { key: "courseName", label: "Course Name", width: "34%", align: "left" },
+  { key: "enrolled_at", label: "Enrollment At", width: "13%", align: "left" },
+  { key: "date", label: "Expiry Date", width: "13%", align: "left" },
   { key: "status", label: "Status", width: "12%", align: "center" },
   { key: "actions", label: "Actions", width: "12%", align: "center" },
 ];

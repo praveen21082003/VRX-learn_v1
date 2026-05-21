@@ -60,8 +60,15 @@ function EnrollmentsManagement() {
                 return { ...col, render: (row) => <Avatar name={row.name} /> };
 
             case "name":
-                return { ...col, render: (row) => <span className="text-h5">{row.name}</span> };
+                return { ...col, className: "whitespace-nowrap", render: (row) => <span className="">{row.name}</span> };
 
+            case "email":
+                return {
+                    ...col,
+                    className: "whitespace-nowrap",
+                    render: (row) => <span className="truncate block">{row.email}</span>
+                };
+                
             case "role":
             case "status":
                 return { ...col, render: (row) => <StatusPill status={row[col.key]} /> };

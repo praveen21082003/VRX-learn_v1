@@ -22,7 +22,7 @@ function Avatar({ name = "" }) {
 
     return (
         <div
-            className="w-8 h-8 rounded-full text-white flex items-center justify-center text-xs font-semibold"
+            className="w-8 h-8 shrink-0 rounded-full text-white flex items-center justify-center text-xs font-semibold"
             style={{ backgroundColor: getColor(name) }}
         >
             {initials}

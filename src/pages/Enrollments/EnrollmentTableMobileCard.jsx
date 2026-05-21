@@ -6,31 +6,17 @@ function EnrollmentTableMobileCard({ row, columns }) {
     return (
         <div className="relative p-3 mt-2 border border-default items-center rounded-sm shadow-sm">
 
-            <div className="flex items-center gap-3 min-w-0">
-
+            <div className="flex items-center gap-3 min-w-0 pr-28">
                 <div className="shrink-0">
                     {getCol("profile")?.render?.(row)}
                 </div>
 
-
                 <div className="flex flex-col min-w-0 overflow-hidden">
-
-
                     <p className="text-h5 text-main truncate">
-                        {getCol("name")?.render
-                            ? getCol("name").render(row)
-                            : row.name}
+                        {getCol("name")?.render ? getCol("name").render(row) : row.name}
                     </p>
-
-
-                    <p className="text-caption text-main truncate">
-                        {row.email}
-                    </p>
-
-                    <p className="text-caption text-main truncate">
-                        {row.course_name}
-                    </p>
-
+                    <p className="text-caption text-main truncate">{row.email}</p>
+                    <p className="text-caption text-main truncate">{row.courseName}</p>
                     <p className="text-caption text-muted mt-1">
                         Enrolled on: {getCol("date")?.render?.(row)}
                     </p>

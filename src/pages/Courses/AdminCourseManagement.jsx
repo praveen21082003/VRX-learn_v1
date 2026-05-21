@@ -78,7 +78,6 @@ function AdminCourseManagement() {
                             hover:underline
                             hover:underline-offset-4
                             hover:decoration-1
-                            hover:font-bold
                             "
                             onClick={() => handleOpenOverview(row.id)}
                         >
@@ -91,7 +90,10 @@ function AdminCourseManagement() {
                 return {
                     ...col,
                     render: (row) => (
-                        <p title={row.shortDescription} className={`h-10 flex overflow-hidden leading-5 line-clamp-2 ${!row.shortDescription ? "text-muted italic" : ""}`}>
+                        <p
+                            title={row.shortDescription}
+                            className={`h-10 line-clamp-2 leading-5 ${!row.shortDescription ? "text-muted italic" : ""}`}
+                        >
                             {row.shortDescription || "No description provided"}
                         </p>
                     ),

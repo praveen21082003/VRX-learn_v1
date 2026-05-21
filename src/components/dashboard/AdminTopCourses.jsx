@@ -86,7 +86,6 @@ function AdminTopCourses({ loading, courses, error, isRefresh, setIsRefresh, ref
                                     hover:underline
                                     hover:underline-offset-4
                                     hover:decoration-1
-                                    hover:font-bold
                                     text-body
                                     "
                                     onClick={() => handleOpenOverview(course.id)}

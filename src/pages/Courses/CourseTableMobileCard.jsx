@@ -71,7 +71,7 @@ function CourseTableMobileCard({ row, columns, loading }) {
         </p>
 
         {/* Description */}
-        <p title={row.shortDescription} className={`h-10 text-caption overflow-hidden leading-5 line-clamp-2 ${!row.shortDescription ? "text-muted italic" : ""}`}>
+        <p title={row.shortDescription} className={`h-12 text-caption overflow-hidden leading-5 line-clamp-3 ${!row.shortDescription ? "text-muted italic" : ""}`}>
           {row.shortDescription || "No description provided"}
         </p>
 
