@@ -33,45 +33,49 @@ export default function ErrorPage({ statusCode }) {
     };
 
     const error = errorConfig[statusCode] || errorConfig[404];
-    // const error = errorConfig[500]
-    // const error = errorConfig[503]
+
 
     return (
-        <div className="h-screen w-screen flex flex-col bg-background text-main">
-            {/* <div className="h-[5vh] min-h-14 shrink-0">
-                <Header menu={true} />
-            </div> */}
+        <div className="min-h-full md:min-h-screen w-full flex items-center justify-center bg-background text-main px-4 py-10">
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 w-full max-w-5xl">
 
-            <div className="flex h-full w-full justify-center items-center">
-
-                <div className="flex flex-row justify-evenly ">
-                    <img src={error.image} className="w-1/4 ml-15 mt-8" />
-                    {/* <a href="https://storyset.com/web">Web illustrations by Storyset</a> */}
-                    <div className="flex flex-col gap-4 w-1/2 my-auto">
-                        <h1 className="text-h1 font-bold mx-auto">{error.title}</h1>
-
-                        <p className="text-h3 font-semibold w-3/4 mx-auto text-center">
-                            {error.description}
-                        </p>
-
-                        <Button
-                            type="button"
-                            bgClass="bg-primary"
-                            className="p-2 rounded-lg w-3/4 mx-auto"
-                            buttonName="Back To Dashboard"
-                            onClick={() => navigate("/dashboard")}
-                        />
-
-                        <p className="text-ll w-3/4 mx-auto text-center">
-                            Need Help?
-                            <a href="https://vrnexgen1.com/" className="underline ml-1">
-                                Contact Us
-                            </a>
-                        </p>
-                    </div>
+                {/* Image */}
+                <div className="w-full max-w-xs sm:max-w-sm lg:max-w-md shrink-0">
+                    <img
+                        src={error.image}
+                        alt={error.title}
+                        className="w-full h-auto object-contain"
+                    />
                 </div>
-            </div>
 
+                {/* Content */}
+                <div className="flex flex-col items-center gap-4 w-full max-w-md text-center lg:text-left">
+                    <h1 className="text-h1 font-bold">{error.title}</h1>
+
+                    <p className="text-h45 text-muted">
+                        {error.description}
+                    </p>
+
+                    <Button
+                        type="button"
+                        bgClass="bg-primary"
+                        className="p-2 rounded-lg w-full sm:w-3/4 lg:w-full"
+                        buttonName="Back To Dashboard"
+                        onClick={() => navigate("/dashboard")}
+                    />
+                    
+                    <p className="text-ll text-muted">
+                        Need Help?{" "}
+
+                        <a href="https://vrnexgen1.com/"
+                            className="underline text-primary"
+                        >
+                            Contact Us
+                        </a>
+                    </p>
+                </div>
+
+            </div>
         </div>
     );
 }
