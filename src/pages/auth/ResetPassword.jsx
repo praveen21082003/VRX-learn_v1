@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 
 import { useAuthenticate } from "./useAuthenticate";
 
-import { Icon, Input, Button, InputWarnMessage } from "@/components/ui";
+import { Icon, Input, Button, InputWarnMessage, StatusBanner } from "@/components/ui";
 
 
 function ResetPassword() {
@@ -11,24 +11,25 @@ function ResetPassword() {
     const navigate = useNavigate();
 
     const token = searchParams.get("token");
-    console.log(token);
 
     const { handleResetPassword, resettingPassword } = useAuthenticate();
 
+    // states
     const [payload, setPayload] = useState({
         token: token,
         password: "",
         confirmPassword: "",
     });
-
     const [warning, setWarning] = useState({
         password: "",
         confirmPassword: "",
         token: "",
     });
-
     const [warnMsg, setWarnMsg] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
 
+
+    // functions 
     const validateForm = () => {
         const newWarning = { password: "", confirmPassword: "", token: "" };
         let isValid = true;
@@ -77,25 +78,21 @@ function ResetPassword() {
             return;
         }
 
-        navigate("/login");
+        // success — show message then navigate
+        setSuccessMsg("Password reset successfully!");
+        setTimeout(() => navigate("/login"), 2000);
+
     };
 
     return (
-        <>
-            <div className="min-h-4">
-                {warning.token && (
-                    <InputWarnMessage message={warning.token} />
-                )}
-                {warnMsg && (
-                    <InputWarnMessage message={warnMsg} />
-                )}
-            </div>
+        <div className='h-full w-full flex flex-col justify-center items-center'>
+            
+            {successMsg && <StatusBanner type="success" message={successMsg} />}
+            {warning.token && <InputWarnMessage message={warning.token} />}
+            {warnMsg && <StatusBanner type="error" message={warnMsg} />}
 
-            <form onSubmit={handleSubmit} className='space-y-3 w-full'>
-
+            <form onSubmit={handleSubmit} className='space-y-2 w-full'>
                 {/* general API error */}
-
-
                 <Input
                     name="password"
                     type="password"
@@ -140,7 +137,7 @@ function ResetPassword() {
                 </div>
 
             </form>
-        </>
+        </div>
     );
 }
 

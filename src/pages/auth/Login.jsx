@@ -30,21 +30,45 @@ function Login() {
 
     const icons = [
         { key: "web", name: "mdi:web", navlink: "https://vrnexgen1.com/", hover: "hover:text-blue-500" },
-        { key: "linkedin", name: "mdi:linkedin", navlink: "#", hover: "hover:text-blue-600" },
-        { key: "youtube", name: "mdi:youtube", navlink: "#", hover: "hover:text-red-500" },
+        { key: "linkedin", name: "mdi:linkedin", navlink: "https://www.linkedin.com/company/vrnexgen/", hover: "hover:text-blue-600" },
+        { key: "youtube", name: "mdi:youtube", navlink: "https://www.youtube.com/@VRNeXGen1/", hover: "hover:text-red-500" },
         { key: "github", name: "mdi:github", navlink: "#", hover: "hover:text-black" },
     ];
+
+
+
+    const validateForm = () => {
+        const errors = {};
+
+        // Email validation
+        if (!credentials.email.trim()) {
+            errors.email = "Please provide email";
+        } else if (
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credentials.email)
+        ) {
+            errors.email = "Please enter a valid email";
+        }
+
+        // Password validation
+        if (!credentials.password.trim()) {
+            errors.password = "Password can't be empty";
+        } 
+        // else if (credentials.password.length < 6) {
+        //     errors.password = "Password must be at least 6 characters";
+        // }
+
+        setWarning(errors);
+
+        // return true if no errors
+        return Object.keys(errors).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!credentials.email || !credentials.password) {
-            setWarning({
-                email: !credentials.email ? "Please provide email" : "",
-                password: !credentials.password ? "Password can't be empty" : "",
-            });
-            return;
-        }
+        // Validation
+        if (!validateForm()) return;
+
 
         const response = await handleLogin({
             email: credentials.email,
@@ -66,14 +90,14 @@ function Login() {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center w-full mt-4">
+        <div className="flex flex-col justify-center items-center w-full">
             <div className="min-h-2">
                 {message && (
                     <InputWarnMessage message={message} />
                 )}
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mt-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full">
                 <Input
                     name="email"
                     label="Email"
@@ -87,28 +111,26 @@ function Login() {
                     autoComplete="email"
                 />
 
-                <div className="flex flex-col gap-1">
-                    <Input
-                        name="password"
-                        type="password"
-                        label="Password"
-                        placeholder="Enter your password"
-                        paddingClass="p-2"
-                        icon="material-symbols:lock"
-                        bgClass="bg-surface"
-                        inputWarning={warning.password}
-                        onChange={handleChange}
-                        value={credentials.password}
-                        autoComplete="new-password"
-                    />
 
-                    <p
-                        onClick={() => navigate("/forgot-password")}
-                        className="text-caption text-muted mt-2 cursor-pointer hover:text-[#0088ff] hover:font-semibold transition-colors"
-                    >
-                        Forgot Password?
-                    </p>
-                </div>
+                <Input
+                    name="password"
+                    type="password"
+                    label="Password"
+                    placeholder="Enter your password"
+                    paddingClass="p-2"
+                    icon="material-symbols:lock"
+                    bgClass="bg-surface"
+                    inputWarning={warning.password}
+                    onChange={handleChange}
+                    value={credentials.password}
+                    autoComplete="new-password"
+                />
+
+                <p onClick={() => navigate("/forgot-password")}
+                    className="text-caption text-muted mt-2 cursor-pointer hover:text-[#0088ff] hover:font-semibold transition-colors"
+                >
+                    Forgot Password?
+                </p>
 
                 <Button
                     type="submit"
@@ -118,15 +140,13 @@ function Login() {
                     disabled={loggingIn}
                 />
 
-                 <p
-                        className="text-caption text-muted  hover:text-brand transition-colors"
-                    >
-                        Don't have an account? <span onClick={() => navigate("/signup")} className="text-[#0088ff] font-bold  cursor-pointer">Sign up</span>
-                    </p>
+                <p className="text-caption text-muted  hover:text-brand transition-colors">
+                    Don't have an account? <span onClick={() => navigate("/signup")} className="text-[#0088ff] font-bold  cursor-pointer">Sign up</span>
+                </p>
             </form>
 
             {/* Social Links Section */}
-            <div className="flex gap-3 py-10">
+            <div className="flex gap-3 py-4">
                 {icons.map((i) => (
                     <a key={i.key} href={i.navlink} target="_blank" rel="noopener noreferrer">
                         <Icon

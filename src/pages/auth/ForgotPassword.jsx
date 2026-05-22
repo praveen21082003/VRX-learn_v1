@@ -18,7 +18,7 @@ function ForgotPassword() {
 
 
     // states
-    const [email, setEmail] = useState(null);
+    const [email, setEmail] = useState("");
     const [warning, setWarning] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
 
@@ -84,12 +84,12 @@ function ForgotPassword() {
 
 
     return (
-        <div>
-
+        <div className='h-full w-full'>
+            
             {successMsg ? (
                 <StatusBanner type="success" message="Password reset link sent successfully. Please check your inbox."/>
             ) : (
-                <p className="text-sm  text-center mb-4 mt-2 ">
+                <p className="text-sm  text-center mb-2 mt-2 ">
                     No Worries , Enter your Email Address and we'll send you a link to reset
                     your password.
                 </p>

@@ -35,12 +35,12 @@ function SignUp() {
         if (bannerMsg) setBannerMsg("");
     };
 
-    const icons = [
-        { key: "web", name: "mdi:web", navlink: "https://vrnexgen1.com/", hover: "hover:text-blue-500" },
-        { key: "linkedin", name: "mdi:linkedin", navlink: "#", hover: "hover:text-blue-600" },
-        { key: "youtube", name: "mdi:youtube", navlink: "#", hover: "hover:text-red-500" },
-        { key: "github", name: "mdi:github", navlink: "#", hover: "hover:text-black" },
-    ];
+    // const icons = [
+    //     { key: "web", name: "mdi:web", navlink: "https://vrnexgen1.com/", hover: "hover:text-blue-500" },
+    //     { key: "linkedin", name: "mdi:linkedin", navlink: "https://www.linkedin.com/company/vrnexgen/", hover: "hover:text-blue-600" },
+    //     { key: "youtube", name: "mdi:youtube", navlink: "https://www.youtube.com/@VRNeXGen1/", hover: "hover:text-red-500" },
+    //     { key: "github", name: "mdi:github", navlink: "#", hover: "hover:text-black" },
+    // ];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -87,7 +87,7 @@ function SignUp() {
                 <StatusBanner type={bannerType} message={bannerMsg} />
             )}
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-1.5 w-full">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-1.5 w-full pb-10">
                 <Input
                     name="username"
                     label="Username"
@@ -154,7 +154,7 @@ function SignUp() {
                 </p>
             </form>
 
-            <div className="flex gap-3 py-2">
+            {/* <div className="flex gap-3 py-2">
                 {icons.map((i) => (
                     <a key={i.key} href={i.navlink} target="_blank" rel="noopener noreferrer">
                         <Icon
@@ -165,7 +165,7 @@ function SignUp() {
                         />
                     </a>
                 ))}
-            </div>
+            </div> */}
         </>
     );
 }
