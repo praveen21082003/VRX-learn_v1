@@ -197,8 +197,8 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
           price: 1001,
         },
       };
-      console.log(payload)
-      // const response = await createNewCourse(payload);
+
+      const response = await createNewCourse(payload);
 
 
       if (response.success) {
