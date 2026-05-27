@@ -67,7 +67,7 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
 
   // Handle Change Fuction
   const handleChange = (field, value) => {
-    const processedValue = field === "title" ? value.toUpperCase() : value;
+    const processedValue = field === "title" ? value.replace(/\s+/g, " ").toUpperCase() : value;
 
     setFormData((prev) => ({ ...prev, [field]: processedValue }));
     setWarning((prev) => ({
@@ -186,7 +186,7 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
     } else {
       // create payload — send null for empty optional fields
       const payload = {
-        title: formData.title.trim(),
+        title: formData.title.replace(/\s+/g, " ").trim(),
         trainerId: formData.trainerId,
         thumbnail: null,
         shortDescription: formData.shortDescription?.trim() || null,
@@ -197,8 +197,8 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
           price: 1001,
         },
       };
-
-      const response = await createNewCourse(payload);
+      console.log(payload)
+      // const response = await createNewCourse(payload);
 
 
       if (response.success) {
