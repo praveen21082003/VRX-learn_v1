@@ -36,7 +36,7 @@ export default function ErrorPage({ statusCode }) {
 
 
     return (
-        <div className="min-h-full md:min-h-screen w-full flex items-center justify-center bg-background text-main px-4 py-10">
+        <div className=" min-h-screen w-full flex items-center justify-center bg-background text-main px-4 py-10">
             <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 w-full max-w-5xl">
 
                 {/* Image */}
