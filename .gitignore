@@ -26,5 +26,6 @@ dist-ssr
 .env
 .env.development
 .env.production
+db.json
 
 public/title-logo.svg

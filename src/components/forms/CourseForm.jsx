@@ -185,7 +185,7 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
     } else {
       // create payload — send null for empty optional fields
       const payload = {
-        title: formData.title.trim(),
+        title: formData.title.replace(/\s+/g, " ").trim(),
         trainerId: formData.trainerId,
         thumbnail: null,
         shortDescription: formData.shortDescription?.trim() || null,

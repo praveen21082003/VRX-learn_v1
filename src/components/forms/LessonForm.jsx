@@ -44,6 +44,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    isPreview : false
   });
   const [files, setFiles] = useState([]);
   const [warning, setWarning] = useState({});
@@ -107,7 +108,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
         return;
       }
 
-      const result = await updateLessonAction(initialData.id, payload);
+      // const result = await updateLessonAction(initialData.id, payload);
 
       // handle inline field error (title duplicate)
       const newWarning = {};
@@ -145,7 +146,9 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
         filename: file?.name || "",
         contentType: file?.type || "",
         fileSize: file?.size || 1,
+        isPreview : formData.isPreview ,
       };
+      console.log("Create payload:", payload);
 
       const result = await createLessonAction(payload, file);
 
@@ -236,6 +239,22 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
           Lesson content (pdf or document)
         </div>
       )}
+
+    <label className="flex items-center gap-3 cursor-pointer  ">
+      <input type="checkbox" checked={formData.isPreview}
+    onChange={(e) =>
+      setFormData(prev => ({
+        ...prev,
+        isPreview: e.target.checked
+      }))
+    } className = "accent-primary h-3.5 w-4 cursor-pointer" />
+      <div >
+        <h5 className = "text-h5">
+          Preview This Lesson
+        </h5>
+        <p className= "text-caption">This Allows trainees to preview this lesson before enrolling in the course.</p>
+      </div>
+    </label>
 
       <div className='flex justify-center'>
         <Button

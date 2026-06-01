@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { closestCorners, DndContext, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 import { Icon } from '@/components/ui'
@@ -25,7 +25,7 @@ function ReorderList({ items, reorder, isUpdating, onReorderUI }) {
     }, [items]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, {
+        useSensor(MouseSensor, {
             activationConstraint: {
                 distance: 8,  // desktop — drag starts after 8px move
             },
