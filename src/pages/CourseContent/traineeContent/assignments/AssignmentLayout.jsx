@@ -55,8 +55,8 @@ function AssignmentLayout() {
       <div className="py-10 text-main">
         <CourseContentEmptyState
           title="No Assignments Found"
-          description="You have not added any assignments yet. Start by creating one."
-          buttonText="Back to overview"
+          description="There are no assignments available for this course at the moment. Check back later or continue learning through the course content."
+          buttonText="Back to Overview"
           onButtonClick={() =>
             navigate(`/course/${courseId}/overview`)
           }

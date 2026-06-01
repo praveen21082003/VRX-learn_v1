@@ -209,6 +209,7 @@ function ReportsForm() {
                     onChange={(e) =>
                         handleChange("description", e.target.value)
                     }
+                    placeholder='Please tell us exactly what went wrong. Include what you were trying to do, what happened instead, and any error messages you saw.'
                     className="w-full border text-body bg-input-bg border-input-border rounded p-3 focus:outline-none focus:ring-1 focus:ring-brand"
                 />
                 <div className='flex justify-between'>

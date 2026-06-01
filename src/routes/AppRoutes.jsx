@@ -59,30 +59,50 @@ function AppRoutes() {
 
       {/* Protected — redirect to /login if not logged in */}
       <Route element={<ProtectedRoute />}>
-
         <Route element={<AppLayout />}>
+          {/* trainee routes */}
           <Route path="/dashboard" element={<DashboardSwitcher />} />
           <Route path="/learning" element={<MyCourses />} />
           <Route path="/courses" element={<CoursesSwitcher />} />
-          <Route path="/users" element={<UserManagement />} />
-          <Route path="/enrollments" element={<EnrollmentsManagement />} />
-          <Route path="/reports">
-            <Route index element={<Reports />} />
-            <Route path=":reportId" element={<ReportDeatils />} />
+
+          {/* admin only */}
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+
+            <Route path="/users" element={<UserManagement />} />
+            <Route path="/enrollments" element={<EnrollmentsManagement />} />
+            <Route path="/reports">
+              <Route index element={<Reports />} />
+              <Route path=":reportId" element={<ReportDeatils />} />
+            </Route>
+
           </Route>
+
         </Route>
+
+
+        {/* trainee only */}
+
 
         <Route path="/course/:courseId" element={<LearningLayout />}>
           <Route index element={<CourseOverview />} />
           <Route path="overview" element={<CourseOverview />} />
-          {TraineeRoutes()}
+          <Route element={<ProtectedRoute allowedRoles={["trainee"]} />}>
+            {TraineeRoutes()}
+          </Route>
         </Route>
+
+
+
+        {/* admin + trainer only */}
 
         <Route path="/course/:courseId" element={<ContentLayout />}>
           <Route index element={<CourseOverview />} />
           <Route path="overview" element={<CourseOverview />} />
-          {TrainerRoutes()}
+          <Route element={<ProtectedRoute allowedRoles={["admin", "trainer"]} />}>
+            {TrainerRoutes()}
+          </Route>
         </Route>
+
 
         <Route element={<ReportLayout />}>
           <Route path="/report-problem" element={<ReportProblem />} />

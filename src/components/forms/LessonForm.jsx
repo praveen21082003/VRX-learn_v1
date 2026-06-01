@@ -59,9 +59,8 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
   }, [isEdit, initialData]);
 
   const handleChange = (field, value) => {
-    const processedValue = field === "title" ? value.toUpperCase() : value;
 
-    setFormData(prev => ({ ...prev, [field]: processedValue }));
+    setFormData(prev => ({ ...prev, [field]: value }));
     setWarning(prev => ({ ...prev, [field]: null }));
   };
 
@@ -198,6 +197,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
           value={formData.title}
           onChange={(e) => handleChange("title", e.target.value)}
           inputWarning={warning.title}
+          uppercase
         />
       </div>
 

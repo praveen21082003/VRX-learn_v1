@@ -30,9 +30,8 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
 
     // handle Change
     const handleChange = (field, value) => {
-        const processedValue = field === "title" ? value.toUpperCase() : value;
 
-        setFormData(prev => ({ ...prev, [field]: processedValue }));
+        setFormData(prev => ({ ...prev, [field]: value }));
         // clear warning on change
         setWarning((prev) => ({ ...prev, [field]: null }));
     };
@@ -164,6 +163,7 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
                 value={formData.title}
                 onChange={(e) => handleChange("title", e.target.value)}
                 inputWarning={warning.title}
+                uppercase
             />
             <div className="space-y-2">
                 <TextEditor

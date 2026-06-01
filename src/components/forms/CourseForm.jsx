@@ -67,9 +67,8 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
 
   // Handle Change Fuction
   const handleChange = (field, value) => {
-    const processedValue = field === "title" ? value.toUpperCase() : value;
 
-    setFormData((prev) => ({ ...prev, [field]: processedValue }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     setWarning((prev) => ({
       ...prev,
       [field]: null,
@@ -263,10 +262,11 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
       <Input
         label="Title"
         placeholder="Enter course title"
-        paddingClass="p-2"
+        paddingClass="p-2 uppercase"
         value={formData.title}
         onChange={(e) => handleChange("title", e.target.value)}
         inputWarning={warning.title}
+        uppercase
       />
 
       <SearchSelect
@@ -294,7 +294,7 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
         <label className="text-sm font-semibold">Short Description</label>
         <textarea
           rows={4}
-          className="w-full border text-body bg-input-bg border-input-border rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-brand"
+          className="w-full border text-body bg-input-bg border-input-border rounded p-3 focus:outline-none focus:ring-1 focus:ring-brand"
           placeholder="Briefly describe what this course covers (minimum 50 characters if provided)"
           value={formData.shortDescription || ""}
           onChange={(e) => handleChange("shortDescription", e.target.value)}

@@ -112,7 +112,7 @@ function CourseManagementSidebar() {
                         )}
                       />
                     )}
-                    {!hasChildren && <span className="w-[26px] shrink-0" />}
+                    {!hasChildren && <span className="w-7 shrink-0" />}
                     <div className="flex justify-between w-full">
                       {section.label}
                     </div>

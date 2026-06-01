@@ -95,7 +95,7 @@ const FileItem = React.memo(({ file, index, isUploading, uploadProgress, loadedD
 // TODO: Optimize by only rendering progress for the currently uploading file, and not all files in the list. This will require tracking which file is being uploaded in the parent component and passing that info down to FileItem.
 const UploadedFiles = React.memo(({ files, isUploading, uploadProgress, loadedData, mediaStatus, handleRemoveFile, maxFileSize }) => {
     return (
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-1 gap-2 cursor-none">
             {files.map((file, index) => (
                 <FileItem
                     key={file.lastModified}

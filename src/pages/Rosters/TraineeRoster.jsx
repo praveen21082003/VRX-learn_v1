@@ -151,6 +151,8 @@ function TraineeRoster() {
                     <input
                         type="checkbox"
                         onChange={(e) => handleSelectAll(e.target.checked)}
+                        className='accent-primary'
+
                     />
                 </div>
             ),
@@ -164,6 +166,7 @@ function TraineeRoster() {
                         onChange={(e) =>
                             handleSelectRow(row.id, e.target.checked)
                         }
+                        className='accent-primary'
                     />
                 </div>
             ),

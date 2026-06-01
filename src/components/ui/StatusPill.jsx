@@ -17,7 +17,7 @@ export default function StatusPill({ status = '' }) {
   };
 
   return (
-    <div className="leading-none">
+    <div className="leading-none shrink-0">
       <span className={`capitalize px-2 py-0.5 rounded-xs text-small ${colors[status] || "bg-gray-200 text-gray-700"}`}>
         {status.toLowerCase().replace(/_/g, " ")}
       </span>

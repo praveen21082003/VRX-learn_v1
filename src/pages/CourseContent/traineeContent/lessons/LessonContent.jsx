@@ -1,14 +1,19 @@
-import React, {useEffect} from 'react';
-import { useOutletContext } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import LessonViewer from '@/components/lessonViewer/LessonViewer';
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
+import CourseContentEmptyState from "../../../../components/ui/emptyStates/CourseContentEmptyState";
+
 
 function LessonContent() {
+
+  const navigate = useNavigate();
   const {
     modules,
     allLessons,
     activeLesson,
     setActiveLesson,
+    courseId,
   } = useOutletContext();
 
   const { setSectionBreadcrumb } = useBreadcrumbs();
@@ -68,8 +73,21 @@ function LessonContent() {
   }, [lesson?.title, setSectionBreadcrumb]);
 
   if (!activeLesson) {
-    return <div>Select a lesson</div>;
+    return (
+      <div className="py-10 text-main">
+        <CourseContentEmptyState
+          title="No Lessons Found"
+          description="There are currently no lessons available in this module. Try another module or return to the course overview."
+          buttonText="Back to Overview"
+          onButtonClick={() =>
+            navigate(`/course/${courseId}/overview`)
+          }
+        />
+      </div>
+    );
   }
+
+
 
   return (
     <LessonViewer

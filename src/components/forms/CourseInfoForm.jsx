@@ -85,9 +85,8 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
 
     // handle Function
     const handleChange = (field, value) => {
-        const processedValue = field === "title" ? value.toUpperCase() : value;
 
-        setFormData(prev => ({ ...prev, [field]: processedValue }));
+        setFormData(prev => ({ ...prev, [field]: value }));
 
         setWarning(prev => ({ ...prev, [field]: "" }));
 
@@ -216,20 +215,21 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
         <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="flex flex-col-reverse md:flex-row gap-4 md:h-49">
                 <div className="flex flex-col gap-8 md:w-[65%] xl:w-[70%] justify-end">
-                    <div ref={refs.title} className="flex flex-col gap-1 min-h-[72px]">
+                    <div ref={refs.title} className="flex flex-col gap-1 min-h-18">
                         <Input
                             label="Title"
                             value={formData.title}
                             onChange={(e) => handleChange("title", e.target.value)}
                             bgClass="bg-input-bg"
                             inputWarning={warning.title}
+                            uppercase
                         />
                     </div>
 
 
                     {can('UPDATE_AUTHOR')
                         ? (
-                            <div ref={refs.trainerId} className="flex flex-col gap-1 min-h-[72px]">
+                            <div ref={refs.trainerId} className="flex flex-col gap-1 min-h-18">
                                 <SearchSelect
                                     label="Author"
                                     value={search}
@@ -306,7 +306,7 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
                     onChange={(e) =>
                         handleChange("shortDescription", e.target.value)
                     }
-                    className="w-full border text-body bg-input-bg border-input-border rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-brand"
+                    className="w-full border text-body bg-input-bg border-input-border rounded p-3 focus:outline-none focus:ring-1 focus:ring-brand"
                 />
             </div>
             <div>

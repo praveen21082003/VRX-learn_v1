@@ -267,7 +267,7 @@ export const useAuthenticate = () => {
                 err.response?.data?.type;
 
             let message =
-                "Unable to reset password right now.";
+                "Unable to verify right now.";
 
             if (status === 400) {
 

@@ -79,7 +79,7 @@ function AssignmentContent() {
     }, [assignmentDetail?.id]);
 
     const getButtonText = () => {
-        if (submitting){
+        if (submitting) {
             return "Submiting..."
         }
         if (submitting && uploadProgress > 0 && uploadProgress < 100) {
@@ -279,7 +279,9 @@ function AssignmentContent() {
                                 <div key={attemptNumber} className="border rounded border-default bg-background overflow-hidden">
                                     <div className="flex bg-submission border-b border-default justify-between p-3 h-15 items-center">
                                         <div className="flex justify-center items-center gap-5">
-                                            Attempt {attemptNumber} of {maxAttempts}
+                                            <span className='text-h5'>
+                                                Attempt {attemptNumber} of {maxAttempts}
+                                            </span>
                                             {openAttempt !== attemptNumber && (
                                                 <span className='hidden md:block'>
                                                     <p className="text-body">{submission.filename}</p>
@@ -322,8 +324,8 @@ function AssignmentContent() {
                                                     </span>
                                                 </div>
                                                 {submission.score !== null && (
-                                                    <span className="flex items-center font-semibold text-primary">
-                                                        <p className="text-h3">{submission.score}</p>
+                                                    <span className="flex items-center font-semibold">
+                                                        <p className="text-h3 text-primary">{submission.score}</p>
                                                         / <p className="text-h5">{assignmentData.maxScore}</p>
                                                     </span>
                                                 )}

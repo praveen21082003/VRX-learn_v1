@@ -49,10 +49,11 @@ function AssignmentView() {
     if (assignmentId) fetchAssignmentDetails(assignmentId);
   }, [assignmentId]);
 
-  // refetch submissions when params change
-  // useEffect(() => {
-  //   fetchSubmissions();
-  // }, [params]);
+
+  useEffect(() => {
+    setActiveTab("instructions");
+    setActiveAssignmentId(null);
+  }, [assignmentId]);
 
   const resetFilters = () => {
     setParams({
@@ -145,7 +146,7 @@ function AssignmentView() {
 
           {activeTab === "submissions" && (
             <div className='block md:hidden shrink-0'>
-              <Button buttonName="Export as CSV" frontIconName="material-symbols:download" frontIconHeght="24" frontIconWidth="24" className="p-1 px-2 rounded font-semibold text-md" bgClass="" textClass="text-primary dark:text-background" isMobile={isMobile}/>
+              <Button buttonName="Export as CSV" frontIconName="material-symbols:download" frontIconHeght="24" frontIconWidth="24" className="p-1 px-2 rounded font-semibold text-md" bgClass="" textClass="text-primary dark:text-background" isMobile={isMobile} />
             </div>
           )}
         </div>

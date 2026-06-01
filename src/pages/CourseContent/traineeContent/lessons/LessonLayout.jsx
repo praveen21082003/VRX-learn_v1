@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useCourseContent } from '../../hooks/useCourseContent';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { BackButton, Icon } from "@/components/ui";
 import ContentLessonSidebar from './ContentLessonSidebar';
+import CourseContentEmptyState from "../../../../components/ui/emptyStates/CourseContentEmptyState";
+
 
 function LessonLayout() {
 
@@ -13,6 +15,7 @@ function LessonLayout() {
 
 
   const { courseId } = useParams();
+  const navigate = useNavigate();
 
 
 
@@ -68,6 +71,22 @@ function LessonLayout() {
     )
   }
 
+  if (!modules || modules.length === 0) {
+    return (
+      <div className="py-10 text-main">
+        <CourseContentEmptyState
+          title="No Modules Found"
+          description="This course doesn't have any modules yet. Return to the course overview or check back later for new content."
+          buttonText="Back to Overview"
+          onButtonClick={() =>
+            navigate(`/course/${courseId}/overview`)
+          }
+        />
+      </div>
+    );
+  }
+
+
   return (
     <div className="flex h-full overflow-hidden bg-background">
       <aside className="w-full max-w-96 border-r-2 border-default bg-surface overflow-y-auto scrollbar-hide hidden lg:block">
@@ -99,6 +118,7 @@ function LessonLayout() {
         <Outlet
           context={{
             course,
+            courseId,
             modules,
             allLessons,
             activeLesson,

@@ -3,6 +3,7 @@ import { useParams, useOutletContext, NavLink, useNavigate } from "react-router-
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 
 import { CourseTumbnail, Icon, CourseOverviewPlaceholder, BackButton } from '@/components/ui';
+import ContentAccordion from '../../components/ui/ContentAccordion';
 
 import { useCourseOverview } from './hooks/useCourseOverview';
 import { usePermission } from '../../hooks/usePermission';
@@ -151,10 +152,10 @@ function CourseOverview() {
 
     if (loading) return <div className='flex h-screen w-full justify-center text-main items-center'><Icon name="line-md:loading-twotone-loop" height="30" width="30" />Loading...</div>;
     if (error) return (
-        <div className='flex flex-col h-screen w-full justify-center items-center text-red-500'>
-            <Icon name="fluent:mail-error-16-filled" height="40" width="40" />
-            <span className='items-center'>{error}</span>
-        </div>);
+        <div className='p-6'>
+            <ContentAccordion />
+        </div>
+        );
 
     return (
         <div className="space-y-1 py-4 px-4 lg:px-6 lg:py-4 text-main">

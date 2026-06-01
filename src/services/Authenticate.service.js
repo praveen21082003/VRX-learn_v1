@@ -55,9 +55,9 @@ export const resetPassword = ({
 
 // verify email
 export const verifyEmail = (token) => {
-    return axiosInstance.patch(
+    return axiosInstance.post(
         "/api/v1/auth/verify-email",
-        null,           // no body
+        null,           // no body only pasing parmas
         {
             params: { token },
         }

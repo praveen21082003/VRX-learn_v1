@@ -12,7 +12,7 @@ export default function StatCard({
     if (loading) {
         return (
             <div className="flex items-center justify-center gap-3 p-3 sm:p-4 border border-default rounded-xs shadow-sm w-full overflow-hidden animate-pulse">
-                
+
                 <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg shrink-0" />
 
                 <div className="flex flex-col justify-center items-center w-full gap-2">
@@ -26,7 +26,7 @@ export default function StatCard({
 
     return (
         <div className={clsx("flex items-center justify-center gap-3 p-3 sm:p-4 border border-default rounded-xs shadow-sm w-full overflow-hidden",
-            !value && "opacity-70"
+            (value === undefined || value === null) && "opacity-70"
         )}>
 
             {/* Icon */}
@@ -38,9 +38,13 @@ export default function StatCard({
             <div className="flex flex-col justify-center items-center w-full">
                 <p className="text-h5 sm:text-h4 text-muted text-center wrap-break-word">{label}</p>
                 <span className={clsx("font-semibold text-primary text-center",
-                    value ? 'text-h2' : 'text-xs'
+                    value !== undefined && value !== null
+                        ? 'text-h2'
+                        : 'text-xs'
                 )}>
-                    {value ? value : <span className="text-muted">Available soon</span>}
+                    {value !== undefined && value !== null
+                        ? value
+                        : <span className="text-muted">Available soon</span>}
                 </span>
             </div>
 

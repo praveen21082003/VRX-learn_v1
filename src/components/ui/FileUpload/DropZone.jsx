@@ -60,7 +60,7 @@ export default function DropZone({ label, optional, files, multipleFiles = false
       {files.length === 0 && (
         <div
           {...getRootProps()}
-          className={`relative noise-overlay flex ${heightClass} w-full  flex-col  items-center border border-dashed bg-primary-16 justify-center `}
+          className={`relative noise-overlay flex ${heightClass} w-full  flex-col  items-center border border-dashed bg-primary-16 justify-center cursor-pointer`}
         >
           <input {...getInputProps()} className="hidden" />
 
