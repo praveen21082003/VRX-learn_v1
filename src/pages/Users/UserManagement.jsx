@@ -68,7 +68,7 @@ function UserManagement() {
                 return {
                     ...col,
                     className: "whitespace-nowrap",
-                    render: (row) => <span className="truncate block">{row.email}</span>
+                    render: (row) => <span className="truncate block" title={row.email}>{row.email}</span>
                 };
 
             case "role":

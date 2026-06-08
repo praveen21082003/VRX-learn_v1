@@ -227,10 +227,11 @@ function EnrollmentForm({ initialData, onClose, onSuccess, mode, isEdit }) {
                     inputLabel="Status"
                     value={formData.status}
                     options={[
-                        { label: "Active", value: "active" },
+                        { label: "Pending", value: "pending" },
                         { label: "In Progress", value: "in-progress" },
+                        { label: "Suspended", value: "suspended" },
+                        { label: "Dropped", value: "dropped" },
                         { label: "Completed", value: "completed" },
-                        { label: "Cancelled", value: "cancelled" },
                     ]}
                     onChange={(val) => handleChange("status", val)}
                 />
@@ -244,7 +245,7 @@ function EnrollmentForm({ initialData, onClose, onSuccess, mode, isEdit }) {
                 min={new Date().toISOString().slice(0, 10)}
             />
 
-            <div className="flex w-full gap-3 pt-4">
+            <div className="flex w-full gap-3 pt-10">
                 <Button
                     type="button"
                     buttonName="Cancel"

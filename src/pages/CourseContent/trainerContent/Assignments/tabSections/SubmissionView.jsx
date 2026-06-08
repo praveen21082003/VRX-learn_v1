@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import GradeImg from "@/assets/images/Grade.svg"
 
-import { Button, Avatar, StatusPill, Icon, Input } from "@/components/ui";
+import { Button, Avatar, StatusPill, Icon, Input, TextArea } from "@/components/ui";
 import { useClickOutside } from '@/hooks/useClickOutside'
 
 import useAssignmentSubmissions from "../hooks/useAssignmentSubmissions";
@@ -302,16 +302,15 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                         )}
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-h5">Feedback</label>
-                        <textarea
-                            rows="8"
-                            placeholder="Provide feedback for the student..."
-                            className="w-full border-2 text-body border-default rounded p-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                            value={evaluation.feedback}
-                            onChange={(e) => handleChange("feedback", e.target.value)}
-                        />
-                    </div>
+                    <TextArea
+                        label="Feedback"
+                        rows="8"
+                        placeholder="Provide feedback for the student..."
+                        value={evaluation.feedback}
+                        onChange={(e) => handleChange("feedback", e.target.value)}
+                        showCount
+                        maxLength={2000}
+                    />
 
                     <div className="flex justify-end">
                         <Button

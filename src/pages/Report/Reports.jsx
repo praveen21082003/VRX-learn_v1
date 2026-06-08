@@ -22,7 +22,7 @@ function Reports() {
   const INITIAL_FILTERS = {
     category: null,
     role: null,
-    status: null
+    status: "pending",
   };
 
   const navigate = useNavigate();

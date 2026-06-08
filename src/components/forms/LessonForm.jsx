@@ -59,9 +59,12 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
   }, [isEdit, initialData]);
 
   const handleChange = (field, value) => {
-    const processedValue = field === "title" ? value.toUpperCase() : value;
+    if (field === "title") {
+      value = value.replace(/\s+/g, " ")
+        .replace(/^\s/, "");
+    }
 
-    setFormData(prev => ({ ...prev, [field]: processedValue }));
+    setFormData(prev => ({ ...prev, [field]: value }));
     setWarning(prev => ({ ...prev, [field]: null }));
   };
 
@@ -71,7 +74,10 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
     if (!formData.title.trim()) errors.title = "Title is required";
 
     // description is optional
-    // if (!formData.description.trim()) errors.description = "Description is required";
+    const longDesc = formData.description?.trim();
+    if (longDesc && longDesc.length > 5000) {
+      errors.description = `Description must be under 5000 characters (${longDesc.length}/5000)`;
+    }
     if (!isEdit && files.length === 0) errors.file = "Please upload a file";
     return errors;
   };
@@ -131,7 +137,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
 
       // success
       addToast(result.message, "success");
-      invalidateCache?.(moduleId);  
+      invalidateCache?.(moduleId);
       navigate(`/course/${courseId}/content/modules/${moduleId}`);
     }
 
@@ -171,7 +177,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
 
       // success
       addToast(result.message, "success");
-      invalidateCache?.(moduleId);  
+      invalidateCache?.(moduleId);
       navigate(`/course/${courseId}/content/modules/${moduleId}`);
     }
   };

@@ -8,7 +8,7 @@ import { searchUser } from "../../services/AdminSearch.service";
 import { useToast } from '@/context/ToastProvider'
 import { usePermission } from '@/hooks/usePermission'
 
-import { Input, CourseTumbnail, Button, TextEditor, SearchSelect } from '@/components/ui'
+import { Input, CourseTumbnail, Button, TextEditor, SearchSelect, TextArea } from '@/components/ui'
 
 
 
@@ -85,9 +85,9 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
 
     // handle Function
     const handleChange = (field, value) => {
-        const processedValue = field === "title" ? value.toUpperCase() : value;
+        value = value.replace(/\s+/g, " ").trim();
 
-        setFormData(prev => ({ ...prev, [field]: processedValue }));
+        setFormData(prev => ({ ...prev, [field]: value }));
 
         setWarning(prev => ({ ...prev, [field]: "" }));
 
@@ -118,6 +118,11 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
 
         if (canEditAuthor && !formData.trainerId) {
             errors.trainerId = "Please select a valid author.";
+        }
+
+        if (formData.shortDescription?.length > 600) {
+            errors.shortDescription =
+                "Short description cannot exceed 600 characters.";
         }
 
         return errors;
@@ -216,7 +221,7 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
         <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="flex flex-col-reverse md:flex-row gap-4 md:h-49">
                 <div className="flex flex-col gap-8 md:w-[65%] xl:w-[70%] justify-end">
-                    <div ref={refs.title} className="flex flex-col gap-1 min-h-[72px]">
+                    <div ref={refs.title} className="flex flex-col gap-1 min-h-18">
                         <Input
                             label="Title"
                             value={formData.title}
@@ -229,7 +234,7 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
 
                     {can('UPDATE_AUTHOR')
                         ? (
-                            <div ref={refs.trainerId} className="flex flex-col gap-1 min-h-[72px]">
+                            <div ref={refs.trainerId} className="flex flex-col gap-1 min-h-18">
                                 <SearchSelect
                                     label="Author"
                                     value={search}
@@ -298,17 +303,18 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
             </div>
 
 
-            <div className="space-y-4">
-                <label className="text-h5">Short description</label>
-                <textarea
-                    rows="6"
-                    value={formData.shortDescription}
-                    onChange={(e) =>
-                        handleChange("shortDescription", e.target.value)
-                    }
-                    className="w-full border text-body bg-input-bg border-input-border rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-brand"
-                />
-            </div>
+            <TextArea
+                label="Short Description"
+                placeholder="Enter a brief description of the course"
+                value={formData.shortDescription}
+                onChange={(e) =>
+                    handleChange("shortDescription", e.target.value)
+                }
+                warning={warning.shortDescription}
+                autoResize
+                maxLength={600}
+                showCount
+            />
             <div>
                 <label className="text-h5">Description</label>
                 <TextEditor

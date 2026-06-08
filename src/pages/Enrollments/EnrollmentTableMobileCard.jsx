@@ -12,13 +12,13 @@ function EnrollmentTableMobileCard({ row, columns }) {
                 </div>
 
                 <div className="flex flex-col min-w-0 overflow-hidden">
-                    <p className="text-h5 text-main truncate">
+                    <p className="text-h5 text-main line-clamp-2 pr-6">
                         {getCol("name")?.render ? getCol("name").render(row) : row.name}
                     </p>
                     <p className="text-caption text-main truncate">{row.email}</p>
                     <p className="text-caption text-main truncate">{row.courseName}</p>
                     <p className="text-caption text-muted mt-1">
-                        Enrolled on: {getCol("date")?.render?.(row)}
+                        Enrolled on: {getCol("enrolled_at")?.render?.(row)}
                     </p>
                 </div>
             </div>

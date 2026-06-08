@@ -63,10 +63,11 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
     }
   }, [isEdit, initialData]);
 
-  const handleChange = (field, value) => {
-    const processedValue = field === "title" ? value.toUpperCase() : value;
-
-    setFormData(prev => ({ ...prev, [field]: processedValue }));
+ const handleChange = (field, value) => {
+    if(field === "title"){
+      value = value.replace(/\s+/g, " ") .replace(/^\s/, "")
+    }
+    setFormData(prev => ({ ...prev, [field]: value }));
     setWarning(prev => ({ ...prev, [field]: null }));
   };
 
@@ -276,6 +277,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           inputWarning={warning.title}
           placeHolder="Enter title"
           onChange={(e) => handleChange("title", e.target.value)}
+          uppercase
         />
       </div>
 
