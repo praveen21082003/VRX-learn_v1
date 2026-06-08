@@ -79,7 +79,7 @@ function AssignmentContent() {
     }, [assignmentDetail?.id]);
 
     const getButtonText = () => {
-        if (submitting){
+        if (submitting) {
             return "Submiting..."
         }
         if (submitting && uploadProgress > 0 && uploadProgress < 100) {
@@ -276,8 +276,15 @@ function AssignmentContent() {
                             if (!submission) return null;
 
                             return (
-                                <div key={attemptNumber} className="border rounded border-default bg-background overflow-hidden">
-                                    <div className="flex bg-submission border-b border-default justify-between p-3 h-15 items-center">
+                                <div key={attemptNumber} className="border rounded border-default overflow-hidden">
+                                    <div
+                                        className="no-select flex bg-menu-header border-b border-default justify-between p-3 h-15 items-center cursor-pointer"
+                                        onClick={() =>
+                                            setOpenAttempt(prev =>
+                                                prev === attemptNumber ? null : attemptNumber
+                                            )
+                                        }
+                                    >
                                         <div className="flex justify-center items-center gap-5">
                                             Attempt {attemptNumber} of {maxAttempts}
                                             {openAttempt !== attemptNumber && (
@@ -300,11 +307,6 @@ function AssignmentContent() {
                                                 bgClass=""
                                                 textClass=""
                                                 className={openAttempt === attemptNumber ? "rotate-180" : ""}
-                                                onClick={() =>
-                                                    setOpenAttempt(prev =>
-                                                        prev === attemptNumber ? null : attemptNumber
-                                                    )
-                                                }
                                             />
                                         </div>
                                     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import GradeImg from "@/assets/images/Grade.svg"
 
-import { Button, Avatar, StatusPill, Icon, Input, TextArea } from "@/components/ui";
+import { Button, Avatar, StatusPill, Icon, Input } from "@/components/ui";
 import { useClickOutside } from '@/hooks/useClickOutside'
 
 import useAssignmentSubmissions from "../hooks/useAssignmentSubmissions";
@@ -9,7 +9,7 @@ import DocumentLayout from "@/components/content/document/DocumentLayout";
 import useMedia from '@/components/content/hook/useMedia';
 import { useToast } from "@/context/ToastProvider";
 
-function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentId, submissions }) {
+function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentId, submissions, refreshSubmissions }) {
     const { addToast } = useToast();
     const [isOpen, ref, setIsOpen, toggle] = useClickOutside();
 
@@ -185,29 +185,55 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                     onClick={() => setActiveTab("submissions")}
                 />
 
-                <div className="relative" ref={ref}>
-                    {/* trigger — full width */}
+                <div className="relative w-full lg:w-96 no-select" ref={ref}>
+
+
+                    {/* Trigger */}
                     <div
-                        className="flex items-center justify-center lg:justify-between gap-1 lg:gap-3 px-4 py-2 border border-default rounded min-w-72 cursor-pointer"
-                        onClick={toggle}
+                        className="flex justify-between px-4 py-2 border border-default rounded bg-menu-header w-full cursor-pointer"
                     >
-                        <div className="flex items-center gap-2">
-                            <Avatar name={submissionData?.submitterName} />
-                            <span className="font-medium truncate">{submissionData?.submitterName}</span>
+                        <Button
+                            frontIconName="mingcute:left-fill"
+                            frontIconHeght="24"
+                            frontIconWidth="24"
+                            bgClass=""
+                            textClass=""
+                            disabled={!hasPrev}
+                            onClick={handlePrev}
+                            className="block lg:hidden"
+                        />
+
+                        <div className="flex items-center justify-between w-full" onClick={toggle}>
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                                <Avatar name={submissionData?.submitterName} className="shrink-0" />
+                                <span className="font-medium truncate">{submissionData?.submitterName}</span>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                                <StatusPill status={submissionData?.status} />
+                                <Icon
+                                    name="iwwa:arrow-down"
+                                    height="16" width="16"
+                                    className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                                />
+                            </div>
                         </div>
-                        <div className="flex items-center gap-3 lg:gap-7">
-                            <StatusPill status={submissionData?.status} />
-                            <Icon
-                                name="iwwa:arrow-down"
-                                height="16" width="16"
-                                className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                            />
-                        </div>
+
+                        <Button
+                            frontIconName="mingcute:right-fill"
+                            frontIconHeght="24"
+                            frontIconWidth="24"
+                            bgClass=""
+                            textClass=""
+                            disabled={!hasNext}
+                            onClick={handleNext}
+                            className="block lg:hidden"
+                        />
                     </div>
 
-                    {/* dropdown — full width of parent */}
+
+                    {/* Dropdown */}
                     {isOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-1 border border-default rounded bg-background shadow-lg z-50 max-h-60 overflow-y-auto scrollbar-hide">
+                        <div className="absolute top-full left-0 right-0 mt-1 border border-default rounded bg-background shadow-lg z-50 max-h-60 overflow-y-auto scrollbar-hide w-full">
                             {submissions?.map((item) => (
                                 <div
                                     key={item.id}
@@ -215,20 +241,23 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                                         setActiveAssignmentId(item.id);
                                         setIsOpen(false);
                                     }}
-                                    className={`flex items-center justify-between px-4 py-3 hover:bg-primary/16 cursor-pointer transition-colors
+                                    className={`flex items-center justify-between gap-3 px-4 py-3 hover:bg-primary/16 cursor-pointer transition-colors
                                         ${item.id === activeAssignmentId ? "bg-primary/16" : ""}
                                     `}
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <Avatar name={item.username} />
-                                        <div>
-                                            <p className="text-h5">{item.username}</p>
-                                            <p className="text-caption text-muted">{item.email}</p>
+                                    {/* Left: avatar + name/email */}
+                                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                                        <Avatar name={item.username} className="shrink-0" />
+                                        <div className="min-w-0">
+                                            <p className="text-h5 truncate">{item.username}</p>
+                                            <p className="text-caption text-muted truncate">{item.email}</p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-end gap-1">
+
+                                    {/* Right: status + score — fixed width, never shrinks */}
+                                    <div className="flex flex-col items-end gap-1 shrink-0">
                                         <StatusPill status={item.status} />
-                                        <span className="text-caption text-muted">
+                                        <span className="text-caption text-muted whitespace-nowrap">
                                             {item.status === "graded" ? item.score : "--"}/{item.maxScore}
                                         </span>
                                     </div>
@@ -239,7 +268,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                 </div>
 
                 {/* next/prev — placeholder for dropdown later */}
-                <div className="flex items-center gap-2 lg:ml-10">
+                <div className="hidden lg:flex items-center gap-2 lg:ml-10">
                     <Button
                         frontIconName="mingcute:left-fill"
                         frontIconHeght="24"
@@ -278,7 +307,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                 </section>
 
                 {/* grading panel */}
-                <aside className="w-full lg:w-80 p-4 space-y-5 border border-default rounded">
+                <aside className="w-full lg:w-80 p-4 space-y-3">
 
                     <div className="space-y-1">
                         <Input
@@ -291,6 +320,8 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                             onChange={(e) => handleChange("score", e.target.value)}
                             inputWarning={warning.score}
                             disabled={isAlreadyGraded} // locked after grading cant change
+                            border="border-default"
+
                         />
                         <span className="text-caption text-muted">
                             Out of {submissionData?.maxScore ?? "—"} points
@@ -302,15 +333,16 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                         )}
                     </div>
 
-                    <TextArea
-                        label="Feedback"
-                        rows="8"
-                        placeholder="Provide feedback for the student..."
-                        value={evaluation.feedback}
-                        onChange={(e) => handleChange("feedback", e.target.value)}
-                        showCount
-                        maxLength={2000}
-                    />
+                    <div className="space-y-2">
+                        <label className="text-h5">Feedback</label>
+                        <textarea
+                            rows="8"
+                            placeholder="Provide feedback for the student..."
+                            className="w-full border-2 text-body border-default rounded p-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                            value={evaluation.feedback}
+                            onChange={(e) => handleChange("feedback", e.target.value)}
+                        />
+                    </div>
 
                     <div className="flex justify-end">
                         <Button

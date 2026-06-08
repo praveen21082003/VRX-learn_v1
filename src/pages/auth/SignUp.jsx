@@ -35,6 +35,7 @@ function SignUp() {
     if (name === "username") {
       updatedValue = value
         .replace(/[^a-zA-Z0-9\s.'.]/g, "") 
+        .replace(/\.{2,}/g, ".")
         .replace(/\s+/g, " ") 
         .replace(/^\s/, "");
     }

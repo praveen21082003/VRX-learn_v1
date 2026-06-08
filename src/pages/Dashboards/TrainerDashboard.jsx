@@ -18,7 +18,7 @@ function TrainerDashboard() {
   const statsWithData = TRAINER_STAT_CARDS.map((card) => ({
     ...card,
     // Fallback to 0 while loading
-    value: kpis?.[card.key] || 0,
+    value: kpis?.[card.key],
   }));
 
   return (

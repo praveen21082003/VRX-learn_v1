@@ -82,6 +82,7 @@ function DataTable({ columns, data, page, setPage, pageSize, total, setPageSize,
           end={end}
           totalPages={totalPages}
           pages={pages}
+          loading={loading}
         />
       </div>
 

@@ -108,7 +108,8 @@ function UserForm({ initialData, onSubmit, onSuccess, onClose, mode }) {
 
     if (field === "username") {
       updatedValue = value
-        .replace(/[^a-zA-Z0-9\s.-]/g, "") // remove emoji, numbers, symbols
+        .replace(/[^a-zA-Z0-9\s.-]/g, "")
+        .replace(/\.{2,}/g, ".") // remove emoji, numbers, symbols
         .replace(/\s+/g, " ") // avoid multiple spaces
         .replace(/^\s/, ""); // prevent starting space
     }
