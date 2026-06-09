@@ -85,7 +85,9 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
 
     // handle Function
     const handleChange = (field, value) => {
-        value = value.replace(/\s+/g, " ");
+        if(field === "title"){
+            value = value.replace(/\s+/g, " ");
+        }
 
         setFormData(prev => ({ ...prev, [field]: value }));
 
