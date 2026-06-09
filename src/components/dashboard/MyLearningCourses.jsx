@@ -1,7 +1,7 @@
 import React from 'react';
 import { CourseCardViewer } from "@/components/ui";
 
-function MyCoursesSection({ enrolledCourses, loading }) {
+function MyLearningCourses({ enrolledCourses, loading }) {
     
 
     return (
@@ -22,4 +22,4 @@ function MyCoursesSection({ enrolledCourses, loading }) {
     );
 }
 
-export default MyCoursesSection;
+export default MyLearningCourses    ;

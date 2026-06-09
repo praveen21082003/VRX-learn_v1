@@ -7,8 +7,9 @@ function AllCoursesSection({ courses, loading }) {
             title="All Courses"
             courses={courses}
             loading={loading}
-            myCourses={true}
+            myCourses={false}
             gridSize={3}
+            maxCourses={3}
             getButtonName={true}
             emptyTitle="No Courses available"
             // emptyDescription="."
