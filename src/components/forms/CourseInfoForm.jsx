@@ -85,7 +85,7 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
 
     // handle Function
     const handleChange = (field, value) => {
-        value = value.replace(/\s+/g, " ").trim();
+        value = value.replace(/\s+/g, " ");
 
         setFormData(prev => ({ ...prev, [field]: value }));
 
@@ -123,6 +123,10 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
         if (formData.shortDescription?.length > 600) {
             errors.shortDescription =
                 "Short description cannot exceed 600 characters.";
+        }
+
+        if (formData.longDescription?.length > 5000) {
+            errors.longDescription = "Long description cannot exceed 5000 characters.";
         }
 
         return errors;
@@ -228,6 +232,7 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
                             onChange={(e) => handleChange("title", e.target.value)}
                             bgClass="bg-input-bg"
                             inputWarning={warning.title}
+                            uppercase
                         />
                     </div>
 
@@ -322,6 +327,10 @@ function CourseInfoForm({ courseInfo, onSuccess, setIsRefresh }) {
                     onChange={(value) =>
                         handleChange("longDescription", value)
                     }
+                    maxLength={5000}
+                    showCount
+                    inputWarning={warning.longDescription}
+                    placeholder="Provide a detailed description of the course, including key topics and outcomes"
                 />
 
             </div>

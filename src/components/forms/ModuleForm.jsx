@@ -170,13 +170,17 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
                 value={formData.title}
                 onChange={(e) => handleChange("title", e.target.value)}
                 inputWarning={warning.title}
+                uppercase
             />
             <div className="space-y-2">
                 <TextEditor
                     label="Description"
+                    placeholder="Provide a brief description of the module content"
                     value={formData.description}
                     onChange={(value) => handleChange("description", value)}
                     inputWarning={warning.description}
+                    maxLength={5000}
+                    showCount
                 />
             </div>
 

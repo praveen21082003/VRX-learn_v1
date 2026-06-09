@@ -63,9 +63,9 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
     }
   }, [isEdit, initialData]);
 
- const handleChange = (field, value) => {
-    if(field === "title"){
-      value = value.replace(/\s+/g, " ") .replace(/^\s/, "")
+  const handleChange = (field, value) => {
+    if (field === "title") {
+      value = value.replace(/\s+/g, " ").replace(/^\s/, "")
     }
     setFormData(prev => ({ ...prev, [field]: value }));
     setWarning(prev => ({ ...prev, [field]: null }));
@@ -86,6 +86,10 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
     if (!isEdit && !instructions && !file) {
       errors.instructions = "Enter instructions or upload a file";
       errors.file = "Upload a file or enter instructions";
+    }
+
+    if (instructions && instructions.length > 5000) {
+      errors.instructions = `Instructions must be under 5000 characters (${instructions.length}/5000)`;
     }
 
     // maxScore only on create
@@ -284,9 +288,12 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
       <div ref={instructionsRef}>
         <TextEditor
           label="Instructions"
+          placeholder="Enter instructions for the assignment. You can also upload a file as an attachment or provide instructions in this text editor."
           value={formData.instructions}
           onChange={(value) => handleChange("instructions", value)}
           inputWarning={warning.instructions}
+          maxLength={5000}
+          showCount
         />
       </div>
 

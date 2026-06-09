@@ -274,6 +274,7 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
         value={formData.title}
         onChange={(e) => handleChange("title", e.target.value)}
         inputWarning={warning.title}
+        uppercase
       />
 
       <SearchSelect
@@ -330,6 +331,8 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
             onChange={(value) => handleChange("longDescription", value)}
             inputWarning={warning.longDescription}
             placeholder="Provide a detailed description of the course, including key topics and outcomes"
+            maxLength={5000}
+            showCount
           />
         </div>
       )}

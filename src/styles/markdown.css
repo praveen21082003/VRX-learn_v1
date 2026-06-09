@@ -31,15 +31,22 @@
 
 
 /* Lists */
+/* Force list styles — Tailwind preflight resets these */
 .markdown-content ul,
 .markdown-content ol {
-  padding-left: 1.25rem;
+  list-style: revert;
+  padding-left: 1.5rem;
   margin: 0.75rem 0;
 }
 
-.markdown-content li {
-  margin: 0.25rem 0;
+.markdown-content ul {
+  list-style-type: disc;
 }
+
+.markdown-content ol {
+  list-style-type: decimal;
+}
+
 
 /* Code blocks */
 .markdown-content pre {
@@ -78,16 +85,6 @@
   margin-bottom: 0.75rem;
 }
 
-/* Lists */
-.markdown-content ul {
-  padding-left: 1.25rem;
-  margin-bottom: 0.75rem;
-}
-
-.markdown-content li {
-  list-style-type: disc;
-  margin-bottom: 0.25rem;
-}
 
 /* Horizontal rule */
 .markdown-content hr {
@@ -106,12 +103,19 @@
 /* for code block */
 
 .markdown-content pre {
-  background: #0d1117;
-  color: #f3f4f6;
+  background: #e5e7eb;
+  color: #be185d;
+  border: 1px solid #f8fafc;
   padding: 12px;
   border-radius: 10px;
   overflow-x: auto;
   margin: 12px 0;
+  cursor: text;
+}
+
+.dark .markdown-content pre {
+  background: #1f2937;
+  color: #f472b6;
 }
 
 .markdown-content code {
@@ -124,6 +128,7 @@
   color: #be185d;
   padding: 2px 5px;
   border-radius: 4px;
+  cursor: text;
 }
 
 .dark .markdown-content p code {

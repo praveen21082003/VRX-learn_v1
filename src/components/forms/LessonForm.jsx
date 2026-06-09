@@ -204,15 +204,19 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
           value={formData.title}
           onChange={(e) => handleChange("title", e.target.value)}
           inputWarning={warning.title}
+          uppercase
         />
       </div>
 
       <div className="space-y-2">
         <TextEditor
           label="Overview"
+          placeholder="Provide a brief overview of the lesson content"
           value={formData.description}
           onChange={(value) => handleChange("description", value)}
           inputWarning={warning.description}
+          showCount
+          maxLength={5000}
         />
       </div>
 

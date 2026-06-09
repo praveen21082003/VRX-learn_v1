@@ -24,6 +24,7 @@ function Input({
     widthClass = "w-full",
     onFocus,
     inputheight = false,
+    uppercase = false,
     ...props
 
 
@@ -78,7 +79,7 @@ function Input({
                         ${textClass}
                         outline-none
                         transition
-                        
+                        ${uppercase ? "uppercase placeholder:normal-case" : ""}
                         ${!border ? " border border-input-border" : `${border}`}
                         dark:border-default
                         ${bgClass}
