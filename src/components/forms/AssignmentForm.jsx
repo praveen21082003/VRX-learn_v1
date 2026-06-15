@@ -279,7 +279,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           label="Title"
           value={formData.title}
           inputWarning={warning.title}
-          placeHolder="Enter title"
+          placeholder="Enter title"
           onChange={(e) => handleChange("title", e.target.value)}
           uppercase
         />
@@ -303,7 +303,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           type="datetime-local"
           min={new Date().toISOString().slice(0, 16)}
           value={formatDateTimeLocal(formData.dueDate)}
-          placeHolder="Select due date and time"
+          placeholder="Select due date and time"
           onChange={(e) => handleChange("dueDate", e.target.value)}
         />
         <Input
@@ -314,7 +314,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           disabled={isEdit}
           value={formData.maxScore ?? ""}
           inputWarning={warning.maxScore}
-          placeHolder="Enter max points"
+          placeholder="Enter max points"
           onChange={(e) => handleChange("maxScore", e.target.value)}
         />
 
@@ -326,7 +326,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           disabled={isEdit}
           value={formData.numberOfAttempts ?? ""}
           inputWarning={warning.numberOfAttempts}
-          placeHolder="Enter max attempts"
+          placeholder="Enter max attempts"
           onChange={(e) => handleChange("numberOfAttempts", e.target.value)}
         />
       </div>

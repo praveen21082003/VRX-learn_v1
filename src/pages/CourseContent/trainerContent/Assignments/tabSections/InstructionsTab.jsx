@@ -1,11 +1,26 @@
+
+import useViewUrl from "@/hooks/useViewUrl";
+import { getAssignmentViewUrl } from '@services/Assignments.service'
 import { MarkdownContent, AttachmentCard } from "@/components/ui";
-import useMedia from '@/components/content/hook/useMedia'
+import { useParams } from "react-router-dom";
 
 function InstructionsTab({ instructions, attachment }) {
 
-    const mediaId = attachment?.mediaId;
+    const { assignmentId } = useParams();
 
-    const { url, loading: mediaLoading } = useMedia(mediaId);
+    const {
+        url,
+        loading,
+        error,
+    } = useViewUrl(
+        assignmentId,
+        getAssignmentViewUrl,
+        {
+            404: "Assignment attachment not found.",
+            403: "You do not have access to this attachment.",
+        }
+    );
+
 
     return (
         <>
@@ -23,7 +38,7 @@ function InstructionsTab({ instructions, attachment }) {
                         <AttachmentCard
                             fileName={attachment.filename}
                             url={url}
-                            loading={mediaLoading}
+                            loading={loading}
                         />
                     </div>
                 </>

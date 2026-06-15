@@ -7,7 +7,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // utils
 import formatDateTime from '@utils/formatDateTime'
-import useMedia from '@/components/content/hook/useMedia'
+// import useMedia from '@/components/content/hook/useMedia'
 
 import { BackButton, Button, StatusPill, Select, Icon, AttachmentCard } from '@/components/ui'
 import { useParams } from 'react-router-dom'
@@ -46,7 +46,7 @@ function ReportDetails() {
 
     const mediaId = issue?.media?.id;
 
-    const { url, loading: mediaLoading } = useMedia(mediaId);
+    const { url, loading: mediaLoading } = null;
 
     const [status, setStatus] = useState("");
 

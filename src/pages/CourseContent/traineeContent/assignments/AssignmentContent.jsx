@@ -5,7 +5,9 @@ import formatDateTime from "@/utils/formatDateTime";
 
 import { useOutletContext } from 'react-router-dom';
 
-import useMedia from '@/components/content/hook/useMedia';
+import useViewUrl from "@/hooks/useViewUrl";
+import { getAssignmentViewUrl } from '@services/Assignments.service'
+
 import { useAssignmentSubmission } from '../../hooks/useAssingmentSubmission';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
@@ -32,12 +34,25 @@ function AssignmentContent() {
 
     const { assignment: assignmentData, attachment, submissions } = assignmentDetail || {};
     const { submitAssignment, loading: submitting, uploadProgress, mediaStatus, loadedData } = useAssignmentSubmission();
-
+console.log(assignmentData, attachment)
     useDocumentTitle(activeAssignment ? `${activeAssignment?.title} - Assignment` : "Assignment");
 
-    const mediaId = attachment?.mediaId;
-    const { url, loading: mediaLoading } = useMedia(mediaId);
+    const assignmentId = activeAssignment?.id
 
+    const ASSIGNMENT_ATTACHMENT_ERRORS = {
+        404: "Assignment attachment not found.",
+        403: "You do not have access to this attachment.",
+    };
+
+    const {
+        url,
+        loading,
+        error,
+    } = useViewUrl(
+        assignmentId,
+        getAssignmentViewUrl,
+        ASSIGNMENT_ATTACHMENT_ERRORS
+    );
 
     const maxAttempts = assignmentData?.numberOfAttempts || 1;
     const attemptsArray = Array.from({ length: maxAttempts }, (_, i) => i + 1);
@@ -76,7 +91,7 @@ function AssignmentContent() {
 
     useEffect(() => {
         setFiles([]);
-    }, [assignmentDetail?.id]);
+    }, [activeAssignment?.id]);
 
     const getButtonText = () => {
         if (submitting) {
@@ -241,7 +256,7 @@ function AssignmentContent() {
                             <AttachmentCard
                                 fileName={attachment.filename}
                                 url={url}
-                                loading={mediaLoading}
+                                loading={loading}
                             />
                         </div>
                     </>

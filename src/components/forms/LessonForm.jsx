@@ -145,14 +145,27 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
     else {
       const file = files[0];
 
+      // const payload = {
+      //   title: formData.title.trim(),
+      //   description: formData.description.trim(),
+      //   moduleId: moduleId,
+      //   filename: file?.name || "",
+      //   contentType: file?.type || "",
+      //   fileSize: file?.size || 1,
+      // };
+
       const payload = {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        moduleId: moduleId,
-        filename: file?.name || "",
-        contentType: file?.type || "",
-        fileSize: file?.size || 1,
-      };
+        "lesson": {
+          "title": formData.title.trim(),
+          "description": formData.description.trim(),
+          "moduleId": moduleId
+        },
+        "attachment": {
+          "filename": file?.name || "",
+          "contentType": file?.type || "",
+          "size": file?.size || 0,
+        }
+      }
 
       const result = await createLessonAction(payload, file);
 

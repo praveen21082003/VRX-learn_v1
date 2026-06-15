@@ -6,7 +6,7 @@ import { useClickOutside } from '@/hooks/useClickOutside'
 
 import useAssignmentSubmissions from "../hooks/useAssignmentSubmissions";
 import DocumentLayout from "@/components/content/document/DocumentLayout";
-import useMedia from '@/components/content/hook/useMedia';
+// import useMedia from '@/components/content/hook/useMedia';
 import { useToast } from "@/context/ToastProvider";
 
 function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentId, submissions, refreshSubmissions }) {
@@ -34,7 +34,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
     } = useAssignmentSubmissions(null, null);
 
     const mediaId = submissionData?.mediaId;
-    const { url, loading: mediaLoading } = useMedia(mediaId);
+    const { url, loading: mediaLoading } = null;
     // status check var
     const isAlreadyGraded = submissionData?.status === "graded";
 
