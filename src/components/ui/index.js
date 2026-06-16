@@ -5,6 +5,7 @@ export { default as InputWarnMessage } from './Input/InputWarnMessage'
 export { default as Select } from './Input/Select'
 export { default as SearchSelect } from './Input/SearchSelect'
 export { default as TextEditor } from './Input/TextEditor'
+export { default as TextArea } from './Input/TextArea'
 
 // buttons
 export { default as BackButton } from './Buttons/BackButton'

@@ -1,10 +1,13 @@
 import { useState, useCallback } from "react";
 import {
+
     createAssignment as createAssignmentService,
+    createAssignmentWithAttachment,
     updateAssignment as updateAssignmentService,
+    updateAttachmentStatus,
 } from "@/services/Assignments.service";
 import { UploadMediaToS3 } from "@/services/UploadMediaToS3.service";
-import { updateMediaStatus } from "@/services/Media.service";
+// import { updateMediaStatus } from "@/services/Media.service";
 import { extractErrorMessage } from '@/utils/errorUtils';
 
 
@@ -27,39 +30,33 @@ export default function useAssignmentActions() {
             setMediaStatus(null);
 
             // build payload — fileMetadata optional
-            const payload = {
-                assignment: {
-                    title: assignmentData.title,
-                    instructions: assignmentData.instructions,
-                    courseId: assignmentData.courseId,
-                    dueDate: assignmentData.dueDate,
-                    maxScore: assignmentData.maxScore ?? 5,
-                    numberOfAttempts: assignmentData.numberOfAttempts ?? 1,
-                },
-                // ...(file && {
-                //     fileMetadata: {
-                //         filename: file.name,
-                //         content_type: file.type,
-                //         size: file.size,
-                //     }
-                // })
-                fileMetadata: file ? {
-                    filename: file.name,
-                    content_type: file.type,
-                    size: file.size,
-                } : null
+            const assignmentPayload = {
+                title: assignmentData.title,
+                instructions: assignmentData.instructions,
+                courseId: assignmentData.courseId,
+                dueDate: assignmentData.dueDate,
+                maxScore: assignmentData.maxScore ?? 5,
+                numberOfAttempts: assignmentData.numberOfAttempts ?? 1,
             };
 
 
-            const response = await createAssignmentService(payload);
-            // console.log("create step - 1", response);
+            const response = file
+                ? await createAssignmentWithAttachment({
+                    assignment: assignmentPayload,
+                    attachment: {
+                        filename: file.name,
+                        contentType: file.type,
+                        size: file.size,
+                    },
+                })
+                : await createAssignmentService(assignmentPayload);
+
+            const uploadUrl = response?.media?.url;
+            const assignmentId = response?.data?.id;
             const data = response?.data || response;
 
-            const uploadUrl = data?.media?.uploadUrl;
-            const mediaId = data?.media?.mediaId;
-
             // upload to S3 only if file provided and urls returned
-            if (file && uploadUrl && mediaId) {
+            if (file && uploadUrl && assignmentId) {
                 const uploadResponse = await UploadMediaToS3(
                     uploadUrl,
                     file,
@@ -68,7 +65,6 @@ export default function useAssignmentActions() {
                         setUploadedBytes(loaded);
                     }
                 );
-                // console.log("uploading step -2 ", uploadResponse)
 
 
                 if (uploadResponse?.status !== 200) {
@@ -80,9 +76,10 @@ export default function useAssignmentActions() {
                     };
                 }
 
-                const mediaResponse = await updateMediaStatus(mediaId);
-                console.log("media response step-3 ", mediaResponse);
+                const mediaResponse = await updateAttachmentStatus(assignmentId);
+
                 const mediaData = mediaResponse?.data || mediaResponse;
+
                 setMediaStatus(mediaData?.status || "completed");
             }
 

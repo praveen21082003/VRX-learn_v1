@@ -3,7 +3,7 @@ import { useRef } from "react";
 
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
-import MyCoursesSection from '@/components/dashboard/MyCoursesSection';
+import MyLearningCourses from '@/components/dashboard/MyLearningCourses';
 import AllCoursesSection from '@/components/dashboard/AllCoursesSection';
 import AnalyticsPreview from '@/components/dashboard/AnalyticsPreview';
 import CalendarSection from '@/components/dashboard/CalendarSection';
@@ -28,7 +28,7 @@ function MyCourses() {
     <div className="grid grid-cols-1 lg:grid-cols-14 h-full">
 
       <section ref={leftRef} className="lg:col-span-10 min-w-0 flex flex-col gap-6 py-6 lg:py-8 px-4 lg:pl-6 lg:overflow-y-auto custom-scroll" >
-        <MyCoursesSection enrolledCourses={enrolledCourses} loading={loading} />
+        <MyLearningCourses enrolledCourses={enrolledCourses} loading={loading} />
         <AllCoursesSection courses={topCourses} loading={loading} />
       </section>
 

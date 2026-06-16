@@ -5,7 +5,9 @@ import formatDateTime from "@/utils/formatDateTime";
 
 import { useOutletContext } from 'react-router-dom';
 
-import useMedia from '@/components/content/hook/useMedia';
+import useViewUrl from "@/hooks/useViewUrl";
+import { getAssignmentViewUrl } from '@services/Assignments.service'
+
 import { useAssignmentSubmission } from '../../hooks/useAssingmentSubmission';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
@@ -29,15 +31,35 @@ function AssignmentContent() {
     const { addToast } = useToast()
 
 
-
     const { assignment: assignmentData, attachment, submissions } = assignmentDetail || {};
     const { submitAssignment, loading: submitting, uploadProgress, mediaStatus, loadedData } = useAssignmentSubmission();
 
     useDocumentTitle(activeAssignment ? `${activeAssignment?.title} - Assignment` : "Assignment");
 
-    const mediaId = attachment?.mediaId;
-    const { url, loading: mediaLoading } = useMedia(mediaId);
+    const assignmentId = activeAssignment?.id
 
+    const ASSIGNMENT_ATTACHMENT_ERRORS = {
+        404: "Assignment attachment not found.",
+        403: "You do not have access to this attachment.",
+    };
+
+    const shouldFetchAttachment =
+        !detailLoading &&
+        Boolean(attachment?.mediaId) &&
+        assignmentData?.id === assignmentId;
+
+    const {
+        url,
+        loading,
+        error,
+    } = useViewUrl(
+        assignmentId,
+        getAssignmentViewUrl,
+        ASSIGNMENT_ATTACHMENT_ERRORS,
+        {
+            enabled: shouldFetchAttachment,
+        }
+    );
 
     const maxAttempts = assignmentData?.numberOfAttempts || 1;
     const attemptsArray = Array.from({ length: maxAttempts }, (_, i) => i + 1);
@@ -76,18 +98,22 @@ function AssignmentContent() {
 
     useEffect(() => {
         setFiles([]);
-    }, [assignmentDetail?.id]);
+    }, [activeAssignment?.id]);
 
     const getButtonText = () => {
-        if (submitting){
-            return "Submiting..."
-        }
+        // NOTE: order matters here — more specific "submitting" states must be
+        // checked before the generic `submitting` check, otherwise they're
+        // unreachable (the generic check would always return first).
         if (submitting && uploadProgress > 0 && uploadProgress < 100) {
             return "Uploading...";
         }
 
         if (submitting && mediaStatus === "processing") {
             return "Finishing...";
+        }
+
+        if (submitting) {
+            return "Submitting...";
         }
 
         if (mediaStatus === "uploaded") {
@@ -97,7 +123,7 @@ function AssignmentContent() {
         return "Submit";
     };
 
-    const handleRefesh = () => {
+    const handleRefresh = () => {
         refetchAssignmentDetail();
     }
 
@@ -117,26 +143,23 @@ function AssignmentContent() {
             assignmentSubmission: {
                 assignmentId: assignmentData.id,
             },
-            fileMetadata: {
+            attachment: {
                 filename: file.name,
-                content_type: file.type || "application/pdf",
+                contentType: file.type || "application/pdf",
                 size: file.size,
             },
         };
-
-        console.log("assignment submission", payload)
 
         try {
             await submitAssignment(payload, file);
             addToast("Assignment submitted successfully", "success");
 
             setFiles([]);
-            handleRefesh?.();
+            handleRefresh?.();
 
         }
         catch (err) {
-            console.log(err)
-            addToast(err.message, "error");
+            addToast(err?.message || "Something went wrong while submitting.", "error");
         }
     }
 
@@ -180,7 +203,7 @@ function AssignmentContent() {
                             {[
                                 {
                                     icon: "mdi:clock-outline",
-                                    text: `Due: ${formatDateTime(assignmentData?.dueDate) || "No due date provided"}`
+                                    text: `Due: ${dueDateText}`
                                 },
                                 {
                                     icon: "streamline:star-badge-remix",
@@ -241,7 +264,7 @@ function AssignmentContent() {
                             <AttachmentCard
                                 fileName={attachment.filename}
                                 url={url}
-                                loading={mediaLoading}
+                                loading={loading}
                             />
                         </div>
                     </>
@@ -276,8 +299,15 @@ function AssignmentContent() {
                             if (!submission) return null;
 
                             return (
-                                <div key={attemptNumber} className="border rounded border-default bg-background overflow-hidden">
-                                    <div className="flex bg-submission border-b border-default justify-between p-3 h-15 items-center">
+                                <div key={attemptNumber} className="border rounded border-default overflow-hidden">
+                                    <div
+                                        className="no-select flex bg-menu-header border-b border-default justify-between p-3 h-15 items-center cursor-pointer"
+                                        onClick={() =>
+                                            setOpenAttempt(prev =>
+                                                prev === attemptNumber ? null : attemptNumber
+                                            )
+                                        }
+                                    >
                                         <div className="flex justify-center items-center gap-5">
                                             Attempt {attemptNumber} of {maxAttempts}
                                             {openAttempt !== attemptNumber && (
@@ -300,11 +330,6 @@ function AssignmentContent() {
                                                 bgClass=""
                                                 textClass=""
                                                 className={openAttempt === attemptNumber ? "rotate-180" : ""}
-                                                onClick={() =>
-                                                    setOpenAttempt(prev =>
-                                                        prev === attemptNumber ? null : attemptNumber
-                                                    )
-                                                }
                                             />
                                         </div>
                                     </div>

@@ -23,6 +23,16 @@ export const updateLesson = (lessonId, payload) => {
 }
 
 //delete lesson
-export const deleteLesson = (lessonId) =>{
+export const deleteLesson = (lessonId) => {
     return axiosInstance.delete(`/api/v1/lessons/${lessonId}`)
+}
+
+// update Attachment Status
+export const updateAttachmentStatus = (lessonId) => {
+    return axiosInstance.patch(`/api/v1/lessons/${lessonId}/attachment/uploaded`)
+}
+
+// Get View Lesson url
+export const getLessonViewUrl = (lessonId) => {
+    return axiosInstance.get(`/api/v1/lessons/${lessonId}/attachment/view-url`);
 }

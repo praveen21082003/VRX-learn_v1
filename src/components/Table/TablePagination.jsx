@@ -11,7 +11,8 @@ function TablePagination({
   totalPages,
   start,
   end,
-  pages
+  pages,
+  loading,
 }) {
 
   // console.log("page", page);
@@ -48,7 +49,7 @@ function TablePagination({
       <div className="flex items-center gap-1 w-full md:w-auto justify-between md:justify-end">
         <Button
           buttonName="Previous"
-          disabled={page === 1}
+          disabled={loading || page === 1}
           bgClass="bg-pagenation-bg dark:bg-transparent"
           textClass="text-black  dark:text-white"
           fontClass="text-small"
@@ -73,13 +74,14 @@ function TablePagination({
                   textClass={`${page === p ? "text-white" : "text-black dark:text-white"}`}
                   fontClass="text-small"
                   className="px-2 py-1 text-body  rounded-sm border border-default"
+                  disabled={loading}
                 />
               );
             })}
         </div>
         <Button
           buttonName="Next"
-          disabled={page === totalPages || totalPages === 0}
+          disabled={loading || (page === totalPages || totalPages === 0)}
           bgClass="bg-pagenation-bg dark:bg-transparent"
           textClass="text-black dark:text-white"
           fontClass="text-small"

@@ -38,9 +38,11 @@ export const useAssignmentContent = (courseId, activeAssignmentId) => {
     }, [courseId]);
 
     const fetchAssignmentDetail = useCallback(async () => {
-        if (!activeAssignmentId) return;
 
+        if (!activeAssignmentId) return;
+        
         try {
+            setAssignmentDetail(null)
             setDetailLoading(true);
             setDetailError(null);
 

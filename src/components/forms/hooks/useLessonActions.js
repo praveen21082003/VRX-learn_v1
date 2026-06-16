@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { createLesson, updateLesson, deleteLesson } from "@/services/Lessons.service";
+import { createLesson, updateLesson, deleteLesson, updateAttachmentStatus } from "@/services/Lessons.service";
 import { UploadMediaToS3 } from "@/services/UploadMediaToS3.service";
 import { updateMediaStatus } from "@/services/Media.service";
 import { extractErrorMessage } from '@/utils/errorUtils';
@@ -28,9 +28,9 @@ export default function useLessonActions() {
             const response = await createLesson(payload);
             // console.log("createLesson", response);
 
-            const lessonId = response?.lesson?.id;
-            const uploadUrl = response?.media?.uploadUrl;
-            const mediaId = response?.media?.mediaId;
+            const lessonId = response?.data?.id;
+            const uploadUrl = response?.media?.url;
+            const mediaId = response?.media?.id;
 
             if (file) {
                 if (!uploadUrl || !mediaId) {
@@ -72,11 +72,9 @@ export default function useLessonActions() {
                     };
                 }
 
-                const mediaResponse = await updateMediaStatus(mediaId);
-                // console.log("media response", mediaResponse);
-                const mediaData = mediaResponse?.data || mediaResponse;
+                const AttachmentStatus = await updateAttachmentStatus(lessonId);
 
-                setMediaStatus(mediaData?.status || null);
+                setMediaStatus(AttachmentStatus?.status || null);
             }
 
             return {

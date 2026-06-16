@@ -23,6 +23,8 @@ axiosInstance.interceptors.response.use(
         const publicRoutes = [
             "/login",
             "/forgot-password",
+            "/verify-email",
+            "/signup"
         ];
 
         const isPublicPage =

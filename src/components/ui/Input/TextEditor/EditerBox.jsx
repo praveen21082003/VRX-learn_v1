@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import clsx from 'clsx'
 import { useEditor, EditorContent } from '@tiptap/react'
 import Starterkit from '@tiptap/starter-kit'
 import Link from "@tiptap/extension-link"
@@ -13,7 +14,7 @@ import './tiptap.css'
 
 
 
-function EditerBox({ label, value, onChange, inputWarning }) {
+function EditerBox({ label, placeholder, value, onChange, maxLength, showCount, inputWarning }) {
 
     const editor = useEditor({
         extensions: [
@@ -33,7 +34,7 @@ function EditerBox({ label, value, onChange, inputWarning }) {
             }),
 
             Placeholder.configure({
-                placeholder: `Write your description...`
+                placeholder: placeholder || `Write your description...`
             }),
             Markdown
         ],
@@ -49,6 +50,10 @@ function EditerBox({ label, value, onChange, inputWarning }) {
             editor.commands.setContent(value ?? "", false);
         }
     }, [value, editor]);
+
+
+    const limitExceeded =
+        maxLength && value?.length > maxLength;
 
 
     if (!editor) return null;
@@ -67,7 +72,13 @@ function EditerBox({ label, value, onChange, inputWarning }) {
                 <div className="min-h-50 p-2 focus:ring-1 focus:ring-primary focus:border-primary">
                     <EditorContent editor={editor} className="tiptap" />
                 </div>
+                {showCount && (
+                    <span className={clsx('absolute bottom-2 right-3 text-caption', limitExceeded ? 'text-[#D32F2F] font-semibold' : 'text-gray-500')}>
+                        ({value?.length || 0}/{maxLength})
+                    </span>
+                )}
             </div>
+
             {inputWarning && <InputWarnMessage message={inputWarning} />}
         </div>
     )

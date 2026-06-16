@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useCreateReport } from './hooks/useCreateReport';
 import { useToast } from '@/context/ToastProvider';
 
-import { BackButton, Button, Input, Select, UploadSection, InputWarnMessage } from "@/components/ui";
+import { BackButton, Button, Input, Select, UploadSection, InputWarnMessage, TextArea } from "@/components/ui";
 import { useNavigate } from 'react-router-dom';
 
 function ReportsForm() {
@@ -116,23 +116,23 @@ function ReportsForm() {
 
         if (!isValid) return;
 
-        const payload = {
-            issue: {
-                subject: formData.subject.trim(),
-                category: formData.category,
-                description: formData.description.trim() || null,
-            },
-            fileMetadata: files[0]
-                ? {
-                    filename: files[0].name,
-                    content_type: files[0].type,
-                    size: files[0].size,
-                }
-                : null,
-        };
+        // const payload = {
+        //     issue: {
+        //         subject: formData.subject.trim(),
+        //         category: formData.category,
+        //         description: formData.description.trim() || null,
+        //     },
+        //     fileMetadata: files[0]
+        //         ? {
+        //             filename: files[0].name,
+        //             content_type: files[0].type,
+        //             size: files[0].size,
+        //         }
+        //         : null,
+        // };
 
 
-        const response = await createReport(payload, files[0] || null);
+        const response = await createReport(formData, files[0] || null);
 
         if (response.success) {
 
@@ -197,39 +197,19 @@ function ReportsForm() {
                 </div>
 
             </div>
-            <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                    <label className="text-h5">Description</label>
-                </div>
+            <TextArea
+                label="Description"
+                value={formData.description}
+                maxLength={2000}
+                onChange={(e) =>
+                    handleChange("description", e.target.value)
+                }
+                placeholder='Please tell us exactly what went wrong. Include what you were trying to do, what happened instead, and any error messages you saw.'
+                inputWarning={warning.description}
+                autoResize
+                showCount
 
-                <textarea
-                    rows="6"
-                    maxLength={2000}
-                    value={formData.description}
-                    onChange={(e) =>
-                        handleChange("description", e.target.value)
-                    }
-                    className="w-full border text-body bg-input-bg border-input-border rounded p-3 focus:outline-none focus:ring-1 focus:ring-brand"
-                />
-                <div className='flex justify-between'>
-                    <div>
-                        {warning.description && (
-                            <InputWarnMessage message={warning.description} />
-                        )}
-                    </div>
-                    <span
-                        className={`text-small ${formData.description.length >= 2000
-                            ? "text-red-500"
-                            : "text-muted-foreground"
-                            }`}
-                    >
-                        {formData.description.length}/2000
-                    </span>
-
-
-                </div>
-
-            </div>
+            />
 
             <UploadSection
                 label="Attachment"

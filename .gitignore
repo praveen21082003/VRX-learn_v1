@@ -28,3 +28,4 @@ dist-ssr
 .env.production
 
 public/title-logo.svg
+db.json

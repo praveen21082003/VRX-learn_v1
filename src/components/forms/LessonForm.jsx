@@ -59,9 +59,12 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
   }, [isEdit, initialData]);
 
   const handleChange = (field, value) => {
-    const processedValue = field === "title" ? value.toUpperCase() : value;
+    if (field === "title") {
+      value = value.replace(/\s+/g, " ")
+        .replace(/^\s/, "");
+    }
 
-    setFormData(prev => ({ ...prev, [field]: processedValue }));
+    setFormData(prev => ({ ...prev, [field]: value }));
     setWarning(prev => ({ ...prev, [field]: null }));
   };
 
@@ -71,7 +74,10 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
     if (!formData.title.trim()) errors.title = "Title is required";
 
     // description is optional
-    // if (!formData.description.trim()) errors.description = "Description is required";
+    const longDesc = formData.description?.trim();
+    if (longDesc && longDesc.length > 5000) {
+      errors.description = `Description must be under 5000 characters (${longDesc.length}/5000)`;
+    }
     if (!isEdit && files.length === 0) errors.file = "Please upload a file";
     return errors;
   };
@@ -131,7 +137,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
 
       // success
       addToast(result.message, "success");
-      invalidateCache?.(moduleId);  
+      invalidateCache?.(moduleId);
       navigate(`/course/${courseId}/content/modules/${moduleId}`);
     }
 
@@ -139,16 +145,30 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
     else {
       const file = files[0];
 
+      // const payload = {
+      //   title: formData.title.trim(),
+      //   description: formData.description.trim(),
+      //   moduleId: moduleId,
+      //   filename: file?.name || "",
+      //   contentType: file?.type || "",
+      //   fileSize: file?.size || 1,
+      // };
+
       const payload = {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        moduleId: moduleId,
-        filename: file?.name || "",
-        contentType: file?.type || "",
-        fileSize: file?.size || 1,
-      };
+        "lesson": {
+          "title": formData.title.trim(),
+          "description": formData.description.trim(),
+          "moduleId": moduleId
+        },
+        "attachment": {
+          "filename": file?.name || "",
+          "contentType": file?.type || "",
+          "size": file?.size || 0,
+        }
+      }
 
       const result = await createLessonAction(payload, file);
+      
 
       // handle inline field error (title duplicate)
       const newWarning = {};
@@ -171,7 +191,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
 
       // success
       addToast(result.message, "success");
-      invalidateCache?.(moduleId);  
+      invalidateCache?.(moduleId);
       navigate(`/course/${courseId}/content/modules/${moduleId}`);
     }
   };
@@ -198,15 +218,19 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
           value={formData.title}
           onChange={(e) => handleChange("title", e.target.value)}
           inputWarning={warning.title}
+          uppercase
         />
       </div>
 
       <div className="space-y-2">
         <TextEditor
           label="Overview"
+          placeholder="Provide a brief overview of the lesson content"
           value={formData.description}
           onChange={(value) => handleChange("description", value)}
           inputWarning={warning.description}
+          showCount
+          maxLength={5000}
         />
       </div>
 

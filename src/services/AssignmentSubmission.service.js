@@ -16,3 +16,13 @@ export const patchSubmissionGrade = async (submissionId, payload) => {
 export const updateGradedFeedback = async (submissionId, payload) => {
     return axiosInstance.patch(`/api/v1/assignment-submission/${submissionId}/update-feedback`, payload)
 }
+
+// assignment submission
+export const updateAttachmentStatus = (assignmentSubmissionId) => {
+    return axiosInstance.patch(`/api/v1/assignment-submission/${assignmentSubmissionId}/attachment/uploaded`)
+}
+
+// assignment submission view url
+export const attachmentViewUrl = (assignmentSubmissionId) => {
+    return axiosInstance.get(`/api/v1/assignment-submission/${assignmentSubmissionId}/attachment/view-url`)
+}

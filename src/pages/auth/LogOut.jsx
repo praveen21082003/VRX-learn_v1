@@ -34,7 +34,7 @@ function LogOut({ isOpen, onClose }) {
                         bgClass="bg-primary"
                         textClass="text-white"
                         className="w-full py-2 rounded-lg"
-                        onClick={handleLogout}
+                        onClick={() => handleLogout(onClose)}
                         disabled={loading}
                     />
 

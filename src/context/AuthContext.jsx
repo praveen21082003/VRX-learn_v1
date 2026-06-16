@@ -14,6 +14,7 @@ export function AuthProvider({ children }) {
 
     const refreshUser = async () => {
         try {
+
             const data = await authMe();
             const role = data?.role?.toLowerCase();
             setUser(data);
@@ -40,7 +41,6 @@ export function AuthProvider({ children }) {
             setViewRole(null);
             setLoading(false);
             onClose?.();
-            window.location.href = "/login";
         }
     };
 

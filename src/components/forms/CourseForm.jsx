@@ -8,6 +8,7 @@ import {
   Button,
   DeleteConfirmContent,
   InputWarnMessage,
+  TextArea,
 } from "@/components/ui";
 import { useToast } from "@/context/ToastProvider";
 
@@ -67,13 +68,19 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
 
   // Handle Change Fuction
   const handleChange = (field, value) => {
-    const processedValue = field === "title" ? value.toUpperCase() : value;
 
-    setFormData((prev) => ({ ...prev, [field]: processedValue }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     setWarning((prev) => ({
       ...prev,
       [field]: null,
     }));
+
+    if (field === "title") {
+      value = value
+        .replace(/\s+/g, " ")
+        .replace(/^\s/, "");
+    }
+
     if (field === "shortDescription") {
       const trimmed = value?.trim();
       if (trimmed && trimmed.length > 600) {
@@ -267,6 +274,7 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
         value={formData.title}
         onChange={(e) => handleChange("title", e.target.value)}
         inputWarning={warning.title}
+        uppercase
       />
 
       <SearchSelect
@@ -290,23 +298,19 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
         inputWarning={warning.trainerId}
       />
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold">Short Description</label>
-        <textarea
-          rows={4}
-          className="w-full border text-body bg-input-bg border-input-border rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-brand"
-          placeholder="Briefly describe what this course covers (minimum 50 characters if provided)"
-          value={formData.shortDescription || ""}
-          onChange={(e) => handleChange("shortDescription", e.target.value)}
-          onInput={(e) => {
-            e.target.style.height = "auto";
-            e.target.style.height = e.target.scrollHeight + "px";
-          }}
-        />
-        {warning.shortDescription && (
-          <InputWarnMessage message={warning.shortDescription} />
-        )}
-      </div>
+      <TextArea
+        label="Short Description"
+        placeholder="Briefly describe what this course covers (minimum 50 characters if provided)"
+        value={formData.shortDescription || ""}
+        onChange={(e) =>
+          handleChange("shortDescription", e.target.value)
+        }
+        warning={warning.shortDescription}
+        autoResize
+        maxLength={600}
+        showCount
+      />
+
       {!isOpen && (
         <div
           className="flex justify-between"
@@ -327,6 +331,8 @@ function CourseForm({ initialData, onClose, onSuccess, mode }) {
             onChange={(value) => handleChange("longDescription", value)}
             inputWarning={warning.longDescription}
             placeholder="Provide a detailed description of the course, including key topics and outcomes"
+            maxLength={5000}
+            showCount
           />
         </div>
       )}

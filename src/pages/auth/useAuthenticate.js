@@ -49,7 +49,7 @@ export const useAuthenticate = () => {
             const status = err.response?.status;
             const errorType = err.response?.data?.type;
 
-            let message = "Unable to login.";
+            let message = "Unable to login. Please try again later.";
 
             if (status === 401) {
                 if (errorType === "EmailNotVerifiedError") {
@@ -251,6 +251,7 @@ export const useAuthenticate = () => {
             setVerfiying(true);
 
             const response = await verifyEmail(token);
+            console.log(response)
 
             return {
                 success: true,

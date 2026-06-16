@@ -64,9 +64,10 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
   }, [isEdit, initialData]);
 
   const handleChange = (field, value) => {
-    const processedValue = field === "title" ? value.toUpperCase() : value;
-
-    setFormData(prev => ({ ...prev, [field]: processedValue }));
+    if (field === "title") {
+      value = value.replace(/\s+/g, " ").replace(/^\s/, "")
+    }
+    setFormData(prev => ({ ...prev, [field]: value }));
     setWarning(prev => ({ ...prev, [field]: null }));
   };
 
@@ -85,6 +86,10 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
     if (!isEdit && !instructions && !file) {
       errors.instructions = "Enter instructions or upload a file";
       errors.file = "Upload a file or enter instructions";
+    }
+
+    if (instructions && instructions.length > 5000) {
+      errors.instructions = `Instructions must be under 5000 characters (${instructions.length}/5000)`;
     }
 
     // maxScore only on create
@@ -274,17 +279,21 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           label="Title"
           value={formData.title}
           inputWarning={warning.title}
-          placeHolder="Enter title"
+          placeholder="Enter title"
           onChange={(e) => handleChange("title", e.target.value)}
+          uppercase
         />
       </div>
 
       <div ref={instructionsRef}>
         <TextEditor
           label="Instructions"
+          placeholder="Enter instructions for the assignment. You can also upload a file as an attachment or provide instructions in this text editor."
           value={formData.instructions}
           onChange={(value) => handleChange("instructions", value)}
           inputWarning={warning.instructions}
+          maxLength={5000}
+          showCount
         />
       </div>
 
@@ -294,7 +303,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           type="datetime-local"
           min={new Date().toISOString().slice(0, 16)}
           value={formatDateTimeLocal(formData.dueDate)}
-          placeHolder="Select due date and time"
+          placeholder="Select due date and time"
           onChange={(e) => handleChange("dueDate", e.target.value)}
         />
         <Input
@@ -305,7 +314,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           disabled={isEdit}
           value={formData.maxScore ?? ""}
           inputWarning={warning.maxScore}
-          placeHolder="Enter max points"
+          placeholder="Enter max points"
           onChange={(e) => handleChange("maxScore", e.target.value)}
         />
 
@@ -317,7 +326,7 @@ function AssignmentForm({ courseId, mode, initialData, assignments, HandlesetAss
           disabled={isEdit}
           value={formData.numberOfAttempts ?? ""}
           inputWarning={warning.numberOfAttempts}
-          placeHolder="Enter max attempts"
+          placeholder="Enter max attempts"
           onChange={(e) => handleChange("numberOfAttempts", e.target.value)}
         />
       </div>

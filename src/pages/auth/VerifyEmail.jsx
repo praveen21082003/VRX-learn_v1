@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTheme } from "@/context/ThemeProvider";
 import { useAuthenticate } from "./useAuthenticate";
 import { Icon, Button } from "@/components/ui";
+import { useAuth } from "@/context/AuthContext";
 
 function VerifyEmail() {
   const navigate = useNavigate();
@@ -12,6 +13,26 @@ function VerifyEmail() {
 
   const [status, setStatus] = useState("verifying"); // "verifying" | "success" | "failed"
   const [message, setMessage] = useState("");
+  const [countdown, setCountdown] = useState(5);
+  const {refreshUser , loading} = useAuth()
+  console.log(loading)
+  useEffect(() => {
+    console.log(status)
+    if (status !== "success") return;
+
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          refreshUser()
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [status, navigate]);
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -74,14 +95,24 @@ function VerifyEmail() {
         <h1 className="text-h3 font-semibold text-main">
           Verification Successful
         </h1>
-        <p className="text-h45 text-center text-muted max-w-xl">
+        {/* <p className="text-h45 text-center text-muted max-w-xl">
           You are all clear and ready to go! Your access is granted. Click the
           button below to log in.
+        </p> */}
+
+        <p className="text-h45 text-center text-muted max-w-xl">
+          Your email has been verified successfully.
+          <br />
+          Redirecting to Dashboard in{" "}
+          <span className="font-semibold text-primary">{countdown}</span>{" "}
+          seconds...
         </p>
         <Button
-          buttonName="Back to Login"
+        
+          buttonName={loading ? "Returning to Dashboard..." : "Back to Dashboard"}
+          disabled = {loading}
           className="px-6 py-2 rounded-lg w-full max-w-xl"
-          onClick={() => navigate("/login")}
+          onClick={() =>  refreshUser()}
         />
       </div>
     );

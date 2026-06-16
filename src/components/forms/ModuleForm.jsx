@@ -30,11 +30,13 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
 
     // handle Change
     const handleChange = (field, value) => {
-        const processedValue = field === "title" ? value.toUpperCase() : value;
-
-        setFormData(prev => ({ ...prev, [field]: processedValue }));
-        // clear warning on change
-        setWarning((prev) => ({ ...prev, [field]: null }));
+        if (field === "title") {
+            value = value
+                .replace(/\s+/g, " ")
+                .replace(/^\s/, "");
+        }
+        setFormData((prev) => ({ ...prev, [field]: value }));
+        setWarning((prev) => ({ ...prev, [field]: null })); // clear field warning on change
     };
 
     // validation
@@ -45,6 +47,10 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
         if (!formData.title.trim()) errors.title = "Title is required";
         if (trimmedDesc.length > 0 && trimmedDesc.length < 20) {
             errors.description = "Description must be at least 20 characters long"
+        }
+        const longDesc = formData.description?.trim();
+        if (longDesc && longDesc.length > 5000) {
+            errors.description = `Description must be under 5000 characters (${longDesc.length}/5000)`;
         }
         return errors;
     };
@@ -95,7 +101,7 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
 
             if (Object.keys(newWarning).length > 0) {
                 setWarning(newWarning);        // replace warnings
-                
+
                 // scroll to error field
                 //scrollToError(newWarning);
 
@@ -164,13 +170,17 @@ function ModuleForm({ mode, initialData, setModules, modules, courseId }) {
                 value={formData.title}
                 onChange={(e) => handleChange("title", e.target.value)}
                 inputWarning={warning.title}
+                uppercase
             />
             <div className="space-y-2">
                 <TextEditor
                     label="Description"
+                    placeholder="Provide a brief description of the module content"
                     value={formData.description}
                     onChange={(value) => handleChange("description", value)}
                     inputWarning={warning.description}
+                    maxLength={5000}
+                    showCount
                 />
             </div>
 

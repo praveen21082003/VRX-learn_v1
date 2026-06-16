@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-import { createAssignmentSubmission } from '@/services/AssignmentSubmission.service';
+import { createAssignmentSubmission, updateAttachmentStatus } from '@/services/AssignmentSubmission.service';
 
 
 import { UploadMediaToS3 } from "@/services/UploadMediaToS3.service";
-import { updateMediaStatus } from '@/services/Media.service';
+
 
 export function useAssignmentSubmission() {
     const [loading, setLoading] = useState(false);
@@ -38,27 +38,27 @@ export function useAssignmentSubmission() {
 
         try {
             const response = await createAssignmentSubmission(payload);
-            console.log("1st", response)
-            const { media: { uploadUrl, mediaId } = {} } = response || {};
+            // const { media: { url, id } = {} } = response || {};
+            const id = response?.data?.id
+            const url = response?.media?.url
 
-            if (!uploadUrl || !mediaId) {
+            if (!url || !id) {
                 throw new Error("Invalid upload response: Missing URL or Media ID");
             }
 
             if (file) {
                 try {
-                    const uploadRes = await UploadMediaToS3(uploadUrl, file, (percent, loaded) => {
+                    const uploadRes = await UploadMediaToS3(url, file, (percent, loaded) => {
                         setUploadProgress(percent);
                         setLoadedData(loaded);
                     });
 
-                    console.log("2nd", uploadRes);
 
                     if (uploadRes.status !== 200) {
                         throw new Error("File upload failed");
                     }
 
-                    const mediaRes = await updateMediaStatus(mediaId);
+                    const mediaRes = await updateAttachmentStatus(id);
                     const mediaData = mediaRes?.data || mediaRes;
 
                     setMediaStatus(mediaData?.status);

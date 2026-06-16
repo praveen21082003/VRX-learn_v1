@@ -19,6 +19,7 @@ function EditorMenu({ editor }) {
             orderedList: editor.isActive("orderedList"),
             codeBlock: editor.isActive("codeBlock"),
             link: editor.isActive("link"),
+            inlineCode: editor.isActive("code"),
         }),
     })
 
@@ -26,22 +27,24 @@ function EditorMenu({ editor }) {
     if (!editor) return null
 
     return (
-        <header className="flex border-b-2 border-primary-border bg-menu-header p-2">
+        <header className="flex border-b-2 border-primary-border bg-menu-header p-2 overflow-x-scroll scrollbar-hide">
+
+            {isLinkOpen && (
+                <LinkModal
+                    editor={editor}
+                    onClose={() => setIsLinkOpen(false)}
+                />
+            )}
             {EDITOR_TOOLBAR_MENU.map((group, groupIndex) => (
                 <div
                     key={groupIndex}
                     className={`flex px-2 ${groupIndex !== 0 ? "border-l border-primary-border" : ""
                         }`}
                 >
-                    {isLinkOpen && (
-                        <LinkModal
-                            editor={editor}
-                            onClose={() => setIsLinkOpen(false)}
-                        />
-                    )}
-                    {group.map((item, index) => (
+
+                    {group.map((item) => (
                         <Button
-                            key={index}
+                            key={item.key}
                             frontIconHeight="24px"
                             frontIconWidth="24px"
                             bgClass="bg-none"
@@ -54,6 +57,7 @@ function EditorMenu({ editor }) {
                                 }
                             }}
                             textClass={editorState[item.key] && "text-blue-600"}
+                            title={item.title}
                         />
                     ))}
                 </div>

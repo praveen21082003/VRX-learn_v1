@@ -59,16 +59,19 @@ function EnrollmentsManagement() {
             case "profile":
                 return { ...col, render: (row) => <Avatar name={row.name} /> };
 
-            case "name":
-                return { ...col, className: "whitespace-nowrap", render: (row) => <span className="">{row.name}</span> };
+            // case "name":
+            //     return { ...col, className: "whitespace-nowrap", render: (row) => <span className="">{row.name}</span> };
 
             case "email":
                 return {
                     ...col,
                     className: "whitespace-nowrap",
-                    render: (row) => <span className="truncate block">{row.email}</span>
+                    render: (row) => 
+                    <span className="truncate block" title={row.email}>
+                        {row.email}
+                    </span>
                 };
-                
+
             case "role":
             case "status":
                 return { ...col, render: (row) => <StatusPill status={row[col.key]} /> };
@@ -79,7 +82,7 @@ function EnrollmentsManagement() {
             case "enrolled_at":
                 return { ...col, render: (row) => <span className="text-caption text-muted">{formatDateTime(row.enrollmentDate)}</span> };
 
-            case "date":
+            case "expiry_at":
                 return { ...col, render: (row) => <span className="text-caption text-muted">{formatDateTime(row.expireAt)}</span> };
 
             case "actions":

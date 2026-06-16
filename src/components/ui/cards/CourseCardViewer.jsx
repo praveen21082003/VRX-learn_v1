@@ -15,7 +15,8 @@ function Viewer({
     gridSize = 3,
     emptyTitle = "No data found",
     emptyDescription = "There are no items to display at this moment.",
-    emptyIcon = "uil:book-open"
+    emptyIcon = "uil:book-open",
+    myCourses = false
 }) {
     const navigate = useNavigate();
     const isEmpty = !loading && (!courses || courses.length === 0);
@@ -37,16 +38,26 @@ function Viewer({
         };
     };
 
+    // navigator for view all button
+    const handleNavigate = () => {
+        if (myCourses) {
+            navigate('/learning');
+        }
+        else {
+            navigate('/courses');
+        }
+    }
+
     const visibleCourses = maxCourses ? courses.slice(0, maxCourses) : courses;
 
     return (
         <section className="relative bg-primary-16 noise-overlay p-4 rounded-xl z-10">
             <header className="flex justify-between items-center mb-6">
                 <h2 className="text-h4 text-main font-medium">{title}</h2>
-                {maxCourses && courses?.length > maxCourses && (
+                {maxCourses && courses?.length >= maxCourses && (
                     <button
                         className="text-sm text-brand font-semibold underline cursor-pointer hover:opacity-80 transition-all"
-                        onClick={() => navigate('/courses')}
+                        onClick={handleNavigate}
                     >
                         View all
                     </button>
