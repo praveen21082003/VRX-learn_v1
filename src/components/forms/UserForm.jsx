@@ -49,10 +49,16 @@ function UserForm({ initialData, onSubmit, onSuccess, onClose, mode }) {
 
   const validate = () => {
     let tempErrors = {};
-
+    const username = formData.username.trim();
     // Username validation
-    if (!formData.username.trim()) {
+    if (!username) {
       tempErrors.username = "Username is required";
+    }else if (!/^[a-zA-Z]/.test(username)) {
+      tempErrors.username = "Username must start with an alphabet";
+    } else if ((username.match(/[a-zA-Z]/g) || []).length < 3) {
+      tempErrors.username = "Username must contain at least 3 alphabets";
+    } else if (username.length > 35) {
+      tempErrors.username = "Username cannot exceed 35 characters";
     }
 
     // Email validation

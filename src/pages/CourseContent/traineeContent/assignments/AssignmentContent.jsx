@@ -104,6 +104,9 @@ function AssignmentContent() {
         // NOTE: order matters here — more specific "submitting" states must be
         // checked before the generic `submitting` check, otherwise they're
         // unreachable (the generic check would always return first).
+        if (submitting) {
+            return "Submiting..."
+        }
         if (submitting && uploadProgress > 0 && uploadProgress < 100) {
             return "Uploading...";
         }

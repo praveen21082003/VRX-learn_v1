@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { isValidElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/context/AuthContext";
@@ -34,9 +34,9 @@ function SignUp() {
     // Username restriction while typing
     if (name === "username") {
       updatedValue = value
-        .replace(/[^a-zA-Z0-9\s.'.]/g, "") 
+        .replace(/[^a-zA-Z0-9\s.'.]/g, "")
         .replace(/\.{2,}/g, ".")
-        .replace(/\s+/g, " ") 
+        .replace(/\s+/g, " ")
         .replace(/^\s/, "");
     }
 
@@ -61,10 +61,24 @@ function SignUp() {
   // validation function
   const validateForm = () => {
     const newWarnings = {};
+<<<<<<< HEAD
 
     // Username validation
     if (!credentials.username.trim()) {
       newWarnings.username = "Please provide username";
+=======
+    const username = credentials.username.trim();
+
+    //Username Validation
+    if (!username) {
+      newWarnings.username = "Please provide username";
+    } else if (!/^[a-zA-Z]/.test(username)) {
+      newWarnings.username = "Username must start with an alphabet";
+    } else if ((username.match(/[a-zA-Z]/g) || []).length < 3) {
+      newWarnings.username = "Username must contain at least 3 alphabets";
+    } else if (username.length > 35) {
+      newWarnings.username = "Username cannot exceed 35 characters";
+>>>>>>> 720dec3ae6efa37a009ee7adbd0ce3dc76ef9cea
     }
 
     // Email validation
