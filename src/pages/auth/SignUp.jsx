@@ -61,12 +61,6 @@ function SignUp() {
   // validation function
   const validateForm = () => {
     const newWarnings = {};
-<<<<<<< HEAD
-
-    // Username validation
-    if (!credentials.username.trim()) {
-      newWarnings.username = "Please provide username";
-=======
     const username = credentials.username.trim();
 
     //Username Validation
@@ -78,7 +72,6 @@ function SignUp() {
       newWarnings.username = "Username must contain at least 3 alphabets";
     } else if (username.length > 35) {
       newWarnings.username = "Username cannot exceed 35 characters";
->>>>>>> 720dec3ae6efa37a009ee7adbd0ce3dc76ef9cea
     }
 
     // Email validation
