@@ -72,7 +72,6 @@ export const useReorder = () => {
             setError(null);
 
             const response = await reorderLessonsService(lessonId, params);
-            console.log(response) 
 
             return {
                 success: true,

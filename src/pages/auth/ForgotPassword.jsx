@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 function ForgotPassword() {
 
-     useDocumentTitle("Forgot Password");
+    useDocumentTitle("Forgot Password");
 
     const navigate = useNavigate();
     const { addToast } = useToast();
