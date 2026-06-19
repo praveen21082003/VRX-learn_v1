@@ -5,7 +5,7 @@ import { CourseCardViewer } from '@/components/ui';
 
 
 function Courses() {
-    const { topCourses, loading, error } = useDashboardCourses(20);
+    const { topCourses, loading, error } = useDashboardCourses(100);
     return (
         <div className='h-full p-6 w-full'>
 

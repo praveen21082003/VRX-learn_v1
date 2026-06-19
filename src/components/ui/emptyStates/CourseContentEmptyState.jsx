@@ -22,7 +22,7 @@ function CourseContentEmptyState({
             <h2 className="text-h3 font-semibold">{title}</h2>
 
 
-            <p className="text-muted-foreground max-w-md">{description}</p>
+            <p className="text-muted max-w-xl">{description}</p>
 
 
             {buttonText && onButtonClick && (

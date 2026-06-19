@@ -4,7 +4,7 @@ import axiosInstance from '../api/apiClient'
 
 //reorder lesson
 export const reorderLessons = (lessonId, params) => {
-    return axiosInstance.patch(`/api/v1/lessons/${lessonId}/update-position`, params)
+    return axiosInstance.patch(`/api/v1/lessons/${lessonId}/position`, params)
 }
 
 export const getLessonsByModuleId = (moduleId) => {
@@ -19,7 +19,7 @@ export const createLesson = (payload) => {
 
 //update lesson
 export const updateLesson = (lessonId, payload) => {
-    return axiosInstance.patch(`/api/v1/lessons/${lessonId}/update`, payload)
+    return axiosInstance.patch(`/api/v1/lessons/${lessonId}`, payload)
 }
 
 //delete lesson

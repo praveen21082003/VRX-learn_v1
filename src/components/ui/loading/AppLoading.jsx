@@ -10,7 +10,7 @@ export default function AppLoading({
             <div className="relative flex items-center justify-center">
                 <Icon
                     name="line-md:loading-twotone-loop"
-                    bgClass="text-primary"
+                    className="text-primary dark:text-white"
                     width="40"
                     height="40"
                 />

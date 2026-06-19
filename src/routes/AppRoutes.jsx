@@ -38,10 +38,13 @@ import ResetPassword from '../pages/auth/ResetPassword';
 import SignUp from '../pages/auth/SignUp';
 import VerifyEmail from '../pages/auth/VerifyEmail';
 
+// Apploading
+import { AppLoading } from '@/components/ui/loading';
+
 function AppRoutes() {
   const { loading } = useAuth();
 
-  if (loading) return null;
+  if (loading) return <AppLoading />;
 
   return (
     <Routes>

@@ -1,12 +1,17 @@
 import React, { isValidElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 import { useAuth } from "@/context/AuthContext";
 import { useAuthenticate } from "./useAuthenticate";
 
 import { Icon, Input, Button, StatusBanner } from "@/components/ui";
 
 function SignUp() {
+
+   useDocumentTitle("Sign Up");
+
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
   const { handleSignup, signingUp } = useAuthenticate();

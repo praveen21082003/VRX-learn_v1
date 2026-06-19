@@ -16,7 +16,7 @@ export const updateAttachmentStatus = (assignmentId) => {
 }
 
 export const updateAssignment = (assignmentId, payload) => {
-    return axiosInstance.patch(`/api/v1/assignments/${assignmentId}/update-details`, payload);
+    return axiosInstance.patch(`/api/v1/assignments/${assignmentId}`, payload);
 }
 
 export const deleteAssignmnet = (assignmentId) => {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 import { useAuthenticate } from "./useAuthenticate";
 import { useToast } from '@/context/ToastProvider';
 
@@ -7,6 +9,8 @@ import { Icon, Input, Button, InputWarnMessage, StatusBanner } from "@/component
 import { useNavigate } from 'react-router-dom';
 
 function ForgotPassword() {
+
+     useDocumentTitle("Forgot Password");
 
     const navigate = useNavigate();
     const { addToast } = useToast();

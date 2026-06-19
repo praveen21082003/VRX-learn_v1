@@ -75,7 +75,7 @@ function LessonActionHandler({ mode }) {
 
 
     return (
-        <div className='p-4'>
+        <div className='p-4 mb-20'>
             <BackButton to={`/course/${courseId}/content/modules/${moduleId}`} label={`Back to Module`} />
             <div className='flex items-center gap-5'>
                 <h2 className="text-h3">

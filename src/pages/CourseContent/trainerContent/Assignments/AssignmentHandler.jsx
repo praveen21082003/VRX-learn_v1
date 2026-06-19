@@ -53,7 +53,7 @@ function AssignmentHandler({ mode }) {
 
 
     return (
-        <div className='mb-30 lg:mb-0'>
+        <div className='mb-30'>
             {
                 (mode === "create" || mode === "edit") &&
                 <div className='pt-2 px-4'>

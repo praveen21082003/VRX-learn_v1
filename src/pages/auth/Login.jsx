@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 import { useAuth } from "@/context/AuthContext";
 import { useAuthenticate } from "./useAuthenticate";
 
@@ -10,6 +12,9 @@ import SignUp from "./SignUp";
 
 
 function Login() {
+
+    useDocumentTitle("Login");
+
     const navigate = useNavigate();
     const { refreshUser } = useAuth();
     const {

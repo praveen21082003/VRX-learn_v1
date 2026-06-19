@@ -76,17 +76,23 @@ function ReorderList({ items, reorder, isUpdating, onReorderUI }) {
         };
 
         try {
-            await reorder(active.id, {
+            const response = await reorder(active.id, {
                 precedingId,
                 succeedingId
             });
+            if (!response.success) {
+                throw new Error(
+                    response.message || "Failed to reorder lessons"
+                );
+            }
             addToast("Modules Reordered successfully", "success")
-
+    
         } catch (err) {
             setData(previousData);
             onReorderUI?.(previousData);
 
             const status = err?.response?.status;
+            console.log(status);
             const message = getCustomErrorMessage(status);
 
             addToast(`${message} ${status ? `(Code: ${status})` : ""}`, "error");

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useCourseContent } from '../../hooks/useCourseContent';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { BackButton, Icon } from "@/components/ui";
 import ContentLessonSidebar from './ContentLessonSidebar';
+import CourseContentEmptyState from "../../../../components/ui/emptyStates/CourseContentEmptyState";
+
 
 function LessonLayout() {
 
@@ -13,6 +15,7 @@ function LessonLayout() {
 
 
   const { courseId } = useParams();
+  const navigate = useNavigate()
 
 
 
@@ -64,6 +67,21 @@ function LessonLayout() {
             We're preparing your course content for you.
           </p>
         </div>
+      </div>
+    )
+  }
+
+  if (!allLessons || allLessons.length === 0 && modules.length === 0) {
+    return (
+      <div className='flex justify-center h-full'>
+        <CourseContentEmptyState
+          title="Lessons Coming Soon"
+          description="The materials for this module are currently being prepared. Please check back later for updates and new lessons."
+          buttonText="Back to Overview"
+          onButtonClick={() =>
+            navigate(`/course/${courseId}/overview`)
+          }
+        />
       </div>
     )
   }

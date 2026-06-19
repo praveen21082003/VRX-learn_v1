@@ -72,6 +72,7 @@ export const useReorder = () => {
             setError(null);
 
             const response = await reorderLessonsService(lessonId, params);
+            console.log(response) 
 
             return {
                 success: true,
@@ -79,6 +80,7 @@ export const useReorder = () => {
                 message: "Lessons reordered successfully",
             };
         } catch (err) {
+            console.log(err)
             let message = "Failed to reorder lessons";
 
             if (err.response?.status === 400) {

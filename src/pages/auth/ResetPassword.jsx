@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom';
 
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+
 import { useAuthenticate } from "./useAuthenticate";
 
 import { Icon, Input, Button, InputWarnMessage, StatusBanner } from "@/components/ui";
 
 
 function ResetPassword() {
+
+     useDocumentTitle("Reset Password");
+
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 

@@ -324,6 +324,7 @@ function SubmissionView({ setActiveTab, activeAssignmentId, setActiveAssignmentI
                         fileUrl={url}
                         key={submissionData?.id}
                         loading={mediaLoading}
+                        error={error}
                     />
                 </section>
 
