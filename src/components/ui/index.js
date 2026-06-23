@@ -13,6 +13,7 @@ export { default as Button } from './Buttons/Button'
 export { default as Header } from './Header'
 export { default as Dropdown } from './Dropdown'
 export { default as Modal } from './Modal'
+export { default as ToggleSwitch } from './Buttons/ToggleSwitch'
 
 // cards
 export { default as CourseCardViewer } from './cards/CourseCardViewer'

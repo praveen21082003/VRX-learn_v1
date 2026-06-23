@@ -1,17 +1,62 @@
 import { useCallback, useState } from "react";
 import {
+    getEnrollment,
     createEnrollment,
     deleteEnrollmentService,
     updateEnrollmentService,
+    moduleRestriction
 } from "@/services/Enrollment.service";
 import { extractErrorMessage } from '@/utils/errorUtils';
 
 
 export const useEnrollmentActions = () => {
+    const [enrollment, setEnrollment] = useState([])
+
+    const [fetchingEnrollment, setFetchingEnrollment] = useState(false);
     const [creating, setCreating] = useState(false);
     const [updating, setUpdating] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
+
     const [error, setError] = useState(null);
+
+    // get Enrollment
+    const fetchEnrollment = useCallback(async (enrollmentId) => {
+        try {
+            setFetchingEnrollment(true);
+            setError(null);
+
+            const response = await getEnrollment(enrollmentId);
+            const data = response?.data || response;
+
+            setEnrollment(data);
+
+            return {
+                success: true,
+                data,
+                message: "Enrollment fetched successfully",
+            };
+        } catch (err) {
+            const status = err.response?.status;
+
+            const message = extractErrorMessage(err, {
+                403: "You do not have permission to view this enrollment.",
+                404: "The requested enrollment could not be found.",
+            });
+
+            setError(message);
+
+            return {
+                success: false,
+                data: null,
+                message,
+                status,
+            };
+        } finally {
+            setFetchingEnrollment(false);
+        }
+    }, []);
+
 
     // create enrollment
     const createNewEnrollment = useCallback(async (payload) => {
@@ -93,13 +138,50 @@ export const useEnrollmentActions = () => {
         }
     }, []);
 
+    //Module Restriction
+
+    const restrictModules = useCallback(async (enrollmentId, payload) => {
+        try {
+            setIsLoading(true);
+            setError(null)
+            const res = await moduleRestriction(enrollmentId, payload);
+            return {
+                success: true,
+                message: "Enrollment updated successfully",
+            }
+
+        }
+        catch (err) {
+            console.log(err)
+            const status = err.response?.status;
+
+            const message = extractErrorMessage(/** @type {any} */(err), {
+                403: "You do not have permission to update this enrollment.",
+                404: "The selected enrollment could not be found.",
+            });
+
+            setError(message);
+            return { success: false, message };
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }, [])
+
     return {
+        fetchEnrollment,
         createNewEnrollment,
         updateEnrollment,
         deleteEnrollment,
+        restrictModules,
+
+        enrollment,
+
+        fetchingEnrollment,
         creating,
         updating,
         deleting,
+        isLoading,
         error,
         setError,
     };
