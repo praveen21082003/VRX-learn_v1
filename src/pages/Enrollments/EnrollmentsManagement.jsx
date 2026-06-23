@@ -66,10 +66,10 @@ function EnrollmentsManagement() {
                 return {
                     ...col,
                     className: "whitespace-nowrap",
-                    render: (row) => 
-                    <span className="truncate block" title={row.email}>
-                        {row.email}
-                    </span>
+                    render: (row) =>
+                        <span className="truncate block" title={row.email}>
+                            {row.email}
+                        </span>
                 };
 
             case "role":
@@ -376,8 +376,9 @@ function EnrollmentsManagement() {
                         onClose={handleClose}
                         title={
                             actionType === "delete" ? "Remove Enrollment?" :
-                                actionType === "edit" ? "Update Enrollment" : "Create New Enrollment"
+                                actionType === "edit" ? "Enrollment & Access Configuration" : "Add New Enrollment"
                         }
+                        width="max-w-[700px]"
                     >
 
                         <EnrollmentActionHandler

@@ -24,7 +24,8 @@ axiosInstance.interceptors.response.use(
             "/login",
             "/forgot-password",
             "/verify-email",
-            "/signup"
+            "/signup",
+            "/course"
         ];
 
         const isPublicPage =
@@ -40,6 +41,7 @@ axiosInstance.interceptors.response.use(
             requestUrl.includes("/api/v1/auth/forgot-password") ||
             requestUrl.includes("/api/v1/auth/reset-password") ||
             requestUrl.includes("/api/v1/auth/me");
+            
 
         if (
             status === 401 &&

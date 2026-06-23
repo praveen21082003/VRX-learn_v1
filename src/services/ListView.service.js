@@ -66,3 +66,8 @@ export const getIssues = (params = {}) => {
         params,
     })
 }
+
+// get list of modules by course id
+export const getModules = (courseId) => {
+    return axiosInstance.get(`/api/v1/list/trainer/modules/${courseId}`)
+}
