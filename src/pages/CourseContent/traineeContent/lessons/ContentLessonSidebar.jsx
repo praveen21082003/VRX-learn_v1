@@ -20,10 +20,19 @@ function ContentLessonSidebar({
 
 
     useEffect(() => {
-        if (modules?.length && openModuleId === null) {
-            setOpenModuleId(modules[0].id)
+    if (modules?.length && openModuleId === null) {
+
+        const firstAvailableModule = modules.find(
+            module => !module.restricted
+        );
+
+        if (firstAvailableModule) {
+            setOpenModuleId(firstAvailableModule.id);
         }
-    }, [modules, openModuleId])
+    }
+}, [modules, openModuleId]);
+
+
 
 
     const toggleModule = (id) => {
@@ -48,22 +57,40 @@ function ContentLessonSidebar({
                                 <button
                                     onClick={() => toggleModule(module.id)}
                                     className={clsx(
-                                        "flex h-14 w-full border-primary items-center justify-between text-h45",
-                                        isOpen ? "bg-primary/16 dark:bg-primary text-primary dark:text-gray-50 border-l-8 p-2" : "hover:bg-primary/16 p-4"
+                                        "flex h-14 w-full items-center justify-between text-h45",
+
+                                     isOpen
+                                        ? module.restricted
+                                        ? "p-4 text-main border-input"
+                                        : "bg-primary/16 dark:bg-primary text-primary dark:text-gray-50 border-l-8 p-2"
+                                        : module.restricted
+                                        ? " p-4 text-gray-400"
+                                        : "hover:bg-primary/16 p-4"
                                     )}
                                 >
                                     <span className="truncate">{module.title}</span>
 
 
-                                    <Icon
-                                        name="iconamoon:arrow-down-2"
-                                        height="26"
-                                        width="26"
-                                        className={clsx(
-                                            "transition-transform duration-200",
-                                            isOpen && "rotate-180"
+
+                                    <div className="flex items-center gap-2">
+                                        {module.restricted && (
+                                            <Icon
+                                                name="material-symbols:lock-outline"
+                                                height="20"
+                                                width="20"
+                                            />
                                         )}
-                                    />
+
+                                        <Icon
+                                            name="iconamoon:arrow-down-2"
+                                            height="26"
+                                            width="26"
+                                            className={clsx(
+                                                "transition-transform duration-200",
+                                                isOpen && "rotate-180"
+                                            )}
+                                        />
+                                    </div>
                                 </button>
                                 {isOpen && (
                                     <ul>
@@ -83,18 +110,21 @@ function ContentLessonSidebar({
                                                             })
                                                         }
                                                         className={clsx(
-                                                            "flex w-full items-center justify-between p-4 text-dark-gray transition",
+                                                            "flex w-full items-center justify-between p-4 transition",
+
                                                             isActive
-                                                                ? "bg-primary/16 dark:bg-primary text-primary dark:text-background"
-                                                                : "hover:bg-primary/16 text-muted"
-                                                        )}
+                                                                ? "bg-primary/16 text-primary"
+                                                                : module.restricted
+                                                                ? "text-gray-500 hover:bg-primary/10"
+                                                                : "text-muted hover:bg-primary/16"
+                                                            )}
                                                     >
                                                         <div className="flex items-center gap-4 min-w-0">
 
                                                             <Icon name={lesson?.mimeType?.startsWith("video") ? "ep:video-play" : "basil:document-outline"} height="26" width="26" />
 
                                                             <p className="text-h5 truncate">
-                                                                {moduleIndex + 1}.{lessonIndex + 1} {lesson.title}
+                                                               {lesson.title}
                                                             </p>
                                                         </div>
 
@@ -195,19 +225,43 @@ function ContentLessonSidebar({
                                 <div key={module.id} className="border-b border-default">
                                     <button
                                         onClick={() => toggleModule(module.id)}
-                                        className="w-full flex items-center justify-between px-3 py-2.5 text-h5 font-medium"
+                                        className={clsx(
+                                            "w-full flex items-center justify-between px-3 py-2.5 text-h5 font-medium",
+
+                                            isModuleOpen
+                                                ? module.restricted
+                                                    ? "text-main border-input"
+                                                    : "bg-primary/16 text-primary"
+                                                : module.restricted
+                                                    ? "text-gray-400"
+                                                    : "hover:bg-primary/16"
+                                        )}
                                     >
                                         <span>{module.title}</span>
 
-                                        <Icon
-                                            name="mdi:chevron-down"
-                                            width="18"
-                                            height="18"
-                                            className={clsx(
-                                                "transition-transform",
-                                                isModuleOpen && "rotate-180"
+                                        <div className="flex items-center gap-2">
+                                            {module?.restricted && (
+                                                <Icon
+                                                    name="material-symbols:lock-outline"
+                                                    height="18"
+                                                    width="18"
+                                                />
                                             )}
-                                        />
+                                            <button
+                                                onClick={() => setShowNextPlaylist(false)}
+                                                className="text-muted"
+                                            >
+                                                <Icon
+                                                    name="mdi:chevron-down"
+                                                    width="20"
+                                                    height="20"
+                                                     className={clsx(
+                                                        "transition-transform duration-200",
+                                                        isModuleOpen && "rotate-180"
+                                                    )}
+                                                />
+                                            </button>
+                                        </div>
                                     </button>
 
                                     {isModuleOpen && (
@@ -231,10 +285,13 @@ function ContentLessonSidebar({
                                                                     setShowNextPlaylist(false);
                                                                 }}
                                                                 className={clsx(
-                                                                    "w-full flex items-center justify-between px-3 py-2.5 text-muted text-left",
+                                                                    "w-full flex items-center justify-between px-3 py-2.5 text-left transition",
+
                                                                     isActive
-                                                                        ? "bg-primary/10 text-primary"
-                                                                        : "hover:bg-primary/5"
+                                                                        ? "bg-primary/16 text-primary"
+                                                                        : module.restricted
+                                                                            ? "text-gray-500 hover:bg-primary/10"
+                                                                            : "text-muted hover:bg-primary/16"
                                                                 )}
                                                             >
                                                                 <div className="flex items-center gap-3 min-w-0">

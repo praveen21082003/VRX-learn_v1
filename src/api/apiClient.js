@@ -17,6 +17,7 @@ axiosInstance.interceptors.response.use(
     async (error) => {
 
         const status = error.response?.status;
+        const type = error.response?.data?.type;
 
         const pathname = window.location.pathname;
 
@@ -24,8 +25,7 @@ axiosInstance.interceptors.response.use(
             "/login",
             "/forgot-password",
             "/verify-email",
-            "/signup",
-            "/course"
+            "/signup"
         ];
 
         const isPublicPage =
@@ -45,6 +45,7 @@ axiosInstance.interceptors.response.use(
 
         if (
             status === 401 &&
+            type === "UnAuthenticated" &&
             !isRedirecting &&
             !isPublicPage &&
             !isAuthEndpoint
