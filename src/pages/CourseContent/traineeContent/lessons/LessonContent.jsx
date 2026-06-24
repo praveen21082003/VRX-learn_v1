@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import LessonViewer from '@/components/lessonViewer/LessonViewer';
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
-import CourseContentEmptyState from "../../../../components/ui/emptyStates/CourseContentEmptyState";
+import CourseContentEmptyState from "@/components/ui/emptyStates/CourseContentEmptyState";
+import { moduleRestrict } from '@/assets';
 
 function LessonContent() {
   const {
@@ -16,10 +17,20 @@ function LessonContent() {
   const { courseId } = useParams();
   const { setSectionBreadcrumb } = useBreadcrumbs();
 
+  const allModulesRestricted =
+  modules?.length > 0 &&
+  modules.every((module) => module.restricted);
 
   const lesson = allLessons.find(
     (item) => item.id === activeLesson?.lessonId
   );
+
+  const currentModule =
+  activeLesson?.moduleIndex !== undefined
+    ? modules[activeLesson.moduleIndex]
+    : null;
+
+const isRestricted = currentModule?.restricted;
 
   const currentIndex = allLessons.findIndex(
     (lesson) => lesson.id === activeLesson?.lessonId
@@ -69,6 +80,22 @@ function LessonContent() {
     setSectionBreadcrumb(lesson?.title);
     return () => setSectionBreadcrumb("");
   }, [lesson?.title, setSectionBreadcrumb]);
+
+  if (isRestricted || allModulesRestricted) {
+  return (
+ <div className="flex justify-center h-full">
+        <CourseContentEmptyState
+          image={moduleRestrict}
+          title="Module Access Restricted"
+          description="Your current enrollment tier does not include access to this specific module’s Lesson. Request access to proceed."
+          // buttonText="Request Access"
+          // onButtonClick={() =>
+          //   navigate(`/course/${courseId}/overview`)
+          //   // alert("Sorry! We didn't Implement...")
+          // }
+        />
+      </div>  );
+}
 
   if (!lesson) {
     return (

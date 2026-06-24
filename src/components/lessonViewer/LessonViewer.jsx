@@ -31,9 +31,9 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
     return (
         <main className="flex-1 text-main overflow-y-auto md:py-1 md:px-6 pb-24">
             <h1 className="text-preview px-1 leading-tight whitespace-normal">
-                {activeLesson.moduleIndex + 1}.{activeLesson.lessonIndex + 1} {lesson?.title}
+                 {lesson?.title}
             </h1>
-            <div className="flex px-2 items-center text-caption -mt-1.5 text-muted-foreground">
+            {/* <div className="flex px-2 items-center text-caption -mt-1.5 text-muted-foreground">
 
                 <span>
                     {lesson?.mimeType?.startsWith("video") ? "video" : "file"}
@@ -48,7 +48,7 @@ function LessonViewer({ activeLesson, prevLesson, nextLesson, onNavigate, lesson
                         <span>{calculateTime(videoDuration) || "0:00"}</span>
                     </>
                 )}
-            </div>
+            </div> */}
 
 
             {/* Content redering */}

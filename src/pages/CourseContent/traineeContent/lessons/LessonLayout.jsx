@@ -29,22 +29,24 @@ function LessonLayout() {
   } = useCourseContent(courseId);
 
 
-
-
   useEffect(() => {
-    if (modules?.length > 0 && !activeLesson) {
-      const firstModule = modules[0];
-      if (firstModule.lessons?.length > 0) {
-        setActiveLesson({
-          moduleIndex: 0,
-          lessonIndex: 0,
-          lessonId: firstModule.lessons[0].id,
-        });
-      }
-    }
-  }, [modules, activeLesson]);
+  if (modules?.length > 0 && !activeLesson) {
 
-  // console.log("Active Lesson in Layout:", activeLesson);
+    const firstAvailableModuleIndex = modules.findIndex(
+      (module) => !module.restricted && module.lessons?.length > 0
+    );
+
+    if (firstAvailableModuleIndex === -1) return;
+
+    const module = modules[firstAvailableModuleIndex];
+
+    setActiveLesson({
+      moduleIndex: firstAvailableModuleIndex,
+      lessonIndex: 0,
+      lessonId: module.lessons[0].id,
+    });
+  }
+}, [modules, activeLesson]);
 
   const currentIndex = allLessons.findIndex(
     (lesson) => lesson.id === activeLesson?.lessonId
@@ -69,6 +71,21 @@ function LessonLayout() {
         </div>
       </div>
     )
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center h-full">
+        <CourseContentEmptyState
+          title="Unable to Load Lessons"
+          description={error}
+          buttonText="Back to Overview"
+          onButtonClick={() =>
+            navigate(`/course/${courseId}/overview`)
+          }
+        />
+      </div>
+    );
   }
 
   if (!allLessons || allLessons.length === 0 && modules.length === 0) {

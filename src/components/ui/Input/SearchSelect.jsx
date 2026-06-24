@@ -14,7 +14,8 @@ function SearchSelect({
     getLabel = (item) => item.label || "",
     getSubLabel = null,
     renderItem = null,
-    paddingClass = "py-2"
+    paddingClass = "py-2",
+    disabled = false
 }) {
 
     const [open, ref, setOpen] = useClickOutside(false);
@@ -22,7 +23,7 @@ function SearchSelect({
     return (
         <div className="relative" ref={ref}>
             {label && (
-                <label className="block text-h5 mb-2">
+                <label className="block text-h5 mb-1">
                     {label} {inputWarning && <InputWarnMessage message={inputWarning} />}
                 </label>
             )}
@@ -34,6 +35,7 @@ function SearchSelect({
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 onFocus={() => setOpen(true)}
+                disabled={disabled}
             />
 
             {open && value && (

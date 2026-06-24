@@ -4,7 +4,8 @@ export default function useDebouncedSearch({
     searchFn,
     delay = 500,
     initialValue = "",
-    extraParams = {}
+    extraParams = {},
+    skip = false
 }) {
     const [search, setSearch] = useState(initialValue);
     const [results, setResults] = useState([]);
@@ -23,6 +24,8 @@ export default function useDebouncedSearch({
     const paramsKey = JSON.stringify(extraParams);
 
     useEffect(() => {
+
+        if (skip || !search.trim()) return;
         const query = search.trim();
 
         if (query === lastQuery.current && paramsKey === lastParams.current) {
@@ -36,6 +39,7 @@ export default function useDebouncedSearch({
         }
 
         const timer = setTimeout(async () => {
+            console.log("started")
             try {
                 setSearching(true);
                 lastQuery.current = query;
@@ -58,7 +62,7 @@ export default function useDebouncedSearch({
 
         return () => clearTimeout(timer);
         // REMOVED searchFn from dependencies to stop the loop!
-    }, [search, delay, paramsKey]);
+    }, [search, skip, delay, paramsKey]);
 
     return { search, setSearch, results, searching, setResults };
 }

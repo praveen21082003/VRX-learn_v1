@@ -72,7 +72,9 @@ function ContentRenderer({ lesson, setVideoDuration }) {
 
         <Button
           buttonName="Retry"
-          onClick={refetch}
+          // onClick={refetch}
+          onClick ={() => window.location.reload()}
+          className ="py-2 px-6 rounded"
         />
       </div>
     );

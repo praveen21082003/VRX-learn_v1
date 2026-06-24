@@ -1,6 +1,7 @@
 // images (keep as URL)
 export { default as defaultCourse } from "./images/default-course-bg.png";
 import LearningIllustration from './images/Learning-Illustration.png';
+export {default as moduleRestrict} from "./images/moduleRestriction.png";
 
 export { LearningIllustration };
 

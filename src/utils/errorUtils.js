@@ -3,10 +3,10 @@ export const extractErrorMessage = (err, customMessages = {}) => {
     const status = err?.response?.status;
 
     // 401 — handle globally
-    if (status === 401) {
-        window.location.href = "/login";
-        return "Session expired. Please login again.";
-    }
+    // if (status === 401) {
+    //     window.location.href = "/login";
+    //     return "Session expired. Please login again.";
+    // }
 
     // use custom message for this status if provided
     if (customMessages[status]) {
