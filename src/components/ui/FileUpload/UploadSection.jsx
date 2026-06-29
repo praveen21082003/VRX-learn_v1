@@ -20,7 +20,7 @@ const UploadProgress = React.memo(({ progress }) => (
     />
 ));
 
-const FileItem = React.memo(({ file, index, isUploading, uploadProgress, loadedData, mediaStatus, handleRemoveFile }) => {
+const FileItem = React.memo(({ file, index, isUploading, uploadProgress, loadedData, mediaStatus, cancelUpload, handleRemoveFile }) => {
     const fileSize =
         file.size > 1024 * 1024
             ? `${(file.size / (1024 * 1024)).toFixed(2)} MB`
@@ -78,7 +78,13 @@ const FileItem = React.memo(({ file, index, isUploading, uploadProgress, loadedD
             </div>
 
             <button
-                onClick={() => handleRemoveFile(index)}
+                onClick={() => {
+                    if (isUploading) {
+                        cancelUpload();
+                    } else {
+                        handleRemoveFile(index);
+                    }
+                }}
                 className="hover:bg-primary/80 hover:text-white p-1 rounded-full text-primary dark:text-text-main-dark transition-colors"
             >
                 <Icon
@@ -93,7 +99,7 @@ const FileItem = React.memo(({ file, index, isUploading, uploadProgress, loadedD
 
 
 // TODO: Optimize by only rendering progress for the currently uploading file, and not all files in the list. This will require tracking which file is being uploaded in the parent component and passing that info down to FileItem.
-const UploadedFiles = React.memo(({ files, isUploading, uploadProgress, loadedData, mediaStatus, handleRemoveFile, maxFileSize }) => {
+const UploadedFiles = React.memo(({ files, isUploading, uploadProgress, loadedData, mediaStatus, cancelUpload, handleRemoveFile, maxFileSize }) => {
     return (
         <div className="grid grid-cols-1 gap-2">
             {files.map((file, index) => (
@@ -106,6 +112,7 @@ const UploadedFiles = React.memo(({ files, isUploading, uploadProgress, loadedDa
                     loadedData={loadedData}
                     mediaStatus={mediaStatus}
                     handleRemoveFile={handleRemoveFile}
+                    cancelUpload={cancelUpload}
                 />
             ))}
         </div>
@@ -119,6 +126,7 @@ export default function UploadSection({
     setFiles,
     uploadProgress = 0,
     isUploading = false,
+    cancelUpload,
     mediaStatus,
     label = "Your Work",
     optional,
@@ -167,6 +175,7 @@ export default function UploadSection({
                             loadedData={loadedData}
                             mediaStatus={mediaStatus}
                             handleRemoveFile={handleRemoveFile}
+                            cancelUpload={cancelUpload}
                         />
                     }
                     inputWarning={inputWarning}

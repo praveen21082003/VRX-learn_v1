@@ -47,7 +47,7 @@ export function ToastProvider({ children }) {
 
                             toast.type === "success" && "bg-[#D1E7DD] border-[#0F2D1F]",
                             toast.type === "error" && "bg-[#F8D7DA]  border-[#661414]",
-                            toast.type === "warning" && "bg-[#e7f8d7] border-[#ffcc00]",
+                            toast.type === "warning" && "bg-[#e7f8d7] border-[#ffcc00b0]",
                             toast.type === "info" && "bg-[#D0E8FF] border-[#1565C0]",
                         )}
                     >

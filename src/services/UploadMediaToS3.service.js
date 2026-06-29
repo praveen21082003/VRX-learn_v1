@@ -1,11 +1,19 @@
 import axios from "axios";
 
 
-export const UploadMediaToS3 = async (uploadUrl, file, onProgress) => {
+export const UploadMediaToS3 = async (
+    uploadUrl,
+    file,
+    onProgress,
+    signal
+) => {
     return axios.put(uploadUrl, file, {
+        signal,
+
         headers: {
             "Content-Type": file.type || "application/octet-stream",
         },
+        
         onUploadProgress: (progressEvent) => {
             if (!progressEvent.total) return;
 
@@ -18,7 +26,7 @@ export const UploadMediaToS3 = async (uploadUrl, file, onProgress) => {
             );
 
 
-            onProgress?.(percent,loaded);
+            onProgress?.(percent, loaded);
         },
     });
 };

@@ -32,7 +32,7 @@ function AssignmentContent() {
 
 
     const { assignment: assignmentData, attachment, submissions } = assignmentDetail || {};
-    const { submitAssignment, loading: submitting, uploadProgress, mediaStatus, loadedData } = useAssignmentSubmission();
+    const { submitAssignment, loading: submitting, uploadProgress, mediaStatus, loadedData, uploadCancel } = useAssignmentSubmission();
 
     useDocumentTitle(activeAssignment ? `${activeAssignment?.title} - Assignment` : "Assignment");
 
@@ -134,7 +134,6 @@ function AssignmentContent() {
 
     const handleSubmit = async () => {
 
-
         if (files.length === 0) {
             addToast("Please upload a file first.", "warning");
             return;
@@ -152,19 +151,20 @@ function AssignmentContent() {
                 size: file.size,
             },
         };
+        console.log(payload);
 
-        try {
-            await submitAssignment(payload, file);
-            addToast("Assignment submitted successfully", "success");
+        const result = await submitAssignment(payload, file);
 
-            setFiles([]);
-            handleRefresh?.();
-
+        if (!result.success) {
+            addToast(result.message, "error");
+            return;
         }
-        catch (err) {
-            addToast(err?.message || "Something went wrong while submitting.", "error");
-        }
-    }
+
+        addToast(result.message, "success");
+
+        setFiles([]);
+        handleRefresh?.();
+    };
 
 
 
@@ -288,7 +288,8 @@ function AssignmentContent() {
                             isUploading={submitting}
                             mediaStatus={mediaStatus}
                             loadedData={loadedData}
-                        // allowedTypes={['pdf', 'mp4']}
+                            // allowedTypes={['pdf', 'mp4']}
+                            uploadCancel={uploadCancel}
                         />
                     </div>
                 )}

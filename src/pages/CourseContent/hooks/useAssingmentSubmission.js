@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 
 import { createAssignmentSubmission, updateAttachmentStatus } from '@/services/AssignmentSubmission.service';
 
@@ -7,6 +7,9 @@ import { UploadMediaToS3 } from "@/services/UploadMediaToS3.service";
 
 
 export function useAssignmentSubmission() {
+
+    const uploadControllerRef = useRef(null);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -43,19 +46,39 @@ export function useAssignmentSubmission() {
             const url = response?.media?.url
 
             if (!url || !id) {
-                throw new Error("Invalid upload response: Missing URL or Media ID");
+                return {
+                    success: false,
+                    data: null,
+                    message: "Invalid upload response: Missing URL or Media ID"
+                }
             }
 
             if (file) {
                 try {
-                    const uploadRes = await UploadMediaToS3(url, file, (percent, loaded) => {
-                        setUploadProgress(percent);
-                        setLoadedData(loaded);
-                    });
+
+                    uploadControllerRef.current = new AbortController();
+
+                    const uploadRes = await UploadMediaToS3(
+                        url,
+                        file,
+                        (percent, loaded) => {
+                            setUploadProgress(percent);
+                            setLoadedData(loaded);
+                        },
+                        uploadControllerRef.current.signal
+                    );
 
 
                     if (uploadRes.status !== 200) {
-                        throw new Error("File upload failed");
+                        // throw new Error("File upload failed");
+
+                        uploadControllerRef.current = null;
+
+                        return {
+                            success: false,
+                            data: null,
+                            message: "File upload failed",
+                        }
                     }
 
                     const mediaRes = await updateAttachmentStatus(id);
@@ -64,16 +87,40 @@ export function useAssignmentSubmission() {
                     setMediaStatus(mediaData?.status);
 
                 } catch (uploadError) {
-                    console.error(uploadError)
-                    setError(uploadError?.message || "File upload failed");
-                    throw uploadError;
+                    console.error(uploadError);
+
+                    if (uploadErr.code === "ERR_CANCELED") {
+                        uploadControllerRef.current = null;
+
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Upload cancelled",
+                            cancelled: true,
+                        };
+                    }
+
+                    const message = uploadError?.message || "File upload failed";
+                    const status = uploadError?.response?.status;
+
+
+
+                    setError(message);
+
+                    // throw uploadError;
+                    return {
+                        success: false,
+                        data: null,
+                        message,
+                        status
+                    }
                 }
             }
 
             return {
                 success: true,
-                lessonId: response?.lessonId,
-                mediaId: response?.mediaId,
+                data: response,
+                message: "Assignment submitted successfully.",
             };
 
         } catch (err) {
@@ -85,7 +132,13 @@ export function useAssignmentSubmission() {
                 : getCustomErrorMessage(status);
 
             setError(message);
-            throw new Error(message);
+
+            return {
+                success: false,
+                data: null,
+                message,
+                status,
+            };
 
         } finally {
             setLoading(false);
@@ -93,8 +146,14 @@ export function useAssignmentSubmission() {
         }
     };
 
+    const uploadCancel = useCallback(() => {
+        uploadControllerRef.current.abort();
+    }, [])
+
     return {
         submitAssignment,
+        uploadCancel,
+
         loading,
         error,
         uploadProgress,

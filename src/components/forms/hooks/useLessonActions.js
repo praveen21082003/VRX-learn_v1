@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 
 import { createLesson, updateLesson, deleteLesson, updateAttachmentStatus } from "@/services/Lessons.service";
 import { UploadMediaToS3 } from "@/services/UploadMediaToS3.service";
@@ -7,6 +7,9 @@ import { extractErrorMessage } from '@/utils/errorUtils';
 import { getUploadErrorMessage } from '@/utils/S3errorUtils'
 
 export default function useLessonActions() {
+
+    const uploadControllerRef = useRef(null);
+
     const [isCreating, setIsCreating] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -43,16 +46,22 @@ export default function useLessonActions() {
 
                 try {
 
+                    uploadControllerRef.current = new AbortController();
+
                     const uploadResponse = await UploadMediaToS3(
                         uploadUrl,
                         file,
                         (percent, loaded) => {
                             setUploadProgress(percent);
                             setLoadedData(loaded);
-                        }
+                        },
+                        uploadControllerRef.current.signal
                     );
 
                     if (uploadResponse?.status !== 200) {
+
+                        uploadControllerRef.current = null;
+
                         return {
                             success: false,
                             data: null,
@@ -61,6 +70,18 @@ export default function useLessonActions() {
                     }
 
                 } catch (uploadErr) {
+
+                    if (uploadErr.code === "ERR_CANCELED") {
+                        uploadControllerRef.current = null;
+
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Upload cancelled",
+                            cancelled: true,
+                        };
+                    }
+
                     const message = getUploadErrorMessage(uploadErr);
 
                     setLessonError(message);
@@ -106,6 +127,11 @@ export default function useLessonActions() {
         } finally {
             setIsCreating(false);
         }
+    }, []);
+
+    // Upload cancel function
+    const cancelUpload = useCallback(() => {
+        uploadControllerRef.current?.abort();
     }, []);
 
     const updateLessonAction = useCallback(async (lessonId, payload) => {
@@ -198,6 +224,8 @@ export default function useLessonActions() {
         createLessonAction,
         updateLessonAction,
         deleteLessonAction,
+
+        cancelUpload,
 
         isCreating,
         isUpdating,

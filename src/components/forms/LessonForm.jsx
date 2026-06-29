@@ -33,6 +33,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
   const {
     createLessonAction,
     updateLessonAction,
+    cancelUpload, // cancle upload function
     isCreating,
     isUpdating,
     uploadProgress,
@@ -248,6 +249,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
             uploadProgress={uploadProgress}
             isUploading={isCreating}
             isUploaded={uploadProgress === 100}
+            cancelUpload={cancelUpload}
             mediaStatus={mediaStatus}
             loadedData={loadedData}
             inputWarning={warning.file}
