@@ -2,12 +2,12 @@ import React from 'react';
 import { CourseCardViewer } from "@/components/ui";
 
 function MyCoursesSection({ enrolledCourses, loading }) {
-    
+    console.log(enrolledCourses);
 
     return (
 
         <CourseCardViewer
-            title="My Courses"
+            title="My Enrollments"
             courses={enrolledCourses}
             loading={loading}
             myCourses={true}
@@ -18,7 +18,6 @@ function MyCoursesSection({ enrolledCourses, loading }) {
             emptyDescription="You aren't enrolled in any courses yet. Explore the courses to get started."
             emptyIcon="uil:book-open"
         />
-
     );
 }
 

@@ -51,7 +51,7 @@ function AnalyticsPreview({ loading = false, learningData = null }) {
     };
 
     return (
-        <section className="relative bg-primary-16 noise-overlay rounded-xl p-6 w-full z-10">
+        <section className="relative noise-overlay rounded-xl p-1 w-full z-10">
             {renderContent()}
         </section>
     );

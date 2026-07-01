@@ -16,7 +16,7 @@ function CalendarUi() {
 
     return (
         <div>
-            <div className="w-full rounded-xl bg-card text-main p-4">
+            <div className="w-full bg-card border border-default text-main p-4">
                 <Calendar />
             </div>
 

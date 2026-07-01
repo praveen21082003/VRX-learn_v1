@@ -8,7 +8,7 @@ function CourseTumbnail({image, name, classRounded = "rounded-lg", classHeight})
 
 
     return (
-        <div className={clsx("relative overflow-hidden", classRounded, classHeight ? classHeight : "h-[140px] sm:h-[150px] lg:h-40", "bg-gray-200 group")}>
+        <div className={clsx("relative overflow-hidden", classRounded, classHeight ? classHeight : "h-39.25", "bg-gray-200 group")}>
 
             <img
                 src={hasCustomImage ? image : defaultCourse}

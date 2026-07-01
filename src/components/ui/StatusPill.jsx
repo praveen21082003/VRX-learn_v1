@@ -1,4 +1,5 @@
-export default function StatusPill({ status = '' }) {
+import { Icon } from '@/components/ui'
+export default function StatusPill({ status = '', iconName = false }) {
 
   const colors = {
     submitted: "bg-[#D1E7DD] text-[#0F5132]",
@@ -13,12 +14,16 @@ export default function StatusPill({ status = '' }) {
     inactive: "bg-[#F8D7DA] text-[#840227]",
     pending: "bg-[#FEEBC8] text-[#744210]",
     completed: "bg-[#DBEAFE] text-[#1E40AF]",
-    resolved: "bg-[#D1E7DD] text-[#0F5132]"
+    resolved: "bg-[#D1E7DD] text-[#0F5132]",
+    premium: "bg-[#610F6D]",
+    free: "bg-[#16A34A]"
   };
 
   return (
     <div className="leading-none">
-      <span className={`capitalize px-2 py-0.5 rounded-xs text-small ${colors[status] || "bg-gray-200 text-gray-700"}`}>
+      <span className={`flex gap-1 items-center capitalize px-1.5 py-0.5 rounded-xs text-small ${colors[status] || "bg-gray-200 text-gray-700"}`}>
+        {iconName && <Icon name={iconName} size={14} />}
+
         {status.toLowerCase().replace(/_/g, " ")}
       </span>
     </div>
