@@ -77,8 +77,6 @@ function ResetPassword() {
         if (!validateForm()) return;
 
         const response = await handleResetPassword(payload);
-        console.log(payload);
-        console.log(response);
 
         if (!response.success) {
             setWarnMsg(response.message);
