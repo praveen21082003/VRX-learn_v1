@@ -125,8 +125,8 @@ export const useAuthenticate = () => {
 
     const handleResetPassword = useCallback(async ({
         token,
-        password,
-        confirmPassword,
+        newPassword,
+        newConfirmPassword,
     }) => {
 
         try {
@@ -135,8 +135,8 @@ export const useAuthenticate = () => {
 
             const res = await resetPassword({
                 token,
-                password,
-                confirmPassword,
+                newPassword,
+                newConfirmPassword,
             });
 
             return {
@@ -148,7 +148,6 @@ export const useAuthenticate = () => {
             };
 
         } catch (err) {
-
             const status = err.response?.status;
 
             const errorType =

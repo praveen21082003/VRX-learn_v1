@@ -37,15 +37,15 @@ export const signup = (payload) => {
 // reset password
 export const resetPassword = ({
     token,
-    password,
-    confirmPassword,
+    newPassword,
+    newConfirmPassword,
 }) => {
 
     return axiosInstance.patch(
         "/api/v1/auth/reset-password",
         {
-            password,
-            confirmPassword,
+            newPassword,
+            newConfirmPassword,
         },
         {
             params: { token },

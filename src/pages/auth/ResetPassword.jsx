@@ -22,12 +22,12 @@ function ResetPassword() {
     // states
     const [payload, setPayload] = useState({
         token: token,
-        password: "",
-        confirmPassword: "",
+        newPassword: "",
+        newConfirmPassword: "",
     });
     const [warning, setWarning] = useState({
-        password: "",
-        confirmPassword: "",
+        newPassword: "",
+        newConfirmPassword: "",
         token: "",
     });
     const [warnMsg, setWarnMsg] = useState("");
@@ -36,21 +36,21 @@ function ResetPassword() {
 
     // functions 
     const validateForm = () => {
-        const newWarning = { password: "", confirmPassword: "", token: "" };
+        const newWarning = { newPassword: "", newConfirmPassword: "", token: "" };
         let isValid = true;
 
-        if (!payload.password.trim()) {
-            newWarning.password = "Please enter your new password.";
+        if (!payload.newPassword.trim()) {
+            newWarning.newPassword = "Please enter your new password.";
             isValid = false;
         }
 
-        if (!payload.confirmPassword.trim()) {
-            newWarning.confirmPassword = "Please confirm your password.";
+        if (!payload.newConfirmPassword.trim()) {
+            newWarning.newConfirmPassword = "Please confirm your password.";
             isValid = false;
         }
 
-        if (payload.password && payload.confirmPassword && payload.password !== payload.confirmPassword) {
-            newWarning.confirmPassword = "Passwords do not match.";
+        if (payload.newPassword && payload.newConfirmPassword && payload.newPassword !== payload.newConfirmPassword) {
+            newWarning.newConfirmPassword = "Passwords do not match.";
             isValid = false;
         }
 
@@ -77,6 +77,8 @@ function ResetPassword() {
         if (!validateForm()) return;
 
         const response = await handleResetPassword(payload);
+        console.log(payload);
+        console.log(response);
 
         if (!response.success) {
             setWarnMsg(response.message);
@@ -99,28 +101,28 @@ function ResetPassword() {
             <form onSubmit={handleSubmit} className='space-y-2 w-full'>
                 {/* general API error */}
                 <Input
-                    name="password"
+                    name="newPassword"
                     type="password"
                     label="New Password"
                     placeholder="Enter your new password"
                     paddingClass="p-2"
                     icon="material-symbols:lock"
-                    inputWarning={warning.password}
+                    inputWarning={warning.newPassword}
                     onChange={handleChange}
-                    value={payload.password}
+                    value={payload.newPassword}
                     autoComplete="new-password"
                 />
 
                 <Input
-                    name="confirmPassword"
+                    name="newConfirmPassword"
                     type="password"
                     label="Confirm Password"
                     placeholder="Confirm password"
                     paddingClass="p-2"
                     icon="material-symbols:lock"
-                    inputWarning={warning.confirmPassword}
+                    inputWarning={warning.newConfirmPassword}
                     onChange={handleChange}
-                    value={payload.confirmPassword}
+                    value={payload.newConfirmPassword}
                     autoComplete="new-password"
                 />
 
