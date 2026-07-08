@@ -31,9 +31,9 @@ export default function useAssignmentActions() {
 
             // build payload — fileMetadata optional
             const assignmentPayload = {
+                // courseId: assignmentData.courseId,
                 title: assignmentData.title,
                 instructions: assignmentData.instructions,
-                courseId: assignmentData.courseId,
                 dueDate: assignmentData.dueDate,
                 maxScore: assignmentData.maxScore ?? 5,
                 numberOfAttempts: assignmentData.numberOfAttempts ?? 1,
@@ -42,6 +42,7 @@ export default function useAssignmentActions() {
 
             const response = file
                 ? await createAssignmentWithAttachment({
+                    courseId: assignmentData.courseId,
                     assignment: assignmentPayload,
                     attachment: {
                         filename: file.name,

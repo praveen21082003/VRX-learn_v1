@@ -90,7 +90,7 @@ function WelcomeBanner() {
         //     </div>
         // </div>
         <div>
-            <h3 className='text-h3 font-medium'>Welcome, {user?.username || 'Learner'}!</h3>
+            <h3 className='text-h3 text-main font-medium'>Welcome, {user?.username || 'Learner'}!</h3>
             <p className='text-caption text-muted'>Every lesson completed brings you one step closer to mastering your skills.</p>
         </div>
     );

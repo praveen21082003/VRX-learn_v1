@@ -4,7 +4,7 @@ import { CourseCardViewer} from "@/components/ui";
 function AllCoursesSection({ courses, loading }) {
     return (
         <CourseCardViewer
-            title="All Courses"
+            title="Popular Courses"
             courses={courses}
             loading={loading}
             myCourses={false}

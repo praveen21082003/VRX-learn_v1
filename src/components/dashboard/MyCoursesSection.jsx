@@ -2,7 +2,7 @@ import React from 'react';
 import { CourseCardViewer } from "@/components/ui";
 
 function MyCoursesSection({ enrolledCourses, loading }) {
-    console.log(enrolledCourses);
+    // console.log(enrolledCourses);
 
     return (
 

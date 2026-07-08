@@ -1,16 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
-import { useScrollToError } from '@/hooks/useScrollToError';
-import useLessonActions from './hooks/useLessonActions';
+import { useScrollToError } from "@/hooks/useScrollToError";
+import useLessonActions from "./hooks/useLessonActions";
 
-import { useToast } from '@/context/ToastProvider';
+import { useToast } from "@/context/ToastProvider";
 
-import { Input, TextEditor, Button, UploadSection } from '@/components/ui'
+import { Input, TextEditor, Button, UploadSection } from "@/components/ui";
 
 function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
-
-
   const titleRef = useRef(null);
   const fileRef = useRef(null);
 
@@ -19,16 +17,14 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
     file: fileRef,
   };
 
-
   const scrollToError = useScrollToError(refs);
-
 
   const isEdit = mode === "edit";
   const navigate = useNavigate();
   const { addToast } = useToast();
   const { moduleId } = useParams();
 
-  const currentModule = modules?.find(m => String(m.id) === String(moduleId));
+  const currentModule = modules?.find((m) => String(m.id) === String(moduleId));
 
   const {
     createLessonAction,
@@ -61,12 +57,11 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
 
   const handleChange = (field, value) => {
     if (field === "title") {
-      value = value.replace(/\s+/g, " ")
-        .replace(/^\s/, "");
+      value = value.replace(/\s+/g, " ").replace(/^\s/, "");
     }
 
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setWarning(prev => ({ ...prev, [field]: null }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setWarning((prev) => ({ ...prev, [field]: null }));
   };
 
   // validation
@@ -89,7 +84,9 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
     if (formData.title.trim() !== (initialData?.title || "").trim()) {
       payload.title = formData.title.trim();
     }
-    if (formData.description.trim() !== (initialData?.description || "").trim()) {
+    if (
+      formData.description.trim() !== (initialData?.description || "").trim()
+    ) {
       payload.description = formData.description.trim();
     }
     return payload;
@@ -121,7 +118,8 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
       const newWarning = {};
 
       if (result.status === 409) {
-        newWarning.title = "A lesson with this title already exists in this module.";
+        newWarning.title =
+          "A lesson with this title already exists in this module.";
       }
 
       if (Object.keys(newWarning).length > 0) {
@@ -156,26 +154,26 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
       // };
 
       const payload = {
-        "lesson": {
-          "title": formData.title.trim(),
-          "description": formData.description.trim(),
-          "moduleId": moduleId
+        moduleId: moduleId,
+        lesson: {
+          title: formData.title.trim(),
+          description: formData.description.trim(),
         },
-        "attachment": {
-          "filename": file?.name || "",
-          "contentType": file?.type || "",
-          "size": file?.size || 0,
-        }
-      }
+        attachment: {
+          filename: file?.name || "",
+          contentType: file?.type || "",
+          size: file?.size || 0,
+        },
+      };
 
       const result = await createLessonAction(payload, file);
-      
 
       // handle inline field error (title duplicate)
       const newWarning = {};
 
       if (result.status === 409) {
-        newWarning.title = "A lesson with this title already exists in this module.";
+        newWarning.title =
+          "A lesson with this title already exists in this module.";
       }
 
       if (Object.keys(newWarning).length > 0) {
@@ -202,7 +200,8 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
   const getButtonText = () => {
     if (!isEdit) {
       if (isCreating && uploadProgress === 0) return "Preparing...";
-      if (isCreating && uploadProgress > 0 && uploadProgress < 100) return `Uploading...`;
+      if (isCreating && uploadProgress > 0 && uploadProgress < 100)
+        return `Uploading...`;
       if (mediaStatus === "uploaded") return "Finalizing...";
       return files.length > 0 ? "Upload & Create" : "Create Lesson";
     }
@@ -237,14 +236,13 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
 
       {/* file upload only in create mode */}
       {!isEdit ? (
-
         <div ref={fileRef}>
           <UploadSection
             label="Lesson attachment"
             files={files}
             setFiles={(newFiles) => {
               setFiles(newFiles);
-              setWarning(prev => ({ ...prev, file: null }));
+              setWarning((prev) => ({ ...prev, file: null }));
             }}
             uploadProgress={uploadProgress}
             isUploading={isCreating}
@@ -253,7 +251,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
             mediaStatus={mediaStatus}
             loadedData={loadedData}
             inputWarning={warning.file}
-            allowedTypes={['pdf', 'mp4']}
+            allowedTypes={["pdf", "mp4"]}
             maxFileSize={2000}
           />
         </div>
@@ -263,7 +261,7 @@ function LessonForm({ mode, initialData, modules, courseId, invalidateCache }) {
         </div>
       )}
 
-      <div className='flex justify-center'>
+      <div className="flex justify-center">
         <Button
           type="submit"
           disabled={isLoading}

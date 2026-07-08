@@ -72,7 +72,7 @@ function CourseCard({
             />
             <div className="flex flex-col gap-1">
                 <span>
-                    <h1 className="text-h5 truncate">{course?.courseName}</h1>
+                    <h1 className="text-h5 text-main truncate">{course?.courseName}</h1>
                     <p className="text-small text-muted">{course?.trainerName}</p>
                 </span>
                 <p className="text-small text-muted">Expires on Dec 25, 2026</p>
